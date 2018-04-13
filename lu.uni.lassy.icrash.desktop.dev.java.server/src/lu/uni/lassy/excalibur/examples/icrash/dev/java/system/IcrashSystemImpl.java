@@ -47,14 +47,20 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCity;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtDescription;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPIID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtRequestID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCategory;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
@@ -1359,5 +1365,169 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			log.error("Exception in oeSetClock..." + ex);
 			return new PtBoolean(false);
 		}
+	}
+	
+	// Point of interest variant
+	
+	/*
+	 	ADMINISTRATOR
+	 */
+	
+	public void oeGetAllRequestsFromCoordinator() {
+		
+		/*
+		 	The Administrator has the method to retrieve all the requests
+		 	which have been checked by the actor Coordinator.
+			
+			- Retrieve requests which are pending
+			- Show them in a list
+		 */
+	}
+	
+	public void oeTreatRequest(DtRequestID aRequestID) {
+		
+		/*
+		 	The Administrator has the method to treat a specific request.
+		 	
+		 	- Access the request data
+		 	- Change the request status to treating
+		 */
+	}
+
+	public void oeSolveRequest(DtRequestID aRequestID) {
+		
+		/*
+		 	The Administrator has the method to solve a specific request.
+		 	
+		 	- Access the request data
+		 	- Change the request status to solved
+		 */
+	}
+	
+	public void oeAddPI(DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) {
+		
+		/*
+		 	The Administartor has the method to add a new point of interest after solving
+		 	the request.
+		 	
+		 	- Get request data which have the request status solved
+		 	- Add the needed request data to the PI table with the GPS location which
+		 		the administrator knows.
+		 */
+	}
+	
+	public void oeUpdatePI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) {
+		
+		/*
+		 	The Administartor has the method to update an existing point of interest.
+		 	
+		 	- Access the PI table
+		 	- Update the PI table with the new values.
+		 */
+	}
+	
+	public void oeDeletePI(DtPIID aPIID) {
+		
+		/*
+		 	The Administartor has the method to delete a point of interest.
+		 	
+		 	- Access the PI table
+		 	- Delete the PI which does not exist anymore.
+		 */
+	}
+	
+	/*
+ 		COORDINATOR
+	 */
+	
+	public void oeGetAllRequests() {
+		
+		/*
+			The Coordinator has the method to retrieve all the requests which have been sent by the actor Person.
+			
+			- Access the request table
+			- Retrieve requests
+			- Show them in a list
+		*/
+	}
+	
+	public void oeCheckAvailability(DtRequestID aRequestID) {
+		
+		 /*
+		  	The Coordinator has the method to check if the point of interest of the request is already in the system.
+		  	
+		  	- Access the request table
+		  	- Get the request data
+		  	- Compare to point of interest data
+		  	- If PI exists, change request ignored to true
+		  	- If PI not exists, change request ignored to false
+		 */
+	}
+	
+	public void oeDeliverRequest(DtRequestID aRequestID) {
+		
+		/*
+		 	The Coordinator has the method to deliver the request to the Administrator
+		 	
+		 	- Access the request table
+		 	- Get the request data
+		 	- Change the request status to pending
+		 	- Receive message that the request has been delivered
+		 	- Send message to the Administrator that the request has been delivered
+		 */
+	}
+	
+	/*
+ 		PERSON
+	 */
+	
+	public void oeSearchPI(DtName aPIName, EtCategory aPICategory, DtCity aPICity) {
+		
+		/*
+		 	The Person has the method to search for a point of interest.
+		 	
+		 	- Access the PI table
+		 	- Retrieve entered values
+		 	- Compare the entered values to the database
+		 	- If the query found a record, then the Person sends a Sms
+		 	- If not, then the Person sends a request to add this PI
+		 */
+	}
+	
+	
+	public void oeSendNewRequest(DtName aPIName, EtCategory aPICategory, DtCity aPICity) {
+		
+		/*
+		 	The Person has the method to send a request to add a new point of interest.
+		 	
+		 	- Access the PI table
+		 	- Retrieve entered values
+		 	- Store the values into the database into Request with Request status and ignored field NULL
+		 	- Receive a message about the request has been sent
+		 	- Send message to the Coordinator that new requests have been created
+		 */
+	}
+	
+	public void oeGetGPSLocation(DtName aPIName, EtCategory aPICategory, DtCity aPICity) {
+		
+		/*
+		 	The Person has the method to retrieve the GPS location of a point of interest to further 
+		 	send a message with the needed GPS data.
+		 	
+		 	- Access the PI table
+		 	- Retrieve the GPS location of the point of interest chosen
+		 	- Get a message with the GPS location of the PI
+		 */
+	}
+
+	public void oeGetPIDescription(DtName aPIName, EtCategory aPICategory, DtCity aPICity) {
+	
+		/*
+	 		The Person has the method to retrieve a brief description of a point of interest.
+		 	
+		 	- Access the PI table
+		 	- Retrieve the description of the point of interest chosen
+		 	- Get a message with the brief description of the PI
+		 */
 	}
 }
