@@ -25,6 +25,9 @@ public class CtCoordinator extends CtAuthenticated {
 
 	/** The id of the coordinator. */
 	public DtCoordinatorID id;
+	
+	/** The access rights of the coordinator. */
+	public EtCrisisType accessRights;
 		
 	/**
 	 * Initialises the coordinator.
@@ -34,9 +37,10 @@ public class CtCoordinator extends CtAuthenticated {
 	 * @param aPwd The password of the coordinator
 	 * @return The success of the initialisation
 	 */
-	public PtBoolean init(DtCoordinatorID aId,DtLogin aLogin,DtPassword aPwd){
+	public PtBoolean init(DtCoordinatorID aId,DtLogin aLogin,DtPassword aPwd, EtCrisisType aAccessRights){
 			super.init(aLogin, aPwd);
 			id = aId;
+			accessRights = aAccessRights;
 			return new PtBoolean(true); 
 	}
 	
@@ -50,6 +54,17 @@ public class CtCoordinator extends CtAuthenticated {
 	public PtBoolean update(DtLogin aLogin,DtPassword aPwd){
 		login = aLogin;
 		pwd = aPwd;
+		return new PtBoolean(true);
+	}
+	
+	/**
+	 * Updates the user access rights, used when the administrator does an update on the coordinator.
+	 *
+	 * @param aAccessRights The value to change the access rights to
+	 * @return the success of the update method
+	 */
+	public PtBoolean updateAccessRights(EtCrisisType aAccessRights){
+		accessRights = aAccessRights;
 		return new PtBoolean(true);
 	}
 	
