@@ -1298,13 +1298,15 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		}
 	}
 	
-	public void oeUpdateCoordinatorAccessRights(DtCoordinatorID aDtCoordinatorID, EtCrisisType aAccessRights) {
+	public PtBoolean oeUpdateCoordinatorAccessRights(DtCoordinatorID aDtCoordinatorID, EtCrisisType aAccessRights) {
 		
 		/*
 		 * This method allows the administrator to update the access rights of a coordinator to make sure 
 		 * the experience level of a coordinator always matches his access rights. This means that after handling
-		 * a certain number of crisis a coordinator can get higher access rights.
+		 * a certain number of crisis a coordinator can get higher access rights. Returns true if executed successfully,
+		 * false otherwise.
 		 */
+		return new PtBoolean(false);
 	}
 	
 	/* (non-Javadoc)
