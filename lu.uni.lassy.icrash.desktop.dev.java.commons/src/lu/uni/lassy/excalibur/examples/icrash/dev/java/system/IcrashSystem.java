@@ -345,10 +345,11 @@ public interface IcrashSystem extends Remote {
 	 * @param aDtCoordinatorID The ID to create the coordinator with
 	 * @param aDtLogin The username of the coordinator to create
 	 * @param aDtPassword The password of the coordinator to create
+	 * @param aAccessRights The access rights of the coordinator to create
 	 * @return The success of the method
 	 * @throws RemoteException Thrown if the server is offline
 	 */
-	public PtBoolean oeAddCoordinator(DtCoordinatorID aDtCoordinatorID,DtLogin aDtLogin,DtPassword aDtPassword) throws RemoteException; 	
+	public PtBoolean oeAddCoordinator(DtCoordinatorID aDtCoordinatorID,DtLogin aDtLogin,DtPassword aDtPassword, EtCrisisType aAccessRights) throws RemoteException; 	
 	
 	/**
 	 * Deletes a coordinator with the details specified.
