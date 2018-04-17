@@ -1626,6 +1626,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		*/
 		return new PtBoolean(false);
 	}
+	// actAuthenticated: resetting password
+	@Override
 	public PtBoolean oeResetPassword(DtLogin aDtLogin) throws RemoteException {
 		System.out.println("oeResetPassord: Not yet implemented.");
 		/*
