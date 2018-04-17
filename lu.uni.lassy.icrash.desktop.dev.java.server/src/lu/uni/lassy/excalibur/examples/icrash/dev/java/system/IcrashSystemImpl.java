@@ -47,6 +47,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCaptcha;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCity;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
@@ -1586,5 +1587,43 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	INPUT EVENT
 		 	- Get a message with the brief description of the PI
 		 */
+	}
+	
+	//*****************************************************************************************
+	//***							AUTHENTICATION VARIANT									***
+	//*****************************************************************************************
+	// actAuthenticated: loggin in with captcha
+	@Override
+	public PtBoolean oeLoginWitchCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha)
+			throws RemoteException {
+		System.out.println("oeLoginWitchCaptcha: Not yet implemented.");
+		/*
+		try {
+			String login = aDtLogin.value.getValue(); // Is This the same as: aDtLogin.toString(); ???
+			String loginDB = sql("SELECT userName FROM coordinators WHERE userName = '"+login+"';");
+			if(loginDB != null) {
+				String pw = aDtPassword.value.getValue();
+				String sCaptcha = aDtCaptcha.value.getValue();
+				
+				String pwDB = sql("SELECT password FROM coordinators WHERE password = '"+pw+"';");
+				
+				int tries = sql("SELECT tries FROM coordinators WHERE userName = '"+login+"';");
+				int time = sql("SELECT lastAccess FROM coordinators WHERE userName = '"+login+"';");
+				
+				if(login.equals(loginDB) && pw.equals(pwDB) AND sCaptcha.equals("2BA2")) {
+					System.out.println("Successfully logged in.");
+					
+					tries = 0;
+					time = 0;
+				} else {
+					System.out.println("Wrong username, password or captcha, please try again.");
+
+					tries++; time = (int) System.currentMillis();
+				}
+				sql("UPDATE coordinators(disable, tries, lastAccess) VALUES(false, '"+tries+"', '"+time+"');");
+			}
+		} catch Exception(Exception e) e.print();
+		*/
+		return new PtBoolean(false);
 	}
 }
