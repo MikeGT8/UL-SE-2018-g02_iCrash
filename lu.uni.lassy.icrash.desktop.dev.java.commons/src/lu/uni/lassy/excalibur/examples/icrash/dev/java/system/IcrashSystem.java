@@ -29,6 +29,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCaptcha;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
@@ -375,6 +376,17 @@ public interface IcrashSystem extends Remote {
 	 * @return The success of the method
 	 * @throws RemoteException Thrown if the server is offline
 	 */
-	public PtBoolean oeSetClock(DtDateAndTime aCurrentClock) throws RemoteException; 
+	public PtBoolean oeSetClock(DtDateAndTime aCurrentClock) throws RemoteException;
+
+	/**
+	 * Processes a login with captcha for the username and password specified.
+	 *
+	 * @param aDtLogin The username to login with
+	 * @param aDtPassword The password to login with
+	 * @param aDtCaptcha The captcha to solve
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public PtBoolean oeLoginWitchCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha) throws RemoteException;
 
 }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCaptcha;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -86,6 +87,31 @@ public abstract class ActAuthenticatedImpl extends UnicastRemoteObject
 
 		if (res.getValue() == true)
 			log.info("operation oeLogin successfully executed by the system");
+
+		return res;
+	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAuthenticated#oeLoginWitchCaptcha(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCaptcha)
+	 */
+	synchronized public PtBoolean oeLoginWithCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha) throws RemoteException, NotBoundException {
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry
+				.lookup("iCrashServer");
+
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActAuthenticated.oeLoginWitchCaptcha sent to system");
+		PtBoolean res = iCrashSys_Server.oeLoginWitchCaptcha(aDtLogin, aDtPassword, aDtCaptcha);
+
+		if (res.getValue() == true)
+			log.info("operation oeLoginWitchCaptcha successfully executed by the system");
 
 		return res;
 	}

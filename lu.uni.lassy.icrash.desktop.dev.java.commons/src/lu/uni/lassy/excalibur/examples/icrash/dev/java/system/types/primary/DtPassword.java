@@ -20,7 +20,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 /**
  * The Class DtPassword, which holds a datatype of the password.
  */
-public class DtPassword  extends DtString implements JIntIs{
+public class DtPassword extends DtString implements JIntIs{
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 227L;
