@@ -378,6 +378,7 @@ public interface IcrashSystem extends Remote {
 	 */
 	public PtBoolean oeSetClock(DtDateAndTime aCurrentClock) throws RemoteException;
 
+	//************************************ AUTHENTICATION VARIANT ***************************************************
 	/**
 	 * Processes a login with captcha for the username and password specified.
 	 *
@@ -388,5 +389,14 @@ public interface IcrashSystem extends Remote {
 	 * @throws RemoteException Thrown if the server is offline
 	 */
 	public PtBoolean oeLoginWitchCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha) throws RemoteException;
+	
+	/**
+	 * Processes a password reset for the specified username.
+	 *
+	 * @param aDtLogin The username whose password should be reset
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public PtBoolean oeResetPassword(DtLogin aDtLogin) throws RemoteException;
 
 }

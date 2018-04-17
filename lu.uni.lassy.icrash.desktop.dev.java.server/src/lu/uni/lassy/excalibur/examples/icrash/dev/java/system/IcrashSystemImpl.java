@@ -1626,4 +1626,27 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		*/
 		return new PtBoolean(false);
 	}
+	public PtBoolean oeResetPassword(DtLogin aDtLogin) throws RemoteException {
+		System.out.println("oeResetPassord: Not yet implemented.");
+		/*
+		try {
+			String login = aDtLogin.value.getValue(); // Is This the same as: aDtLogin.toString(); ???
+			String loginDB = sql("SELECT userName FROM coordinators WHERE userName = '"+login+"';");
+			if(loginDB != null) {
+				
+				if(login.equals(loginDB)) { // actually this has already been tested before with the sql statement...
+					System.out.println("Please enter your new pw.");
+					
+					String newPw = "";
+					std::cin << newPw; // This is C, but it only to get the idea down anyway, since my sql("SELECT...") also will never work :(
+					
+					return sql("UPDATE coordinators(password) VALUES('"+newPw+"') WHERE userName = '"+loginDB+"'");
+				} else {
+					System.out.println("Username does not exist.");
+					return new PtBoolean(false);
+				}
+		} catch Exception(Exception e) e.print();
+		*/
+		return new PtBoolean(false);
+	}
 }
