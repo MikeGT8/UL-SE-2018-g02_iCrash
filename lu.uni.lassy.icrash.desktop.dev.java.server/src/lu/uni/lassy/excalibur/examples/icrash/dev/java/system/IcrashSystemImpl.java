@@ -1379,7 +1379,10 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	The Administrator has the method to retrieve all the requests
 		 	which have been checked by the actor Coordinator.
 			
+			- Access the request data
 			- Retrieve requests which are pending
+			
+			INPUT EVENT
 			- Show them in a list
 		 */
 	}
@@ -1391,6 +1394,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	
 		 	- Access the request data
 		 	- Change the request status to treating
+		 	
+		 	INPUT EVENT
+		 	- Show a message that the request was treated
 		 */
 	}
 
@@ -1401,28 +1407,37 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	
 		 	- Access the request data
 		 	- Change the request status to solved
+		 	
+		 	INPUT EVENT
+		 	- Show a message that the request was solved
 		 */
 	}
 	
 	public void oeAddPI(DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) {
 		
 		/*
-		 	The Administartor has the method to add a new point of interest after solving
+		 	The Administrator has the method to add a new point of interest after solving
 		 	the request.
 		 	
 		 	- Get request data which have the request status solved
 		 	- Add the needed request data to the PI table with the GPS location which
 		 		the administrator knows.
+		 	
+		 	INPUT EVENT
+		 	- Show a message that the point of interest has been added to the Administrator and the Person
 		 */
 	}
 	
 	public void oeUpdatePI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) {
 		
 		/*
-		 	The Administartor has the method to update an existing point of interest.
+		 	The Administrator has the method to update an existing point of interest.
 		 	
 		 	- Access the PI table
 		 	- Update the PI table with the new values.
+		 	
+		 	INPUT EVENT
+		 	- Show a message that the PI has been updated
 		 */
 	}
 	
@@ -1433,6 +1448,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	
 		 	- Access the PI table
 		 	- Delete the PI which does not exist anymore.
+		 	
+		 	INPUT EVENT
+		 	- Show a message that the PI has been deleted
 		 */
 	}
 	
@@ -1447,6 +1465,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			- Access the request table
 			- Retrieve requests
+			
+			INPUT EVENT
 			- Show them in a list
 		*/
 	}
@@ -1461,6 +1481,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		  	- Compare to point of interest data
 		  	- If PI exists, change request ignored to true
 		  	- If PI not exists, change request ignored to false
+		  	
+		  	INPUT EVENT
+		 	- Show a message that the request is ignored or not
 		 */
 	}
 	
@@ -1472,8 +1495,10 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	- Access the request table
 		 	- Get the request data
 		 	- Change the request status to pending
+		 	
+		 	INPUT EVENT
 		 	- Receive message that the request has been delivered
-		 	- Send message to the Administrator that the request has been delivered
+		 	- (Send message to the Administrator that the request has been delivered)
 		 */
 	}
 	
@@ -1491,6 +1516,10 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	- Compare the entered values to the database
 		 	- If the query found a record, then the Person sends a Sms
 		 	- If not, then the Person sends a request to add this PI
+		 	
+		 	INPUT EVENT
+		 	- Show a message that the PI has NOT been found
+		 	- Show a record with the properties of the PI
 		 */
 	}
 	
@@ -1503,6 +1532,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	- Access the PI table
 		 	- Retrieve entered values
 		 	- Store the values into the database into Request with Request status and ignored field NULL
+		 	
+		 	INPUT EVENT
 		 	- Receive a message about the request has been sent
 		 	- Send message to the Coordinator that new requests have been created
 		 */
@@ -1516,6 +1547,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	
 		 	- Access the PI table
 		 	- Retrieve the GPS location of the point of interest chosen
+		 	
+		 	INPUT EVENT
 		 	- Get a message with the GPS location of the PI
 		 */
 	}
@@ -1527,6 +1560,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	
 		 	- Access the PI table
 		 	- Retrieve the description of the point of interest chosen
+		 	
+		 	INPUT EVENT
 		 	- Get a message with the brief description of the PI
 		 */
 	}
