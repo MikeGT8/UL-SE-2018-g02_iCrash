@@ -838,6 +838,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					.getValue());
 			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
 				ActCoordinator theActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
+				//Check if the current requesting coordinator's access rights match the crises type
+				//if it does then the coordinator can continue if not he is not allowed to continue
 				//PostF1
 				theCrisis.type = aEtCrisisType;
 				DbCrises.updateCrisis(theCrisis);
@@ -868,6 +870,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					.getValue());
 			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
 				ActCoordinator theActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
+				//Check if the current requesting coordinator's access rights match the crises type
+				//if it does then the coordinator can continue if not he is not allowed to continue
 				//PostF1
 				theCrisis.status = aEtCrisisStatus;
 				DbCrises.updateCrisis(theCrisis);
@@ -898,6 +902,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
 				ActCoordinator theActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
 				CtCoordinator theCtCoordinator = (CtCoordinator) getCtAuthenticated(theActCoordinator);
+				//Check if the current requesting coordinator's access rights match the crises type
+				//if it does then the coordinator can continue if not he is not allowed to continue
 				
 				log.debug("theCrisis Instance is " + theCrisis.toString());
 				log.debug("aDtCrisisID.value.getValue() is "
@@ -910,7 +916,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				else
 						log.debug("theCtCoordinatorAtPre is "
 								+ assCtCrisisCtCoordinator.get(theCrisis).toString());
-	
+				//Check if the current requesting coordinator's access rights match the crises type
+				//if it does then the coordinator can continue if not he is not allowed to continue
 				//PostF1
 				theCrisis.status = EtCrisisStatus.handled;
 				DbCrises.updateCrisis(theCrisis);
@@ -972,6 +979,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					.getValue());
 			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
 				ActCoordinator theActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
+				//Check if the current requesting coordinator's access rights match the crises type
+				//if it does then the coordinator can continue if not he is not allowed to continue
 				//PostF1
 				theCrisis.comment = aDtComment;
 				DbCrises.updateCrisis(theCrisis);
@@ -994,7 +1003,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
 	 */
-	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus) {
+	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus, EtCrisisType crisisType) {
 		try{
 			//PreP1
 			isSystemStarted();
@@ -1005,7 +1014,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				//go through all existing crises
 				for (String crisisKey : cmpSystemCtCrisis.keySet()) {
 					CtCrisis crisis = cmpSystemCtCrisis.get(crisisKey);
-					if (crisis.status.toString().equals(aEtCrisisStatus.toString()))
+					if (crisis.status.toString().equals(aEtCrisisStatus.toString()) && crisis.type.toString().equals(crisisType))
 						//PostF1
 						crisis.isSentToCoordinator(aActCoordinator);
 				}
@@ -1063,6 +1072,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					.getValue());
 			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
 				ActCoordinator theActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
+				//Check if the current requesting coordinator's access rights match the crises type
+				//if it does then the coordinator can continue if not he is not allowed to continue
 				//PostF1
 				theCrisis.status = EtCrisisStatus.closed;
 				DbCrises.updateCrisis(theCrisis);

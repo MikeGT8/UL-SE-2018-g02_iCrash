@@ -300,7 +300,7 @@ public interface IcrashSystem extends Remote {
 	 * @return The success of the method
 	 * @throws RemoteException Thrown if the server is offline
 	 */
-	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus) throws RemoteException; 
+	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus, EtCrisisType crisisType) throws RemoteException; 
 	
 	/**
 	 * Gets the alerts with the status specified.
