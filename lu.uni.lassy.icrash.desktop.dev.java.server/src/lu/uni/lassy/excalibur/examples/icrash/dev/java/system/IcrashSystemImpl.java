@@ -34,17 +34,22 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCom
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompanyImpl;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinatorImpl;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPerson;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbAlerts;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbComCompanies;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCoordinators;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCrises;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbHumans;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbPIs;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAuthenticated;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPI;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPerson;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRequest;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCaptcha;
@@ -97,6 +102,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	 * This is set by the Actor itself before it performs an oe action*/
 	ActAuthenticated currentRequestingAuthenticatedActor;
 	
+	ActPerson requestingNewPIActor;
+	
 	/** The current connected communication company that is performing a method on the system.
 	 * This is set by the Actor itself before it performs an oe action*/
 	ActComCompany currentConnectedComCompany;
@@ -114,12 +121,23 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	/**  A hashtable of the crises in the system, stored by their ID as a key. */
 	Hashtable<String, CtCrisis> cmpSystemCtCrisis = new Hashtable<String, CtCrisis>();
 	
+	/**  A hashtable of the requests in the system, stored by their ID as a key. */
+	Hashtable<String, CtRequest> cmpSystemCtRequest = new Hashtable<String, CtRequest>();
+	
+	/**  A hashtable of the points of interest in the system, stored by their ID as a key. */
+	Hashtable<String, CtPI> cmpSystemCtPI = new Hashtable<String, CtPI>();
+	
+	/**  A hashtable of the people in the system, stored by their ID as a key. */
+	Hashtable<String, CtPerson> cmpSystemCtPerson = new Hashtable<String, CtPerson>();
+	
 	/**  A hashtable of the humans in the system, stored by their phone number as a key. */
 	Hashtable<String, CtHuman> cmpSystemCtHuman = new Hashtable<String, CtHuman>();
 	
 	/**  A hashtable of the actor com companies in the system, stored by their name as a key. */
 	Hashtable<String, ActComCompany> cmpSystemActComCompany = new Hashtable<String, ActComCompany>();
 
+	/* Declare hashtables for associations */
+	
 	// Messir associations	
 	/**  A hashtable of the joint alerts and crises in the system, stored by their alert as a key. */
 	Hashtable<CtAlert, CtCrisis> assCtAlertCtCrisis = new Hashtable<CtAlert, CtCrisis>();
@@ -471,6 +489,64 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			for(CtCrisis crisis : cmpSystemCtCrisis.values())
 				result.add(crisis);
 		}
+		return result;
+	}
+	
+	public CtRequest getCtRequest(DtRequestID aRequestID) {
+
+		for (CtRequest ctRequest : cmpSystemCtRequest.values()) {
+			
+			if (ctRequest instanceof CtRequest) {
+				
+				PtBoolean res = ((CtRequest) ctRequest).id.eq(aRequestID);
+				
+				if (res.getValue())
+					return ctRequest;
+			}
+		}
+		
+		return null;
+	}
+	
+	public CtPI getCtPI(DtPIID aPIID) {
+
+		for (CtPI ctPI : cmpSystemCtPI.values()) {
+			
+			if (ctPI instanceof CtPI) {
+				
+				PtBoolean res = ((CtPI) ctPI).id.eq(aPIID);
+				
+				if (res.getValue())
+					return ctPI;
+			}
+		}
+		
+		return null;
+	}
+	
+	public ArrayList<CtRequest> getAllCtRequests() throws java.rmi.RemoteException {
+		
+		ArrayList<CtRequest> result = new ArrayList<CtRequest>();
+		
+		if (cmpSystemCtRequest != null) {
+			
+			for(CtRequest request : cmpSystemCtRequest.values())
+				result.add(request);
+		}
+		
+		return result;
+	}
+	
+	public ArrayList<CtPI> getAllCtPIs() throws java.rmi.RemoteException {
+		
+		ArrayList<CtPI> result = new ArrayList<CtPI>();
+		
+		if (cmpSystemCtPI != null) {
+			
+			for(CtPI PI : cmpSystemCtPI.values())
+				result.add(PI);
+		}
+		
 		return result;
 	}
 	
@@ -1396,7 +1472,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	 	ADMINISTRATOR
 	 */
 	
-	public void oeGetAllRequestsFromCoordinator() {
+	public PtBoolean oeGetAllRequestsFromCoordinator() throws RemoteException {
 		
 		/*
 		 	The Administrator has the method to retrieve all the requests
@@ -1408,9 +1484,11 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			INPUT EVENT
 			- Show them in a list
 		 */
+		
+		return new PtBoolean(false);
 	}
 	
-	public void oeTreatRequest(DtRequestID aRequestID) {
+	public PtBoolean oeTreatRequest(DtRequestID aRequestID) throws RemoteException {
 		
 		/*
 		 	The Administrator has the method to treat a specific request.
@@ -1421,9 +1499,11 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	INPUT EVENT
 		 	- Show a message that the request was treated
 		 */
+		
+		return new PtBoolean(false);
 	}
 
-	public void oeSolveRequest(DtRequestID aRequestID) {
+	public PtBoolean oeSolveRequest(DtRequestID aRequestID) throws RemoteException {
 		
 		/*
 		 	The Administrator has the method to solve a specific request.
@@ -1434,54 +1514,132 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	INPUT EVENT
 		 	- Show a message that the request was solved
 		 */
+		
+		return new PtBoolean(false);
 	}
 	
-	public void oeAddPI(DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) {
+	public PtBoolean oeAddPI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException {
 		
-		/*
-		 	The Administrator has the method to add a new point of interest after solving
-		 	the request.
-		 	
-		 	- Get request data which have the request status solved
-		 	- Add the needed request data to the PI table with the GPS location which
-		 		the administrator knows.
-		 	
-		 	INPUT EVENT
-		 	- Show a message that the point of interest has been added to the Administrator and the Person
-		 */
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
+			
+			//PreP2 to make sure that the administrator is logged in.
+			isAdminLoggedIn();
+			
+			CtRequest ctRequestAvailable = getCtRequest(aPIID);
+			CtPI ctPIAvailable = getCtPI(aPIID);
+			
+			//PreF1 and PreF2 combined to check if the point of interest is not already in the system, but the request of the PI is.
+			if ((ctPIAvailable == null) && ctRequestAvailable != null && ctRequestAvailable instanceof CtRequest) {
+				
+				//PostF1 to add the new PI to the system
+				CtPI ctPI = new CtPI();
+				ctPI.init(aPIID, aPIName, aPICity, aPICategory, aGPSLocation, aPIDescription);
+				DbPIs.insertPI(ctPI);
+				
+				//PostF2 to send the input event to the administrator
+				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+				admin.iePIAdded();
+				
+				//PostF3 to send the input event to the which requested the PI
+				ActPerson person = (ActPerson) requestingNewPIActor;
+				person.iePIAdded();
+				
+				//PostF4 add the new added PI in relation to the system
+				cmpSystemCtPI.put(ctPI.id.value.getValue(), ctPI);
+				
+				return new PtBoolean(true);
+			}
+						
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeAddPI..." + ex);
+			return new PtBoolean(false);
+		}
+		
+		return new PtBoolean(false);
 	}
 	
-	public void oeUpdatePI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) {
+	public PtBoolean oeUpdatePI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException {
 		
-		/*
-		 	The Administrator has the method to update an existing point of interest.
-		 	
-		 	- Access the PI table
-		 	- Update the PI table with the new values.
-		 	
-		 	INPUT EVENT
-		 	- Show a message that the PI has been updated
-		 */
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
+			
+			//PreP2 to make sure that the administrator is logged in.
+			isAdminLoggedIn();
+			
+			CtPI ctPIAvailable = getCtPI(aPIID);
+			
+			//PreF1 to check if the PI is in the system
+			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
+				
+				//PostF1 to add the new PI to the system
+				CtPI ctPI = (CtPI) ctPIAvailable;
+				DbPIs.updatePI(ctPI);
+				
+				//PostF2 to send the input event to the administrator
+				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+				admin.iePIUpToDate();
+				
+				//PostF3 update the PI in relation to the system
+				cmpSystemCtPI.replace(ctPI.id.value.getValue(), ctPI);
+				
+				return new PtBoolean(true);
+			}
+						
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeAddPI..." + ex);
+			return new PtBoolean(false);
+		}
+		
+		return new PtBoolean(false);
 	}
 	
-	public void oeDeletePI(DtPIID aPIID) {
+	public PtBoolean oeDeletePI(DtPIID aPIID) throws RemoteException {
 		
-		/*
-		 	The Administartor has the method to delete a point of interest.
-		 	
-		 	- Access the PI table
-		 	- Delete the PI which does not exist anymore.
-		 	
-		 	INPUT EVENT
-		 	- Show a message that the PI has been deleted
-		 */
+		try {
+			//PreP1
+			isSystemStarted();
+			
+			//PreP2
+			isAdminLoggedIn();
+			
+			CtPI ctPIAvailable = getCtPI(aPIID);
+			
+			//PreF1 to check if the point of interest is in the system
+			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
+				
+				//PostF1 to delete the PI
+				CtPI ctPI = (CtPI) ctPIAvailable;
+				DbPIs.deletePI(ctPI);
+				
+				//PostF2 to send a message to the administrator
+				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+				admin.iePIDeleted();
+				
+				//PostF3 delete the PI in relation to the system
+				cmpSystemCtPI.remove(ctPIAvailable.id.value.getValue());
+				
+				return new PtBoolean(true);
+			}
+			
+		} catch (Exception e) {
+			
+			log.error("Exception in oeDeletePI..." + e);
+			return new PtBoolean(false);
+		}
+		
+		return new PtBoolean(false);
 	}
 	
 	/*
  		COORDINATOR
 	 */
 	
-	public void oeGetAllRequests() {
+	public PtBoolean oeGetAllRequests() throws RemoteException {
 		
 		/*
 			The Coordinator has the method to retrieve all the requests which have been sent by the actor Person.
@@ -1492,9 +1650,11 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			INPUT EVENT
 			- Show them in a list
 		*/
+		
+		return new PtBoolean(false);
 	}
 	
-	public void oeCheckAvailability(DtRequestID aRequestID) {
+	public PtBoolean oeCheckAvailability(DtRequestID aRequestID) throws RemoteException {
 		
 		 /*
 		  	The Coordinator has the method to check if the point of interest of the request is already in the system.
@@ -1508,9 +1668,11 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		  	INPUT EVENT
 		 	- Show a message that the request is ignored or not
 		 */
+		
+		return new PtBoolean(false);
 	}
 	
-	public void oeDeliverRequest(DtRequestID aRequestID) {
+	public PtBoolean oeDeliverRequest(DtRequestID aRequestID) throws RemoteException {
 		
 		/*
 		 	The Coordinator has the method to deliver the request to the Administrator
@@ -1523,13 +1685,15 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	- Receive message that the request has been delivered
 		 	- (Send message to the Administrator that the request has been delivered)
 		 */
+		
+		return new PtBoolean(false);
 	}
 	
 	/*
  		PERSON
 	 */
 	
-	public void oeSearchPI(DtName aPIName, EtCategory aPICategory, DtCity aPICity) {
+	public PtBoolean oeSearchPI(DtName aPIName, EtCategory aPICategory, DtCity aPICity) throws RemoteException {
 		
 		/*
 		 	The Person has the method to search for a point of interest.
@@ -1544,10 +1708,12 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	- Show a message that the PI has NOT been found
 		 	- Show a record with the properties of the PI
 		 */
+		
+		return new PtBoolean(false);
 	}
 	
 	
-	public void oeSendNewRequest(DtName aPIName, EtCategory aPICategory, DtCity aPICity) {
+	public PtBoolean oeSendNewRequest(DtName aPIName, EtCategory aPICategory, DtCity aPICity) throws RemoteException {
 		
 		/*
 		 	The Person has the method to send a request to add a new point of interest.
@@ -1560,9 +1726,11 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	- Receive a message about the request has been sent
 		 	- Send message to the Coordinator that new requests have been created
 		 */
+		
+		return new PtBoolean(false);
 	}
 	
-	public void oeGetGPSLocation(DtName aPIName, EtCategory aPICategory, DtCity aPICity) {
+	public PtBoolean oeGetGPSLocation(DtPIID aPIID) throws RemoteException {
 		
 		/*
 		 	The Person has the method to retrieve the GPS location of a point of interest to further 
@@ -1574,9 +1742,11 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	INPUT EVENT
 		 	- Get a message with the GPS location of the PI
 		 */
+		
+		return new PtBoolean(false);
 	}
 
-	public void oeGetPIDescription(DtName aPIName, EtCategory aPICategory, DtCity aPICity) {
+	public PtBoolean oeGetPIDescription(DtPIID aPIID) throws RemoteException {
 	
 		/*
 	 		The Person has the method to retrieve a brief description of a point of interest.
@@ -1587,6 +1757,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		 	INPUT EVENT
 		 	- Get a message with the brief description of the PI
 		 */
+		
+		return new PtBoolean(false);
 	}
 	
 	//*****************************************************************************************

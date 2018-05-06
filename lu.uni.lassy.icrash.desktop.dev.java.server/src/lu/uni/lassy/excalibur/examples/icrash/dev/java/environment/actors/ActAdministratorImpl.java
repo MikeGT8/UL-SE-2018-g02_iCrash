@@ -19,9 +19,16 @@ import java.rmi.registry.Registry;
 import java.util.Iterator;
 
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCity;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtDescription;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPIID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtRequestID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCategory;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
@@ -162,4 +169,77 @@ public class ActAdministratorImpl extends ActAuthenticatedImpl implements
 		return new PtBoolean(true);
 	}
 
+	@Override
+	public PtBoolean oeAddPI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation,
+			DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException, NotBoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean oeUpdatePI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation,
+			DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException, NotBoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean oeDeletePI(DtPIID aPIID) throws RemoteException, NotBoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean oeGetAllRequestsFromCoordinator() throws RemoteException, NotBoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean oeTreatRequest(DtRequestID aRequestID) throws RemoteException, NotBoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean oeSolveRequest(DtRequestID aRequestID) throws RemoteException, NotBoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean ieRequestList() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean ieRequestBeingTreated() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean ieRequestSolved() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean iePIAdded() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean iePIUpToDate() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PtBoolean iePIDeleted() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

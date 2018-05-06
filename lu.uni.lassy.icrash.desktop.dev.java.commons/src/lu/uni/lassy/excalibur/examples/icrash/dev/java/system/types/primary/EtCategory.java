@@ -9,7 +9,6 @@ public enum EtCategory implements JIntIs {
 	market,
 	hobby,
 	petrolstation,
-	building,
 	university,
 	school;
 	
@@ -19,7 +18,6 @@ public enum EtCategory implements JIntIs {
 				this.name() == EtCategory.market.name() ||
 				this.name() == EtCategory.hobby.name() ||
 				this.name() == EtCategory.petrolstation.name() ||
-				this.name() == EtCategory.building.name() ||
 				this.name() == EtCategory.university.name() ||
 				this.name() == EtCategory.school.name());
 	}

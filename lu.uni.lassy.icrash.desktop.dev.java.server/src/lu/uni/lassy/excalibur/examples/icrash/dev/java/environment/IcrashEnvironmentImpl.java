@@ -22,6 +22,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCom
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActMsrCreator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActMsrCreatorImpl;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPerson;
 
 /**
  * The Class IcrashEnvironmentImpl.
@@ -43,6 +44,9 @@ public class IcrashEnvironmentImpl extends UnicastRemoteObject implements Icrash
 	
 	/** The comunication company stored in the environment. */
 	private Hashtable<String, ActComCompany> comCompanies = new Hashtable<String, ActComCompany>();
+	
+	/** The person stored in the environment. */
+	private Hashtable<String, ActPerson> persons = new Hashtable<String, ActPerson>();
 	
 	/** The coordinators stored in the environment. 
 	 * Key = ActCoordinator's login's name*/
@@ -168,4 +172,14 @@ public class IcrashEnvironmentImpl extends UnicastRemoteObject implements Icrash
 		return comCompanies;
 	}
 	
+	/* PI variant */
+	
+	public ActPerson getActPerson(String keyName){
+		
+		return persons.get(keyName);
+	}
+	
+	public Hashtable<String, ActPerson> getActPersons(){
+		return persons;
+	}
 }

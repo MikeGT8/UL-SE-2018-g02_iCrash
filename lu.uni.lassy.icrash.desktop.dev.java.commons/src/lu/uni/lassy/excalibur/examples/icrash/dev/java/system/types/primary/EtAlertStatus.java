@@ -18,7 +18,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 /**
  * The Enum EtAlertStatus which holds the different alert statuses.
  */
-public enum EtAlertStatus  implements JIntIs{
+public enum EtAlertStatus implements JIntIs{
 	
 	/**  The alert is currently pending and has not been validated. */
 	pending, 

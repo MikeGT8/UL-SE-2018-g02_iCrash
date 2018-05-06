@@ -802,7 +802,5 @@ public class DbAlerts extends DbAbstract {
 		} catch (Exception e) {
 			logException(e);
 		}
-
 	}
-
 }

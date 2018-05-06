@@ -12,6 +12,7 @@
  ******************************************************************************/
 package lu.uni.lassy.excalibur.examples.icrash.dev.java.system;
 
+import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -30,14 +31,20 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHu
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCaptcha;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCity;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtDescription;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPIID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtRequestID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCategory;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
@@ -378,6 +385,186 @@ public interface IcrashSystem extends Remote {
 	 */
 	public PtBoolean oeSetClock(DtDateAndTime aCurrentClock) throws RemoteException;
 
+	/* PI variant */
+	
+	/* ADMINISTRATOR */
+	
+	/**
+	 * Add a PI to the system, using the parameters passed.
+	 *
+	 * @param aPIID The ID to use when creating the PI
+	 * @param aName The PI name to use when creating the PI
+	 * @param aCity The city to use when creating the PI
+	 * @param aGPSLocation The gps location to use when creating the PI
+	 * @param aDescription The description to use when creating the PI
+	 * @param aCategory The category to use when creating the PI
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeAddPI(DtPIID aPIID, DtName aPIName, 
+			DtCity aPICity, DtGPSLocation aGPSLocation, 
+			DtDescription aPIDescription, EtCategory aPICategory) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Update a PI to the system, using the parameters passed.
+	 *
+	 * @param aPIID The ID to use when updating the PI
+	 * @param aName The PI name to use when updating the PI
+	 * @param aCity The city to use when updating the PI
+	 * @param aGPSLocation The gps location to use when updating the PI
+	 * @param aDescription The description to use when updating the PI
+	 * @param aCategory The category to use when updating the PI
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeUpdatePI(DtPIID aPIID, DtName aPIName, 
+			DtCity aPICity, DtGPSLocation aGPSLocation, 
+			DtDescription aPIDescription, EtCategory aPICategory) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Delete a PI to the system, using the parameters passed.
+	 *
+	 * @param aPIID The ID to use when looking for the PI to delete
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeDeletePI(DtPIID aPIID) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Get all pending requests from the system.
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeGetAllRequestsFromCoordinator() 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Treat a specific request from the system.
+	 *
+	 * @param aRequestID The ID to use when looking for the Request to treat
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeTreatRequest(DtRequestID aRequestID) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Solve a specific request from the system.
+	 *
+	 * @param aRequestID The ID to use when looking for the Request to solve
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeSolveRequest(DtRequestID aRequestID) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Get a list of requests from the system.
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	/* COORDINATOR */
+	
+	public PtBoolean oeGetAllRequests() 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Check if a specific PI exists in the system.
+	 *
+	 * @param aRequestID The ID to use when looking for the request to check
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeCheckAvailability(DtRequestID aRequestID) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Deliver a request to next actor in the system.
+	 *
+	 * @param aRequestID The ID to use when looking for the request to deliver
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeDeliverRequest(DtRequestID aRequestID) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Search a PI from the system, using the parameters passed.
+	 *
+	 * @param aName The PI name to use when searching the PI
+	 * @param aCategory The category to use when searching the PI
+	 * @param aCity The city to use when searching the PI
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	/* PERSON */
+	
+	public PtBoolean oeSearchPI(DtName aPIName, EtCategory aPICategory, DtCity aPICity) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Send new request of a PI to the system, using the parameters passed.
+	 *
+	 * @param aName The PI name to use when requesting the PI
+	 * @param aCategory The category to use when requesting the PI
+	 * @param aCity The city to use when requesting the PI
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeSendNewRequest(DtName aPIName, EtCategory aPICategory, DtCity aPICity) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Get the gps location of a PI from the system, using the parameters passed.
+	 *
+	 * @param aPIID The ID to use when getting the gps location
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeGetGPSLocation(DtPIID aPIID) 
+			throws RemoteException, NotBoundException;
+
+	/**
+	 * Get the description of a PI from the system, using the parameters passed.
+	 *
+	 * @param aPIID The ID to use when getting the description
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeGetPIDescription(DtPIID aPIID) 
+			throws RemoteException, NotBoundException;
+	
 	//************************************ AUTHENTICATION VARIANT ***************************************************
 	/**
 	 * Processes a login with captcha for the username and password specified.
