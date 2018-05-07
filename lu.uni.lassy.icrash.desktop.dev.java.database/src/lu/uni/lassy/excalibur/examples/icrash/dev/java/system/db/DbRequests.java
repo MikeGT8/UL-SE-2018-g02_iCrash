@@ -1,43 +1,11 @@
 package lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Hashtable;
+import java.util.*;
 
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRequest;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCity;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtIgnored;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLatitude;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLongitude;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtRequestID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCategory;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtRequestStatus;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDateAndTime;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtReal;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.*;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.*;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.ICrashUtils;
 
 /**

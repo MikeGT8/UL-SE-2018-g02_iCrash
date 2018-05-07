@@ -7,21 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Hashtable;
 
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPI;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRequest;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCity;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtDescription;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtIgnored;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLatitude;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLongitude;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPIID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtRequestID;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCategory;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtRequestStatus;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtReal;
-import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.*;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.*;
 
 /**
  * The Class DbPIs for updating and retrieving information from the table PIs in the database.
