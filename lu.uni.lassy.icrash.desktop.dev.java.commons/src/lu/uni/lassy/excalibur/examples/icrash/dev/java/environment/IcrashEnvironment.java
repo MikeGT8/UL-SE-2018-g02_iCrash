@@ -21,6 +21,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAut
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompany;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActMsrCreator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPerson;
 
 /**
  * The Interface IcrashEnvironment, which makes the methods public for the RMI access.
@@ -139,4 +140,23 @@ public interface IcrashEnvironment  extends Remote {
 	 * @throws RemoteException the remote exception
 	 */
 	public ActAuthenticated getActAuthenticated(String keyName) throws RemoteException;
+	
+	/**
+	 * Gets the person actor from the system with the name specified.
+	 *
+	 * @param keyName Name of the actor to retrieve
+	 * @return A person actor, if found, otherwise a null
+	 * @throws RemoteException the remote exception
+	 */
+	
+	public ActPerson getActPerson(String keyName) throws RemoteException;
+	
+	/**
+	 * Gets the entire hashtable of actor person in the system.
+	 *
+	 * @return The hashtable of person
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	
+	public Hashtable<String, ActPerson> getActPersons() throws RemoteException;
 }
