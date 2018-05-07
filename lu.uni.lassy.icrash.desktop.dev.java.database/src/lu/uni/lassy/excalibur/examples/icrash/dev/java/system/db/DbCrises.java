@@ -350,8 +350,15 @@ public class DbCrises extends DbAbstract {
 					//coordinator's pwd
 					DtPassword aPwd = new DtPassword(new PtString(
 							res.getString("pwd")));
+					//coordinator's accessRights
+					EtCrisisType aAccessRights = EtCrisisType.small;
+					switch(res.getString("accessRights")) {
+					case "medium": aAccessRights = EtCrisisType.small; break;
+					case "high": aAccessRights = EtCrisisType.small; break;
+					default: break;
+					}
 
-					aCtCoordinator.init(aId1, aLogin, aPwd);
+					aCtCoordinator.init(aId1, aLogin, aPwd, aAccessRights);
 
 					//add instances to the hash
 					assCtCrisisCtCoordinator.put(aCtCrisis, aCtCoordinator);
