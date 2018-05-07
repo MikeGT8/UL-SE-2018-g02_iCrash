@@ -19,6 +19,7 @@ import java.rmi.RemoteException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 
 /**
@@ -32,11 +33,12 @@ public interface ActProxyAdministrator extends ActProxyAuthenticated {
 	 * @param aDtCoordinatorID The ID to use when creating the coordinator
 	 * @param aDtLogin The username to use when creating the coordinator
 	 * @param aDtPassword The password to use when creating the coordinator
+	 * @param aAccessRights The access rights to use when creating the coordinator
 	 * @return The success of the method
 	 * @throws RemoteException Thrown if the server is offline
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
-	public PtBoolean oeAddCoordinator(DtCoordinatorID aDtCoordinatorID, DtLogin aDtLogin,DtPassword aDtPassword) throws RemoteException, NotBoundException;
+	public PtBoolean oeAddCoordinator(DtCoordinatorID aDtCoordinatorID, DtLogin aDtLogin,DtPassword aDtPassword, EtCrisisType aAccessRights) throws RemoteException, NotBoundException;
 	
 	/**
 	 * Delete a coordinator to the system, using the parameters passed.
