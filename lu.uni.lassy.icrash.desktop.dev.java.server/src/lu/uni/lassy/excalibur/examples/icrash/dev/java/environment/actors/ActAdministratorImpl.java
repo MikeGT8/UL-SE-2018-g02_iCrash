@@ -168,6 +168,8 @@ public class ActAdministratorImpl extends ActAuthenticatedImpl implements
 		}
 		return new PtBoolean(true);
 	}
+	
+	/* PI variant */
 
 	@Override
 	public PtBoolean oeAddPI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation,

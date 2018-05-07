@@ -75,6 +75,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDateAndTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtInteger;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtSecond;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtInteger;
@@ -1527,7 +1528,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			//PreP2 to make sure that the administrator is logged in.
 			isAdminLoggedIn();
 			
-			CtRequest ctRequestAvailable = getCtRequest(aPIID);
+			String aRequestID = aPIID.toString();
+			
+			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
 			CtPI ctPIAvailable = getCtPI(aPIID);
 			
 			//PreF1 and PreF2 combined to check if the point of interest is not already in the system, but the request of the PI is.
