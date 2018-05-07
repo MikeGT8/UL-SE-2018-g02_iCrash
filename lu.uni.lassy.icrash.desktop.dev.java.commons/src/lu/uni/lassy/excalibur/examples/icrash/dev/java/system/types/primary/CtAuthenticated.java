@@ -13,6 +13,8 @@
 package lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary;
 
 import java.io.Serializable;
+
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtInteger;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 
 /**
@@ -32,6 +34,15 @@ public abstract class CtAuthenticated implements Serializable {
 	/**  A check to see if the current Ct class is considered logged into the system. */
 	public PtBoolean vpIsLogged;	
 	
+	/** The number of tries the user made to login in the last 3 minutes, resets when successfully logged in */
+	public DtInteger tries;
+	
+	/** The last time the user tried to login, also resets when the user successfully logged in */
+	public DtInteger lastAccess;
+	
+	/** Determines if the user who is trying to log in, needs to also solve a captcha or not */
+	public PtBoolean capReq;
+	
 	/**
 	 * Initialisation of the user.
 	 *
@@ -43,6 +54,11 @@ public abstract class CtAuthenticated implements Serializable {
 			login = aLogin;
 			pwd = aPwd;
 			vpIsLogged = new PtBoolean(false);
+			
+			tries = new DtInteger(0);
+			lastAccess = new DtInteger(-181);
+			capReq = new PtBoolean(false);
+			
 			return new PtBoolean(true); 
 	}
 	

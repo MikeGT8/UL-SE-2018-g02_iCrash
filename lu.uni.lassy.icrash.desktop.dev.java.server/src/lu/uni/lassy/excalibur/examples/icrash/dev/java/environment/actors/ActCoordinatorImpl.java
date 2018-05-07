@@ -365,4 +365,10 @@ public class ActCoordinatorImpl extends ActAuthenticatedImpl implements ActCoord
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public PtBoolean oeResetPassword(DtLogin aDtLogin) throws RemoteException, NotBoundException {
+		// Authentication variant, implement this if time left.
+		return new PtBoolean(false);
+	}
 }

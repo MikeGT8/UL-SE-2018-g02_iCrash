@@ -244,4 +244,11 @@ public class ActAdministratorImpl extends ActAuthenticatedImpl implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public PtBoolean oeResetPassword(DtLogin aDtLogin) throws RemoteException, NotBoundException {
+		// Reset PW of Administrator wont work
+		System.out.println("Cannot reset password for the administrator. Please access database and change it yourself");
+		return new PtBoolean(false);
+	}
 }

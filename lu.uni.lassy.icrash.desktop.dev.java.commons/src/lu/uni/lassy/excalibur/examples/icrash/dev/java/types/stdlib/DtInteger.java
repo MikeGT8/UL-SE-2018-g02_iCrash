@@ -33,4 +33,9 @@ public class DtInteger implements Serializable {
 		public DtInteger(PtInteger v){
 			value = v;
 		}
+		
+		// Modification by DSL Mike, now you can just give the class an integer and this class handles the rest (regarding the ptInteger)
+		public DtInteger(int v) {
+			value = new PtInteger(v);
+		}
 }

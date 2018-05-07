@@ -17,6 +17,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIsActor;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCaptcha;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -45,6 +46,28 @@ public interface ActAuthenticated extends java.rmi.Remote, Serializable, JIntIsA
 	 * @throws NotBoundException Thrown if the server has not been bound in the RMI settings
 	 */
 	public PtBoolean oeLogin(DtLogin aDtLogin,DtPassword aDtPassword) throws RemoteException, NotBoundException;
+	
+	/**
+	 * Allows a user to logon to the system, using the login with captcha.
+	 *
+	 * @param aDtLogin The username to logon with
+	 * @param aDtPassword The password to logon with
+	 * @param aDtCaptcha The captcha to solve
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server isn't online
+	 * @throws NotBoundException Thrown if the server has not been bound in the RMI settings
+	 */
+	public PtBoolean oeLoginWithCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha) throws RemoteException, NotBoundException;
+	
+	/**
+	 * Allows a user to reset his password to a random generated password.
+	 *
+	 * @param aDtLogin The username to reset the password
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server isn't online
+	 * @throws NotBoundException Thrown if the server has not been bound in the RMI settings
+	 */
+	public PtBoolean oeResetPassword(DtLogin aDtLogin) throws RemoteException, NotBoundException;
 	
 	/**
 	 * Allows a user to logoff to the system.
