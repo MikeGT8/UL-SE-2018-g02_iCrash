@@ -1893,7 +1893,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	// actAuthenticated: resetting password
 	@Override
 	public PtBoolean oeResetPassword(DtLogin aDtLogin) throws RemoteException {
-		System.out.println("oeResetPassord: Not yet implemented.");
+		System.out.println("oeResetPassword: Not yet implemented.");
 		/*
 		try {
 			String login = aDtLogin.value.getValue(); // Is This the same as: aDtLogin.toString(); ???
@@ -1904,7 +1904,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					System.out.println("Please enter your new pw.");
 					
 					String newPw = "";
-					std::cin << newPw; // This is C, but it only to get the idea down anyway, since my sql("SELECT...") also will never work :(
+					std::cin << newPw; // This is C, but its only to get the idea down anyway, since my sql("SELECT...") also will never work :(
 					
 					return sql("UPDATE coordinators(password) VALUES('"+newPw+"') WHERE userName = '"+loginDB+"'");
 				} else {
