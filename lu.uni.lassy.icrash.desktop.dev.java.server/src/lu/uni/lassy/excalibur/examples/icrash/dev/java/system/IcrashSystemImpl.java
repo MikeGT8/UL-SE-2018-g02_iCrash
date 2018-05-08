@@ -1195,8 +1195,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeLogin(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword)
 	 */
 	//actAuthenticated Actor
-	public PtBoolean oeLogin(DtLogin aDtLogin, DtPassword aDtPassword)
-			throws RemoteException {		
+	public PtBoolean oeLogin(DtLogin aDtLogin, DtPassword aDtPassword) throws RemoteException {		
 		try {
 			log.debug("The current requesting authenticating actor is " + currentRequestingAuthenticatedActor.getLogin().value.getValue());
 			//PreP1
@@ -1206,12 +1205,14 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			 *this is done by checking if there exists an instance with
 			 *such credential in the ctAuthenticatedInstances data structure
 			 */
-			CtAuthenticated ctAuthenticatedInstance = cmpSystemCtAuthenticated
-					.get(aDtLogin.value.getValue());
+			CtAuthenticated ctAuthenticatedInstance = cmpSystemCtAuthenticated.get(aDtLogin.value.getValue());
 			if (ctAuthenticatedInstance != null){
 				//PreP2
 				if(ctAuthenticatedInstance.vpIsLogged.getValue())
 					throw new Exception("User " + aDtLogin.value.getValue() + " is already logged in");
+				//PreP3
+				if(ctAuthenticatedInstance.capReq.getValue())
+					throw new Exception("User " + aDtLogin.value.getValue() + " also needs to solve captcha");
 				PtBoolean pwdCheck = ctAuthenticatedInstance.pwd.eq(aDtPassword);
 				if(pwdCheck.getValue()) {
 					//PostP1
@@ -1224,10 +1225,20 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					log.debug("The logging in actor is " + authActorCheck.getLogin().value.getValue());
 					if (authActorCheck != null && authActorCheck.getLogin().value.getValue().equals(currentRequestingAuthenticatedActor.getLogin().value.getValue())){
 						ctAuthenticatedInstance.vpIsLogged = new PtBoolean(true);
+						ctAuthenticatedInstance.tries.value = new PtInteger(0);
+						ctAuthenticatedInstance.lastAccess.value = new PtInteger(-181);
 						//PostF1
 						PtString aMessage = new PtString("You are logged ! Welcome ...");
 						currentRequestingAuthenticatedActor.ieMessage(aMessage);
 						return new PtBoolean(true);
+					} else if(authActorCheck != null) {
+						ctAuthenticatedInstance.lastAccess.value = new PtInteger(((int)(System.currentTimeMillis()/1000)) - ctAuthenticatedInstance.lastAccess.value.getValue());
+						if(ctAuthenticatedInstance.lastAccess.value.getValue() <= 180) {
+							ctAuthenticatedInstance.tries.value = new PtInteger(ctAuthenticatedInstance.tries.value.getValue() + 1);
+							if(ctAuthenticatedInstance.lastAccess.value.getValue() > 2)
+								ctAuthenticatedInstance.capReq = new PtBoolean(true);
+						}else
+							ctAuthenticatedInstance.lastAccess.value = new PtInteger(1);
 					}
 				}
 			}
@@ -1769,8 +1780,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	//*****************************************************************************************
 	// actAuthenticated: loggin in with captcha
 	@Override
-	public PtBoolean oeLoginWitchCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha)
-			throws RemoteException {
+	public PtBoolean oeLoginWitchCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha) throws RemoteException {
 		System.out.println("oeLoginWitchCaptcha: Not yet implemented.");
 		/*
 		try {
