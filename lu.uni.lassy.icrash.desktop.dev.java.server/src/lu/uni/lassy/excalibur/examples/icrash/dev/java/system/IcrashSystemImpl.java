@@ -229,6 +229,29 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	}
 	
 	/**
+	 * Checks weather a given Coordinator's access rights are equal to or higher than the given crisis type.
+	 * 
+	 * @param aActCoordinator The Coordinator to be checked
+	 * @param aEtCrisisType The crisis to compare the coordinator to
+	 * @return true if the Coordinator's access rights are equal to or higher than the crisis type , false otherwise
+	 */
+	private boolean checkAccessRights(ActCoordinator aActCoordinator, EtCrisisType aEtCrisisType) {
+		boolean check = false;
+		CtAuthenticated ctAuth = getCtAuthenticated(aActCoordinator);
+		
+		if(ctAuth instanceof CtCoordinator) {
+			CtCoordinator ctCoord = (CtCoordinator) getCtCoordinator(((CtCoordinator) ctAuth).id);
+			switch(aEtCrisisType ) {
+			case huge: check = (ctCoord.accessRights == EtCrisisType.huge); break;
+			case medium: check = (ctCoord.accessRights == EtCrisisType.huge && ctCoord.accessRights == EtCrisisType.medium); break;
+			case small: check = (ctCoord.accessRights == EtCrisisType.huge && ctCoord.accessRights == EtCrisisType.medium && ctCoord.accessRights == EtCrisisType.small); break;
+			default: break;
+			}
+		}
+		return check;
+	}
+	
+	/**
 	 * A standard check to see if the system is started, if not then an exception is thrown to be caught by the checking method.
 	 *
 	 * @throws Exception The exception with a simple text description of the reason for failure
@@ -916,16 +939,17 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					.getValue());
 			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
 				ActCoordinator theActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
-				//Check if the current requesting coordinator's access rights match the crises type
-				//if it does then the coordinator can continue if not he is not allowed to continue
-				//PostF1
-				theCrisis.type = aEtCrisisType;
-				DbCrises.updateCrisis(theCrisis);
-				PtString aMessage = new PtString("The crisis with ID '"
-						+ aDtCrisisID.value.getValue() + "' is now of type '"
-						+ aEtCrisisType.toString() + "' !");
-				theActCoordinator.ieMessage(aMessage);
-				return new PtBoolean(true);
+				//PreP3
+				if (checkAccessRights(theActCoordinator, aEtCrisisType)) {
+					//PostF1
+					theCrisis.type = aEtCrisisType;
+					DbCrises.updateCrisis(theCrisis);
+					PtString aMessage = new PtString("The crisis with ID '"
+							+ aDtCrisisID.value.getValue() + "' is now of type '"
+							+ aEtCrisisType.toString() + "' !");
+					theActCoordinator.ieMessage(aMessage);
+					return new PtBoolean(true);
+				}
 			}
 		}
 		catch (Exception e){
@@ -1081,7 +1105,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
 	 */
-	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus, EtCrisisType crisisType) {
+	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus) {
 		try{
 			//PreP1
 			isSystemStarted();
@@ -1092,7 +1116,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				//go through all existing crises
 				for (String crisisKey : cmpSystemCtCrisis.keySet()) {
 					CtCrisis crisis = cmpSystemCtCrisis.get(crisisKey);
-					if (crisis.status.toString().equals(aEtCrisisStatus.toString()) && crisis.type.toString().equals(crisisType))
+					if (crisis.status.toString().equals(aEtCrisisStatus.toString()))
 						//PostF1
 						crisis.isSentToCoordinator(aActCoordinator);
 				}
@@ -1387,15 +1411,33 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		}
 	}
 	
-	public PtBoolean oeUpdateCoordinatorAccessRights(DtCoordinatorID aDtCoordinatorID, EtCrisisType aAccessRights) {
-		
-		/*
-		 * This method allows the administrator to update the access rights of a coordinator to make sure 
-		 * the experience level of a coordinator always matches his access rights. This means that after handling
-		 * a certain number of crisis a coordinator can get higher access rights. Returns true if executed successfully,
-		 * false otherwise.
-		 */
-		return new PtBoolean(false);
+	public PtBoolean oeUpdateCoordinatorAccessRights(DtCoordinatorID aDtCoordinatorID, EtCrisisType aAccessRights) throws java.rmi.RemoteException{
+		try {
+			//PreP1
+			isSystemStarted();
+			//PreP2
+			isAdminLoggedIn();
+			CtAuthenticated ctAuth = getCtCoordinator(aDtCoordinatorID);
+			if (ctAuth != null && ctAuth instanceof CtCoordinator){
+				CtCoordinator aCtCoordinator = (CtCoordinator)ctAuth;
+				CtCoordinator oldCoordinator = new CtCoordinator();
+				oldCoordinator.init(aCtCoordinator.id, aCtCoordinator.login, aCtCoordinator.pwd, aCtCoordinator.accessRights);
+				aCtCoordinator.updateAccessRights(aAccessRights);
+				if (DbCoordinators.updateCoordinator(aCtCoordinator).getValue()){
+					cmpSystemCtAuthenticated.remove(oldCoordinator.login.value.getValue());
+					cmpSystemCtAuthenticated.put(aCtCoordinator.login.value.getValue(), aCtCoordinator);
+					ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+					admin.ieCoordinatorUpdated();
+					return new PtBoolean(true);
+				}
+				else
+					aCtCoordinator.updateAccessRights(oldCoordinator.accessRights);
+			}
+			return new PtBoolean(false);
+		} catch (Exception e) {
+			log.error("Exception in oeUpdateCoordinatorAccessRights..." + e);
+			return new PtBoolean(false);
+		}
 	}
 	
 	/* (non-Javadoc)
