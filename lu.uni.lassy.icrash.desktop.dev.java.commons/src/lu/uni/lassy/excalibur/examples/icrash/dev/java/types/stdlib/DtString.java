@@ -41,6 +41,7 @@ public class DtString implements Serializable {
 		 * @return If they are equal, returns true
 		 */
 		public PtBoolean eq(DtString s){
+			// return new PtBoolean(s.value.getValue().equals(this.value.getValue()));
 			boolean res = s.value.getValue().equals(this.value.getValue());
 		
 			if(res)

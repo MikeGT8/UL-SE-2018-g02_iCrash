@@ -230,6 +230,29 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	}
 	
 	/**
+	 * Checks weather a given Coordinator's access rights are equal to or higher than the given crisis type.
+	 * 
+	 * @param aActCoordinator The Coordinator to be checked
+	 * @param aEtCrisisType The crisis to compare the coordinator to
+	 * @return true if the Coordinator's access rights are equal to or higher than the crisis type , false otherwise
+	 */
+	private boolean checkAccessRights(ActCoordinator aActCoordinator, EtCrisisType aEtCrisisType) {
+		boolean check = false;
+		CtAuthenticated ctAuth = getCtAuthenticated(aActCoordinator);
+		
+		if(ctAuth instanceof CtCoordinator) {
+			CtCoordinator ctCoord = (CtCoordinator) getCtCoordinator(((CtCoordinator) ctAuth).id);
+			switch(aEtCrisisType ) {
+			case huge: check = (ctCoord.accessRights == EtCrisisType.huge); break;
+			case medium: check = (ctCoord.accessRights == EtCrisisType.huge && ctCoord.accessRights == EtCrisisType.medium); break;
+			case small: check = (ctCoord.accessRights == EtCrisisType.huge && ctCoord.accessRights == EtCrisisType.medium && ctCoord.accessRights == EtCrisisType.small); break;
+			default: break;
+			}
+		}
+		return check;
+	}
+	
+	/**
 	 * A standard check to see if the system is started, if not then an exception is thrown to be caught by the checking method.
 	 *
 	 * @throws Exception The exception with a simple text description of the reason for failure
@@ -917,16 +940,17 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					.getValue());
 			if (currentRequestingAuthenticatedActor instanceof ActCoordinator) {
 				ActCoordinator theActCoordinator = (ActCoordinator) currentRequestingAuthenticatedActor;
-				//Check if the current requesting coordinator's access rights match the crises type
-				//if it does then the coordinator can continue if not he is not allowed to continue
-				//PostF1
-				theCrisis.type = aEtCrisisType;
-				DbCrises.updateCrisis(theCrisis);
-				PtString aMessage = new PtString("The crisis with ID '"
-						+ aDtCrisisID.value.getValue() + "' is now of type '"
-						+ aEtCrisisType.toString() + "' !");
-				theActCoordinator.ieMessage(aMessage);
-				return new PtBoolean(true);
+				//PreP3
+				if (checkAccessRights(theActCoordinator, aEtCrisisType)) {
+					//PostF1
+					theCrisis.type = aEtCrisisType;
+					DbCrises.updateCrisis(theCrisis);
+					PtString aMessage = new PtString("The crisis with ID '"
+							+ aDtCrisisID.value.getValue() + "' is now of type '"
+							+ aEtCrisisType.toString() + "' !");
+					theActCoordinator.ieMessage(aMessage);
+					return new PtBoolean(true);
+				}
 			}
 		}
 		catch (Exception e){
@@ -1082,7 +1106,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeGetCrisisSet(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus)
 	 */
-	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus, EtCrisisType crisisType) {
+	public PtBoolean oeGetCrisisSet(EtCrisisStatus aEtCrisisStatus) {
 		try{
 			//PreP1
 			isSystemStarted();
@@ -1093,7 +1117,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				//go through all existing crises
 				for (String crisisKey : cmpSystemCtCrisis.keySet()) {
 					CtCrisis crisis = cmpSystemCtCrisis.get(crisisKey);
-					if (crisis.status.toString().equals(aEtCrisisStatus.toString()) && crisis.type.toString().equals(crisisType))
+					if (crisis.status.toString().equals(aEtCrisisStatus.toString()))
 						//PostF1
 						crisis.isSentToCoordinator(aActCoordinator);
 				}
@@ -1196,8 +1220,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeLogin(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword)
 	 */
 	//actAuthenticated Actor
-	public PtBoolean oeLogin(DtLogin aDtLogin, DtPassword aDtPassword)
-			throws RemoteException {		
+	public PtBoolean oeLogin(DtLogin aDtLogin, DtPassword aDtPassword) throws RemoteException {		
 		try {
 			log.debug("The current requesting authenticating actor is " + currentRequestingAuthenticatedActor.getLogin().value.getValue());
 			//PreP1
@@ -1207,12 +1230,14 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			 *this is done by checking if there exists an instance with
 			 *such credential in the ctAuthenticatedInstances data structure
 			 */
-			CtAuthenticated ctAuthenticatedInstance = cmpSystemCtAuthenticated
-					.get(aDtLogin.value.getValue());
+			CtAuthenticated ctAuthenticatedInstance = cmpSystemCtAuthenticated.get(aDtLogin.value.getValue());
 			if (ctAuthenticatedInstance != null){
 				//PreP2
 				if(ctAuthenticatedInstance.vpIsLogged.getValue())
 					throw new Exception("User " + aDtLogin.value.getValue() + " is already logged in");
+				//PreP3
+				if(ctAuthenticatedInstance.capReq.getValue())
+					throw new Exception("User " + aDtLogin.value.getValue() + " also needs to solve captcha");
 				PtBoolean pwdCheck = ctAuthenticatedInstance.pwd.eq(aDtPassword);
 				if(pwdCheck.getValue()) {
 					//PostP1
@@ -1225,10 +1250,20 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					log.debug("The logging in actor is " + authActorCheck.getLogin().value.getValue());
 					if (authActorCheck != null && authActorCheck.getLogin().value.getValue().equals(currentRequestingAuthenticatedActor.getLogin().value.getValue())){
 						ctAuthenticatedInstance.vpIsLogged = new PtBoolean(true);
+						ctAuthenticatedInstance.tries.value = new PtInteger(0);
+						ctAuthenticatedInstance.lastAccess.value = new PtInteger(-181);
 						//PostF1
 						PtString aMessage = new PtString("You are logged ! Welcome ...");
 						currentRequestingAuthenticatedActor.ieMessage(aMessage);
 						return new PtBoolean(true);
+					} else if(authActorCheck != null) {
+						ctAuthenticatedInstance.lastAccess.value = new PtInteger(((int)(System.currentTimeMillis()/1000)) - ctAuthenticatedInstance.lastAccess.value.getValue());
+						if(ctAuthenticatedInstance.lastAccess.value.getValue() <= 180) {
+							ctAuthenticatedInstance.tries.value = new PtInteger(ctAuthenticatedInstance.tries.value.getValue() + 1);
+							if(ctAuthenticatedInstance.lastAccess.value.getValue() > 2)
+								ctAuthenticatedInstance.capReq = new PtBoolean(true);
+						}else
+							ctAuthenticatedInstance.lastAccess.value = new PtInteger(1);
 					}
 				}
 			}
@@ -1388,15 +1423,33 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		}
 	}
 	
-	public PtBoolean oeUpdateCoordinatorAccessRights(DtCoordinatorID aDtCoordinatorID, EtCrisisType aAccessRights) {
-		
-		/*
-		 * This method allows the administrator to update the access rights of a coordinator to make sure 
-		 * the experience level of a coordinator always matches his access rights. This means that after handling
-		 * a certain number of crisis a coordinator can get higher access rights. Returns true if executed successfully,
-		 * false otherwise.
-		 */
-		return new PtBoolean(false);
+	public PtBoolean oeUpdateCoordinatorAccessRights(DtCoordinatorID aDtCoordinatorID, EtCrisisType aAccessRights) throws java.rmi.RemoteException{
+		try {
+			//PreP1
+			isSystemStarted();
+			//PreP2
+			isAdminLoggedIn();
+			CtAuthenticated ctAuth = getCtCoordinator(aDtCoordinatorID);
+			if (ctAuth != null && ctAuth instanceof CtCoordinator){
+				CtCoordinator aCtCoordinator = (CtCoordinator)ctAuth;
+				CtCoordinator oldCoordinator = new CtCoordinator();
+				oldCoordinator.init(aCtCoordinator.id, aCtCoordinator.login, aCtCoordinator.pwd, aCtCoordinator.accessRights);
+				aCtCoordinator.updateAccessRights(aAccessRights);
+				if (DbCoordinators.updateCoordinator(aCtCoordinator).getValue()){
+					cmpSystemCtAuthenticated.remove(oldCoordinator.login.value.getValue());
+					cmpSystemCtAuthenticated.put(aCtCoordinator.login.value.getValue(), aCtCoordinator);
+					ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+					admin.ieCoordinatorUpdated();
+					return new PtBoolean(true);
+				}
+				else
+					aCtCoordinator.updateAccessRights(oldCoordinator.accessRights);
+			}
+			return new PtBoolean(false);
+		} catch (Exception e) {
+			log.error("Exception in oeUpdateCoordinatorAccessRights..." + e);
+			return new PtBoolean(false);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -1768,42 +1821,78 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	//*****************************************************************************************
 	// actAuthenticated: loggin in with captcha
 	@Override
-	public PtBoolean oeLoginWitchCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha)
-			throws RemoteException {
-		System.out.println("oeLoginWitchCaptcha: Not yet implemented.");
-		/*
+	public PtBoolean oeLoginWitchCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha) throws RemoteException {
 		try {
-			String login = aDtLogin.value.getValue(); // Is This the same as: aDtLogin.toString(); ???
-			String loginDB = sql("SELECT userName FROM coordinators WHERE userName = '"+login+"';");
-			if(loginDB != null) {
-				String pw = aDtPassword.value.getValue();
-				String sCaptcha = aDtCaptcha.value.getValue();
-				
-				String pwDB = sql("SELECT password FROM coordinators WHERE password = '"+pw+"';");
-				
-				int tries = sql("SELECT tries FROM coordinators WHERE userName = '"+login+"';");
-				int time = sql("SELECT lastAccess FROM coordinators WHERE userName = '"+login+"';");
-				
-				if(login.equals(loginDB) && pw.equals(pwDB) AND sCaptcha.equals("2BA2")) {
-					System.out.println("Successfully logged in.");
-					
-					tries = 0;
-					time = 0;
-				} else {
-					System.out.println("Wrong username, password or captcha, please try again.");
-
-					tries++; time = (int) System.currentMillis();
+			log.debug("The current requesting authenticating actor is " + currentRequestingAuthenticatedActor.getLogin().value.getValue());
+			//PreP1
+			isSystemStarted();
+			/**
+			 * check whether the credentials corresponds to an existing user
+			 *this is done by checking if there exists an instance with
+			 *such credential in the ctAuthenticatedInstances data structure
+			 */
+			CtAuthenticated ctAuthenticatedInstance = cmpSystemCtAuthenticated.get(aDtLogin.value.getValue());
+			if (ctAuthenticatedInstance != null){
+				//PreP2
+				if(ctAuthenticatedInstance.vpIsLogged.getValue())
+					throw new Exception("User " + aDtLogin.value.getValue() + " is already logged in");
+				//PreP3
+				if(!ctAuthenticatedInstance.capReq.getValue())
+					throw new Exception("User " + aDtLogin.value.getValue() + " does not need to solve captcha");
+				PtBoolean pwdCheck = ctAuthenticatedInstance.pwd.eq(aDtPassword);
+				if(pwdCheck.getValue()) {
+					//PostP1
+					/**
+					 * Make sure that the user logging in is the current requesting user
+					 * We do this as each window is a dumb terminal and only one use can logon at each individual window
+					 * So user 1 can only logon at the window for user 1, if user 2 tries, it should fail
+					 */
+					ActAuthenticated authActorCheck = assCtAuthenticatedActAuthenticated.get(ctAuthenticatedInstance);
+					log.debug("The logging in actor is " + authActorCheck.getLogin().value.getValue());
+					if (authActorCheck != null){
+						if(aDtCaptcha.value.getValue().equals("Test")) {
+							if(authActorCheck.getLogin().value.getValue().equals(currentRequestingAuthenticatedActor.getLogin().value.getValue())) {
+								ctAuthenticatedInstance.tries.value = new PtInteger(0);
+								ctAuthenticatedInstance.lastAccess.value = new PtInteger(-181);
+								ctAuthenticatedInstance.capReq = new PtBoolean(false);
+								ctAuthenticatedInstance.vpIsLogged = new PtBoolean(true);
+								//PostF1
+								PtString aMessage = new PtString("You are logged ! Welcome ...");
+								currentRequestingAuthenticatedActor.ieMessage(aMessage);
+								return new PtBoolean(true);
+							}else { // ELSE of pw and/or login being incorrect
+								ctAuthenticatedInstance.lastAccess.value = new PtInteger(((int)(System.currentTimeMillis()/1000)) - ctAuthenticatedInstance.lastAccess.value.getValue());
+								if(ctAuthenticatedInstance.lastAccess.value.getValue() <= 180)
+									ctAuthenticatedInstance.tries.value = new PtInteger(ctAuthenticatedInstance.tries.value.getValue() + 1);
+								else
+									ctAuthenticatedInstance.lastAccess.value = new PtInteger(1);
+							}
+						}
+					}
 				}
-				sql("UPDATE coordinators(disable, tries, lastAccess) VALUES(false, '"+tries+"', '"+time+"');");
 			}
-		} catch Exception(Exception e) e.print();
-		*/
+			//PostF1
+			PtString aMessage = new PtString(
+					"Wrong identification information! Please try again ...");
+			currentRequestingAuthenticatedActor.ieMessage(aMessage);
+			Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(), RmiUtils.getInstance().getPort());
+			IcrashEnvironment env = (IcrashEnvironment) registry
+					.lookup("iCrashEnvironment");
+			//notify to all administrators that exist in the environment
+			for (String adminKey : env.getAdministrators().keySet()) {
+				ActAdministrator admin = env.getActAdministrator(adminKey);
+				aMessage = new PtString("Intrusion tentative !");
+				admin.ieMessage(aMessage);
+			}
+		} catch (Exception ex) {
+			log.error("Exception in oeLoginWithCaptcha..." + ex);
+		}
 		return new PtBoolean(false);
 	}
 	// actAuthenticated: resetting password
 	@Override
 	public PtBoolean oeResetPassword(DtLogin aDtLogin) throws RemoteException {
-		System.out.println("oeResetPassord: Not yet implemented.");
+		System.out.println("oeResetPassword: Not yet implemented.");
 		/*
 		try {
 			String login = aDtLogin.value.getValue(); // Is This the same as: aDtLogin.toString(); ???
@@ -1814,7 +1903,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					System.out.println("Please enter your new pw.");
 					
 					String newPw = "";
-					std::cin << newPw; // This is C, but it only to get the idea down anyway, since my sql("SELECT...") also will never work :(
+					std::cin << newPw; // This is C, but its only to get the idea down anyway, since my sql("SELECT...") also will never work :(
 					
 					return sql("UPDATE coordinators(password) VALUES('"+newPw+"') WHERE userName = '"+loginDB+"'");
 				} else {

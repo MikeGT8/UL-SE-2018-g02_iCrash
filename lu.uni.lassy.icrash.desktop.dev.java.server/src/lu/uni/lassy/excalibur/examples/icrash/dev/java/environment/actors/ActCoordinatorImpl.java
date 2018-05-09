@@ -369,7 +369,23 @@ public class ActCoordinatorImpl extends ActAuthenticatedImpl implements ActCoord
 
 	@Override
 	public PtBoolean oeResetPassword(DtLogin aDtLogin) throws RemoteException, NotBoundException {
-		// Authentication variant, implement this if time left.
-		return new PtBoolean(false);
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry
+				.lookup("iCrashServer");
+
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActAuthenticated.oeResetPassword sent to system");
+		PtBoolean res = iCrashSys_Server.oeResetPassword(aDtLogin);
+
+		if (res.getValue() == true)
+			log.info("operation oeResetPassword successfully executed by the system");
+
+		return res;
 	}
 }
