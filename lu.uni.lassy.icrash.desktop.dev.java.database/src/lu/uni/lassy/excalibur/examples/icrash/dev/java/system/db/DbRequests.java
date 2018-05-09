@@ -123,7 +123,7 @@ public class DbRequests extends DbAbstract {
 
 					ctRequest = new CtRequest();
 					//request's id
-					DtRequestID aId = new DtRequestID(new PtString(res.getString("id")));
+					DtID aId = new DtID(new PtString(res.getString("id")));
 
 					//request's name  
 					DtName aName = new DtName(new PtString(
@@ -210,7 +210,7 @@ public class DbRequests extends DbAbstract {
 
 					ctRequest = new CtRequest();
 					//request's id
-					DtRequestID aId = new DtRequestID(new PtString(res.getString("id")));
+					DtID aId = new DtID(new PtString(res.getString("id")));
 
 					//request's name  
 					DtName aName = new DtName(new PtString(

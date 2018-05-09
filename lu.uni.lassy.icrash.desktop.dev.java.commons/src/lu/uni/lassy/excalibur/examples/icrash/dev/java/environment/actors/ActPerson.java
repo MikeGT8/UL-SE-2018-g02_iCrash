@@ -4,6 +4,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCity;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPIID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCategory;
@@ -50,7 +51,7 @@ public interface ActPerson extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
 	
-	public PtBoolean oeGetGPSLocation(DtPIID aPIID) 
+	public PtBoolean oeGetGPSLocation(DtID aPIID) 
 			throws RemoteException, NotBoundException;
 
 	/**
@@ -62,7 +63,7 @@ public interface ActPerson extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
 	
-	public PtBoolean oeGetPIDescription(DtPIID aPIID) 
+	public PtBoolean oeGetPIDescription(DtID aPIID) 
 			throws RemoteException, NotBoundException;
 	
 	/**

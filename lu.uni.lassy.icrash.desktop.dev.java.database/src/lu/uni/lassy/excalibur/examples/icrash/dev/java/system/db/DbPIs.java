@@ -173,7 +173,7 @@ public class DbPIs extends DbAbstract {
 
 					ctPI = new CtPI();
 					//PI's id
-					DtPIID aId = new DtPIID(new PtString(res.getString("id")));
+					DtID aId = new DtID(new PtString(res.getString("id")));
 
 					//PI's name  
 					DtName aName = new DtName(new PtString(
@@ -258,7 +258,7 @@ public class DbPIs extends DbAbstract {
 
 					ctPI = new CtPI();
 					//PI's id
-					DtPIID aId = new DtPIID(new PtString(res.getString("id")));
+					DtID aId = new DtID(new PtString(res.getString("id")));
 
 					//PI's name  
 					DtName aName = new DtName(new PtString(

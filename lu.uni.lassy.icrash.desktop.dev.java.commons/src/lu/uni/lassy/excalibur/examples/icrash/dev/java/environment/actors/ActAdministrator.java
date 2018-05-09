@@ -19,6 +19,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCi
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtDescription;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPIID;
@@ -99,7 +100,7 @@ public interface ActAdministrator extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
 	
-	public PtBoolean oeAddPI(DtPIID aPIID, DtName aPIName, 
+	public PtBoolean oeAddPI(DtID aPIID, DtName aPIName, 
 			DtCity aPICity, DtGPSLocation aGPSLocation, 
 			DtDescription aPIDescription, EtCategory aPICategory) 
 			throws RemoteException, NotBoundException;
@@ -118,7 +119,7 @@ public interface ActAdministrator extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
 	
-	public PtBoolean oeUpdatePI(DtPIID aPIID, DtName aPIName, 
+	public PtBoolean oeUpdatePI(DtID aPIID, DtName aPIName, 
 			DtCity aPICity, DtGPSLocation aGPSLocation, 
 			DtDescription aPIDescription, EtCategory aPICategory) 
 			throws RemoteException, NotBoundException;
@@ -132,7 +133,7 @@ public interface ActAdministrator extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
 	
-	public PtBoolean oeDeletePI(DtPIID aPIID) 
+	public PtBoolean oeDeletePI(DtID aPIID) 
 			throws RemoteException, NotBoundException;
 	
 	/**
@@ -155,7 +156,7 @@ public interface ActAdministrator extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
 	
-	public PtBoolean oeTreatRequest(DtRequestID aRequestID) 
+	public PtBoolean oeTreatRequest(DtID aRequestID) 
 			throws RemoteException, NotBoundException;
 	
 	/**
@@ -167,7 +168,7 @@ public interface ActAdministrator extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
 	
-	public PtBoolean oeSolveRequest(DtRequestID aRequestID) 
+	public PtBoolean oeSolveRequest(DtID aRequestID) 
 			throws RemoteException, NotBoundException;
 	
 	/**

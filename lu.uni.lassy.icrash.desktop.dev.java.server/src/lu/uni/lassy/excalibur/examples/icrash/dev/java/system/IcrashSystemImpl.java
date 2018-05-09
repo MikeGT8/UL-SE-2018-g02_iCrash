@@ -59,6 +59,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCo
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtDescription;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPIID;
@@ -493,7 +494,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return result;
 	}
 	
-	public CtRequest getCtRequest(DtRequestID aRequestID) {
+	public CtRequest getCtRequest(DtID aRequestID) {
 
 		for (CtRequest ctRequest : cmpSystemCtRequest.values()) {
 			
@@ -509,7 +510,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return null;
 	}
 	
-	public CtPI getCtPI(DtPIID aPIID) {
+	public CtPI getCtPI(DtID aPIID) {
 
 		for (CtPI ctPI : cmpSystemCtPI.values()) {
 			
@@ -1489,7 +1490,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 	
-	public PtBoolean oeTreatRequest(DtRequestID aRequestID) throws RemoteException {
+	public PtBoolean oeTreatRequest(DtID aRequestID) throws RemoteException {
 		
 		/*
 		 	The Administrator has the method to treat a specific request.
@@ -1504,7 +1505,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 
-	public PtBoolean oeSolveRequest(DtRequestID aRequestID) throws RemoteException {
+	public PtBoolean oeSolveRequest(DtID aRequestID) throws RemoteException {
 		
 		/*
 		 	The Administrator has the method to solve a specific request.
@@ -1519,7 +1520,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 	
-	public PtBoolean oeAddPI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException {
+	public PtBoolean oeAddPI(DtID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException {
 		
 		try {
 			//PreP1 to make sure that the system has been deployed.
@@ -1528,9 +1529,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			//PreP2 to make sure that the administrator is logged in.
 			isAdminLoggedIn();
 			
-			String aRequestID = aPIID.toString();
-			
-			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
+			CtRequest ctRequestAvailable = getCtRequest(aPIID);
 			CtPI ctPIAvailable = getCtPI(aPIID);
 			
 			//PreF1 and PreF2 combined to check if the point of interest is not already in the system, but the request of the PI is.
@@ -1564,7 +1563,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 	
-	public PtBoolean oeUpdatePI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException {
+	public PtBoolean oeUpdatePI(DtID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException {
 		
 		try {
 			//PreP1 to make sure that the system has been deployed.
@@ -1601,7 +1600,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 	
-	public PtBoolean oeDeletePI(DtPIID aPIID) throws RemoteException {
+	public PtBoolean oeDeletePI(DtID aPIID) throws RemoteException {
 		
 		try {
 			//PreP1
@@ -1657,7 +1656,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 	
-	public PtBoolean oeCheckAvailability(DtRequestID aRequestID) throws RemoteException {
+	public PtBoolean oeCheckAvailability(DtID aRequestID) throws RemoteException {
 		
 		 /*
 		  	The Coordinator has the method to check if the point of interest of the request is already in the system.
@@ -1675,7 +1674,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 	
-	public PtBoolean oeDeliverRequest(DtRequestID aRequestID) throws RemoteException {
+	public PtBoolean oeDeliverRequest(DtID aRequestID) throws RemoteException {
 		
 		/*
 		 	The Coordinator has the method to deliver the request to the Administrator
@@ -1733,7 +1732,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 	
-	public PtBoolean oeGetGPSLocation(DtPIID aPIID) throws RemoteException {
+	public PtBoolean oeGetGPSLocation(DtID aPIID) throws RemoteException {
 		
 		/*
 		 	The Person has the method to retrieve the GPS location of a point of interest to further 
@@ -1749,7 +1748,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		return new PtBoolean(false);
 	}
 
-	public PtBoolean oeGetPIDescription(DtPIID aPIID) throws RemoteException {
+	public PtBoolean oeGetPIDescription(DtID aPIID) throws RemoteException {
 	
 		/*
 	 		The Person has the method to retrieve a brief description of a point of interest.

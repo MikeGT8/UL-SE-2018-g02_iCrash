@@ -23,6 +23,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtRequestID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
@@ -343,13 +344,13 @@ public class ActCoordinatorImpl extends ActAuthenticatedImpl implements ActCoord
 	}
 
 	@Override
-	public PtBoolean oeCheckAvailability(DtRequestID aRequestID) throws RemoteException, NotBoundException {
+	public PtBoolean oeCheckAvailability(DtID aRequestID) throws RemoteException, NotBoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PtBoolean oeDeliverRequest(DtRequestID aRequestID) throws RemoteException, NotBoundException {
+	public PtBoolean oeDeliverRequest(DtID aRequestID) throws RemoteException, NotBoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}

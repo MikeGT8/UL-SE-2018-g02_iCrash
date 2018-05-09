@@ -21,6 +21,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRe
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtRequestID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
@@ -165,7 +166,7 @@ public interface ActCoordinator extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
 	
-	public PtBoolean oeCheckAvailability(DtRequestID aRequestID) 
+	public PtBoolean oeCheckAvailability(DtID aRequestID) 
 			throws RemoteException, NotBoundException;
 	
 	/**
@@ -177,7 +178,7 @@ public interface ActCoordinator extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
 	
-	public PtBoolean oeDeliverRequest(DtRequestID aRequestID) 
+	public PtBoolean oeDeliverRequest(DtID aRequestID) 
 			throws RemoteException, NotBoundException;
 	
 	/**

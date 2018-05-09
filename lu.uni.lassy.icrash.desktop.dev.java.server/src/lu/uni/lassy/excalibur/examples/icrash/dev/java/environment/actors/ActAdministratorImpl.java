@@ -23,6 +23,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCi
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtDescription;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPIID;
@@ -172,21 +173,21 @@ public class ActAdministratorImpl extends ActAuthenticatedImpl implements
 	/* PI variant */
 
 	@Override
-	public PtBoolean oeAddPI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation,
+	public PtBoolean oeAddPI(DtID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation,
 			DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException, NotBoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PtBoolean oeUpdatePI(DtPIID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation,
+	public PtBoolean oeUpdatePI(DtID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation,
 			DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException, NotBoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PtBoolean oeDeletePI(DtPIID aPIID) throws RemoteException, NotBoundException {
+	public PtBoolean oeDeletePI(DtID aPIID) throws RemoteException, NotBoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -198,13 +199,13 @@ public class ActAdministratorImpl extends ActAuthenticatedImpl implements
 	}
 
 	@Override
-	public PtBoolean oeTreatRequest(DtRequestID aRequestID) throws RemoteException, NotBoundException {
+	public PtBoolean oeTreatRequest(DtID aRequestID) throws RemoteException, NotBoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PtBoolean oeSolveRequest(DtRequestID aRequestID) throws RemoteException, NotBoundException {
+	public PtBoolean oeSolveRequest(DtID aRequestID) throws RemoteException, NotBoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}

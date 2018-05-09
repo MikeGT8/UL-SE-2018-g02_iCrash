@@ -11,7 +11,7 @@ public class CtPI implements Serializable {
 	
 	private static final long serialVersionUID = 227L;
 
-	public DtPIID id;
+	public DtID id;
 	
 	public DtName name;
 	
@@ -24,7 +24,7 @@ public class CtPI implements Serializable {
 	public DtDescription description;
 
 	/* Initialises the PI */
-	public PtBoolean init(DtPIID aId, DtName aName, DtCity aCity, EtCategory aCategory, DtGPSLocation aLocation, DtDescription aDescription) {
+	public PtBoolean init(DtID aId, DtName aName, DtCity aCity, EtCategory aCategory, DtGPSLocation aLocation, DtDescription aDescription) {
 			
 		id = aId;
 		name = aName;

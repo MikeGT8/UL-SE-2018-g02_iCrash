@@ -10,7 +10,7 @@ public class CtRequest implements Serializable {
 	
 	private static final long serialVersionUID = 227L;
 
-	public DtRequestID id;
+	public DtID id;
 	
 	public DtName name;
 	
@@ -23,7 +23,7 @@ public class CtRequest implements Serializable {
 	public DtIgnored ignored;
 
 	/* Initialises the request */
-	public PtBoolean init(DtRequestID aId, DtName aName, DtCity aCity, EtCategory aCategory, EtRequestStatus aStatus, DtIgnored aIgnored) {
+	public PtBoolean init(DtID aId, DtName aName, DtCity aCity, EtCategory aCategory, EtRequestStatus aStatus, DtIgnored aIgnored) {
 			
 		id = aId;
 		name = aName;
@@ -47,7 +47,7 @@ public class CtRequest implements Serializable {
 		if (!(obj instanceof CtRequest))
 			return false;
 		
-		CtRequest ctRequest = (CtRequest)obj;
+		CtRequest ctRequest = (CtRequest) obj;
 		
 		if (!(ctRequest.id.value.getValue().equals(this.id.value.getValue())))
 			return false;
