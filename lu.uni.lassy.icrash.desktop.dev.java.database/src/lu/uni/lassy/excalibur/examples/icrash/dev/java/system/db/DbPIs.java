@@ -472,5 +472,41 @@ public class DbPIs extends DbAbstract {
 		return assCtPICtPerson;
 	}
 
-	/* Implement bind association methods */
+static public void bindPIPerson(CtPI ctPI, CtPerson ctPerson) {
+		
+		try {
+			conn = DriverManager.getConnection(url + dbName, userName, password);
+			log.debug("Connected to the database");
+
+			/********************/
+			//Update
+
+			try {
+				String sql = "UPDATE " + dbName
+						+ ".PIs SET person =? WHERE id = ?";
+				
+				String id = ctPI.id.value.getValue();
+				String personid = ctPerson.id.value.getValue();
+
+				PreparedStatement statement = conn.prepareStatement(sql);
+				
+				statement.setString(1, personid);
+				statement.setString(2, id);
+				int rows = statement.executeUpdate();
+				
+				log.debug(rows + " row affected");
+				
+			} catch (SQLException s) {
+				
+				log.error("SQL statement is not executed! " + s);
+			}
+
+			conn.close();
+			log.debug("Disconnected from database");
+			
+		} catch (Exception e) {
+			
+			logException(e);
+		}
+	}
 }
