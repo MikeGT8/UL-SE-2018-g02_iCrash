@@ -23,6 +23,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
@@ -229,4 +230,53 @@ public class ActProxyCoordinatorImpl extends ActProxyAuthenticatedImpl
 		return super.oeLogout();
 	}
 
+	/* PI variant */
+	
+	synchronized public PtBoolean oeGetAllRequests() throws RemoteException, NotBoundException {
+
+		if (getServerSideActor() != null)
+			
+			return ((ActCoordinator) getServerSideActor()).oeGetAllRequests();
+		else
+			
+			return new PtBoolean(false);
+	}
+	
+	synchronized public PtBoolean oeCheckAvailability(DtID aRequestID) throws RemoteException, NotBoundException {
+
+		if (getServerSideActor() != null)
+			
+			return ((ActCoordinator) getServerSideActor()).oeCheckAvailability(aRequestID);
+		else
+			
+			return new PtBoolean(false);
+	}
+	
+	synchronized public PtBoolean oeDeliverRequest(DtID aRequestID) throws RemoteException, NotBoundException {
+
+		if (getServerSideActor() != null)
+			
+			return ((ActCoordinator) getServerSideActor()).oeDeliverRequest(aRequestID);
+		else
+			
+			return new PtBoolean(false);
+	}
+	
+	public PtBoolean ieRequestList() {
+
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActCoordinator.ieRequestList received from system");
+		listOfMessages.add(new Message(MessageType.ieRequestList));
+		
+		return new PtBoolean(true);
+	}
+	
+	public PtBoolean ieRequestDelivered() {
+
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActCoordinator.ieRequestDelivered received from system");
+		listOfMessages.add(new Message(MessageType.ieRequestDelivered));
+		
+		return new PtBoolean(true);
+	}
 }

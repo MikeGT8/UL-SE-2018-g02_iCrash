@@ -16,9 +16,15 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAdministrator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCity;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtDescription;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCategory;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
@@ -103,5 +109,121 @@ public class ActProxyAdministratorImpl extends ActProxyAuthenticatedImpl impleme
 	@Override
 	public PtBoolean oeLogout() throws RemoteException, NotBoundException {
 		return super.oeLogout();
+	}
+	
+	/* PI variant */
+	
+	synchronized public PtBoolean oeGetAllRequestsFromCoordinator() throws RemoteException, NotBoundException {
+		
+		if(getServerSideActor() !=null)
+			
+			return ((ActAdministrator) getServerSideActor()).oeGetAllRequestsFromCoordinator();
+		else
+			
+			return new PtBoolean(false);
+	}
+	
+	synchronized public PtBoolean oeTreatRequest(DtID aRequestID) throws RemoteException, NotBoundException {
+		
+		if(getServerSideActor() !=null)
+			
+			return ((ActAdministrator) getServerSideActor()).oeTreatRequest(aRequestID);
+		else
+			
+			return new PtBoolean(false);
+	}
+	
+	synchronized public PtBoolean oeSolveRequest(DtID aRequestID) throws RemoteException, NotBoundException {
+		
+		if(getServerSideActor() !=null)
+			
+			return ((ActAdministrator) getServerSideActor()).oeSolveRequest(aRequestID);
+		else
+			
+			return new PtBoolean(false);
+	}
+	
+	synchronized public PtBoolean oeAddPI(DtID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException, NotBoundException {
+		
+		if(getServerSideActor() !=null)
+			
+			return ((ActAdministrator) getServerSideActor()).oeAddPI(aPIID, aPIName, aPICity, aGPSLocation, aPIDescription, aPICategory);
+		else
+			
+			return new PtBoolean(false);
+	}
+	
+	synchronized public PtBoolean oeUpdatePI(DtID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException, NotBoundException {
+		
+		if(getServerSideActor() !=null)
+			
+			return ((ActAdministrator) getServerSideActor()).oeUpdatePI(aPIID, aPIName, aPICity, aGPSLocation, aPIDescription, aPICategory);
+		else
+			
+			return new PtBoolean(false);
+	}
+	
+	synchronized public PtBoolean oeDeletePI(DtID aPIID) throws RemoteException, NotBoundException {
+		
+		if(getServerSideActor() !=null)
+			
+			return ((ActAdministrator) getServerSideActor()).oeDeletePI(aPIID);
+		else
+			
+			return new PtBoolean(false);
+	}
+	
+	public PtBoolean ieRequestList() {
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActAdministrator.ieRequestList received from system");
+		listOfMessages.add(new Message(MessageType.ieRequestList));
+		
+		return new PtBoolean(true);
+	}
+	
+	public PtBoolean ieRequestBeingTreated() {
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActAdministrator.ieRequestBeingTreated received from system");
+		listOfMessages.add(new Message(MessageType.ieRequestBeingTreated));
+		
+		return new PtBoolean(true);
+	}
+	
+	public PtBoolean ieRequestSolved() {
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActAdministrator.ieRequestSolved received from system");
+		listOfMessages.add(new Message(MessageType.ieRequestSolved));
+		
+		return new PtBoolean(true);
+	}
+	
+	public PtBoolean iePIAdded() {
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActAdministrator.iePIAdded received from system");
+		listOfMessages.add(new Message(MessageType.iePIAdded));
+		
+		return new PtBoolean(true);
+	}
+	
+	public PtBoolean iePIUpToDate() {
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActAdministrator.iePIUpToDate received from system");
+		listOfMessages.add(new Message(MessageType.iePIUpToDate));
+		
+		return new PtBoolean(true);
+	}
+	
+	public PtBoolean iePIDeleted() {
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActAdministrator.iePIDeleted received from system");
+		listOfMessages.add(new Message(MessageType.iePIDeleted));
+		
+		return new PtBoolean(true);
 	}
 }

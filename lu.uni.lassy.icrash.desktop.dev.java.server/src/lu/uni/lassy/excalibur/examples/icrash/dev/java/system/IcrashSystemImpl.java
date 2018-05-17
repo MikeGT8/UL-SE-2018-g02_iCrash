@@ -1630,8 +1630,16 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			//PreF1 to check if the PI is in the system
 			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
 				
-				//PostF1 to add the new PI to the system
+				//PostF1 to update the PI in the system
 				CtPI ctPI = (CtPI) ctPIAvailable;
+				
+				ctPI.id = aPIID;
+				ctPI.name =aPIName;
+				ctPI.city = aPICity;
+				ctPI.location = aGPSLocation;
+				ctPI.description = aPIDescription;
+				ctPI.category = aPICategory;
+				
 				DbPIs.updatePI(ctPI);
 				
 				//PostF2 to send the input event to the administrator

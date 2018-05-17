@@ -41,7 +41,28 @@ public class Message {
 		ieCoordinatorUpdated,
 		
 		/** The ie sms send. */
-		ieSmsSend
+		ieSmsSend,
+		
+		/** The ie get request list */
+		ieRequestList,
+		
+		/** The ie request being treated */
+		ieRequestBeingTreated,
+		
+		/** The ie request solved */
+		ieRequestSolved,
+		
+		/** The ie PI added */
+		iePIAdded,
+		
+		/** The ie PI updated */
+		iePIUpToDate,
+		
+		/** The ie PI deleted */
+		iePIDeleted,
+		
+		/** The ie request delivered */
+		ieRequestDelivered
 	}
 	
 	/**

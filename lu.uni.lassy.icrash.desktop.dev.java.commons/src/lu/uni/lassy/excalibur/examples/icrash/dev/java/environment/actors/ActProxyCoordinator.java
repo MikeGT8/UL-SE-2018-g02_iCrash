@@ -21,6 +21,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtComment;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCrisisID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
@@ -143,4 +144,60 @@ public interface ActProxyCoordinator extends ActProxyAuthenticated {
 	 */
 	public PtBoolean ieSendAnAlert(CtAlert aCtAlert) throws RemoteException;
 
+/* PI variant */
+	
+	/**
+	 * Get a list of requests from the system.
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeGetAllRequests() 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Check if a specific PI exists in the system.
+	 *
+	 * @param aRequestID The ID to use when looking for the request to check
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeCheckAvailability(DtID aRequestID) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * Deliver a request to next actor in the system.
+	 *
+	 * @param aRequestID The ID to use when looking for the request to deliver
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	
+	public PtBoolean oeDeliverRequest(DtID aRequestID) 
+			throws RemoteException, NotBoundException;
+	
+	/**
+	 * A list of request sent from the server side saying the requests need to be checked.
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	
+	public PtBoolean ieRequestList() 
+			throws RemoteException;
+	
+	/**
+	 * A message sent from the server side saying the request was delivered.
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	
+	public PtBoolean ieRequestDelivered() 
+			throws RemoteException;
 }
