@@ -39,8 +39,7 @@ import org.apache.log4j.Logger;
 /**
  * The Class ActAdministratorImpl, which is a server side actor for the user Administrator.
  */
-public class ActAdministratorImpl extends ActAuthenticatedImpl implements
-		ActAdministrator {
+public class ActAdministratorImpl extends ActAuthenticatedImpl implements ActAdministrator {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 227L;
@@ -175,75 +174,267 @@ public class ActAdministratorImpl extends ActAuthenticatedImpl implements
 	@Override
 	public PtBoolean oeAddPI(DtID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation,
 			DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException, NotBoundException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry.lookup("iCrashServer");
+
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActAdministrator.oeAddPI sent to system");
+		PtBoolean res = iCrashSys_Server.oeAddPI(aPIID, aPIName, aPICity, aGPSLocation, aPIDescription, aPICategory);
+
+		if (res.getValue() == true)
+			
+			log.info("operation oeAddPI successfully executed by the system");
+
+		return res;
 	}
 
 	@Override
 	public PtBoolean oeUpdatePI(DtID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation,
 			DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException, NotBoundException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry.lookup("iCrashServer");
+
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActAdministrator.oeUpdatePI sent to system");
+		PtBoolean res = iCrashSys_Server.oeUpdatePI(aPIID, aPIName, aPICity, aGPSLocation, aPIDescription, aPICategory);
+
+		if (res.getValue() == true)
+			
+			log.info("operation oeUpdatePI successfully executed by the system");
+
+		return res;
 	}
 
 	@Override
 	public PtBoolean oeDeletePI(DtID aPIID) throws RemoteException, NotBoundException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry.lookup("iCrashServer");
+
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActAdministrator.oeDeletePI sent to system");
+		PtBoolean res = iCrashSys_Server.oeDeletePI(aPIID);
+
+		if (res.getValue() == true)
+			
+			log.info("operation oeDeletePI successfully executed by the system");
+
+		return res;
 	}
 
 	@Override
 	public PtBoolean oeGetAllRequestsFromCoordinator() throws RemoteException, NotBoundException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry.lookup("iCrashServer");
+
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActAdministrator.oeGetAllRequestsFromCoordinator sent to system");
+		PtBoolean res = iCrashSys_Server.oeGetAllRequestsFromCoordinator();
+
+		if (res.getValue() == true)
+			
+			log.info("operation oeGetAllRequestsFromCoordinator successfully executed by the system");
+
+		return res;
 	}
 
 	@Override
 	public PtBoolean oeTreatRequest(DtID aRequestID) throws RemoteException, NotBoundException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry.lookup("iCrashServer");
+
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActAdministrator.oeTreatRequest sent to system");
+		PtBoolean res = iCrashSys_Server.oeTreatRequest(aRequestID);
+
+		if (res.getValue() == true)
+			
+			log.info("operation oeTreatRequest successfully executed by the system");
+
+		return res;
 	}
 
 	@Override
 	public PtBoolean oeSolveRequest(DtID aRequestID) throws RemoteException, NotBoundException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+
+		//Gathering the remote object as it was published into the registry
+		IcrashSystem iCrashSys_Server = (IcrashSystem) registry.lookup("iCrashServer");
+
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActAdministrator.oeSolveRequest sent to system");
+		PtBoolean res = iCrashSys_Server.oeSolveRequest(aRequestID);
+
+		if (res.getValue() == true)
+			
+			log.info("operation oeSolveRequest successfully executed by the system");
+
+		return res;
 	}
 
 	@Override
 	public PtBoolean ieRequestList() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		for (Iterator<ActProxyAuthenticated> iterator = listeners.iterator(); iterator.hasNext();) {
+			
+			ActProxyAuthenticated aProxy = iterator.next();
+			
+			try {
+				if (aProxy instanceof ActProxyAdministrator)
+					((ActProxyAdministrator) aProxy).ieRequestList();
+				
+			} catch (RemoteException e) {
+				
+				Log4JUtils.getInstance().getLogger().error(e);
+				iterator.remove();
+			}
+		}
+		
+		return new PtBoolean(true);
 	}
 
 	@Override
 	public PtBoolean ieRequestBeingTreated() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		for (Iterator<ActProxyAuthenticated> iterator = listeners.iterator(); iterator.hasNext();) {
+			
+			ActProxyAuthenticated aProxy = iterator.next();
+			
+			try {
+				if (aProxy instanceof ActProxyAdministrator)
+					((ActProxyAdministrator) aProxy).ieRequestBeingTreated();
+				
+			} catch (RemoteException e) {
+				
+				Log4JUtils.getInstance().getLogger().error(e);
+				iterator.remove();
+			}
+		}
+		
+		return new PtBoolean(true);
 	}
 
 	@Override
 	public PtBoolean ieRequestSolved() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		for (Iterator<ActProxyAuthenticated> iterator = listeners.iterator(); iterator.hasNext();) {
+			
+			ActProxyAuthenticated aProxy = iterator.next();
+			
+			try {
+				if (aProxy instanceof ActProxyAdministrator)
+					((ActProxyAdministrator) aProxy).ieRequestSolved();
+				
+			} catch (RemoteException e) {
+				
+				Log4JUtils.getInstance().getLogger().error(e);
+				iterator.remove();
+			}
+		}
+		
+		return new PtBoolean(true);
 	}
 
 	@Override
 	public PtBoolean iePIAdded() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		for (Iterator<ActProxyAuthenticated> iterator = listeners.iterator(); iterator.hasNext();) {
+			
+			ActProxyAuthenticated aProxy = iterator.next();
+			
+			try {
+				if (aProxy instanceof ActProxyAdministrator)
+					((ActProxyAdministrator) aProxy).iePIAdded();
+				
+			} catch (RemoteException e) {
+				
+				Log4JUtils.getInstance().getLogger().error(e);
+				iterator.remove();
+			}
+		}
+		
+		return new PtBoolean(true);
 	}
 
 	@Override
 	public PtBoolean iePIUpToDate() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		for (Iterator<ActProxyAuthenticated> iterator = listeners.iterator(); iterator.hasNext();) {
+			
+			ActProxyAuthenticated aProxy = iterator.next();
+			
+			try {
+				if (aProxy instanceof ActProxyAdministrator)
+					((ActProxyAdministrator) aProxy).iePIUpToDate();
+				
+			} catch (RemoteException e) {
+				
+				Log4JUtils.getInstance().getLogger().error(e);
+				iterator.remove();
+			}
+		}
+		
+		return new PtBoolean(true);
 	}
 
 	@Override
 	public PtBoolean iePIDeleted() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		for (Iterator<ActProxyAuthenticated> iterator = listeners.iterator(); iterator.hasNext();) {
+			
+			ActProxyAuthenticated aProxy = iterator.next();
+			
+			try {
+				if (aProxy instanceof ActProxyAdministrator)
+					((ActProxyAdministrator) aProxy).iePIDeleted();
+				
+			} catch (RemoteException e) {
+				
+				Log4JUtils.getInstance().getLogger().error(e);
+				iterator.remove();
+			}
+		}
+		
+		return new PtBoolean(true);
 	}
 
 	@Override

@@ -339,32 +339,110 @@ public class ActCoordinatorImpl extends ActAuthenticatedImpl implements ActCoord
 	
 	@Override
 	public PtBoolean oeGetAllRequests() throws RemoteException, NotBoundException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+		
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+			 	
+		//Gathering the remote object as it was published into the registry
+	    IcrashSystem iCrashSys_Server = (IcrashSystem)registry.lookup("iCrashServer");
+		
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActCoordinator.oeGetAllRequests sent to system");
+		PtBoolean res = iCrashSys_Server.oeGetAllRequests();
+			
+			
+		if(res.getValue() == true)
+			log.info("operation oeGetAllRequests successfully executed by the system");
+
+
+		return res;
 	}
 
 	@Override
 	public PtBoolean oeCheckAvailability(DtID aRequestID) throws RemoteException, NotBoundException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+		
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+			 	
+		//Gathering the remote object as it was published into the registry
+	    IcrashSystem iCrashSys_Server = (IcrashSystem)registry.lookup("iCrashServer");
+		
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActCoordinator.oeCheckAvailability sent to system");
+		PtBoolean res = iCrashSys_Server.oeCheckAvailability(aRequestID);
+			
+			
+		if(res.getValue() == true)
+			log.info("operation oeCheckAvailability successfully executed by the system");
+
+
+		return res;
 	}
 
 	@Override
 	public PtBoolean oeDeliverRequest(DtID aRequestID) throws RemoteException, NotBoundException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Logger log = Log4JUtils.getInstance().getLogger();
+		
+		Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(),RmiUtils.getInstance().getPort());
+			 	
+		//Gathering the remote object as it was published into the registry
+	    IcrashSystem iCrashSys_Server = (IcrashSystem)registry.lookup("iCrashServer");
+		
+		//set up ActAuthenticated instance that performs the request
+		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
+
+		log.info("message ActCoordinator.oeDeliverRequest sent to system");
+		PtBoolean res = iCrashSys_Server.oeDeliverRequest(aRequestID);
+			
+			
+		if(res.getValue() == true)
+			log.info("operation oeDeliverRequest successfully executed by the system");
+
+
+		return res;
 	}
 
 	@Override
 	public PtBoolean ieRequestList() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+				
+		for (ActProxyAuthenticated aProxy : listeners) {
+			
+			try {
+				if (aProxy instanceof ActProxyCoordinator)
+					((ActProxyCoordinator)aProxy).ieRequestList();
+				
+			} catch (RemoteException e) {
+				
+				Log4JUtils.getInstance().getLogger().error(e);
+			}
+		}
+
+		return new PtBoolean(true);
 	}
 
 	@Override
 	public PtBoolean ieRequestDelivered() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		for (ActProxyAuthenticated aProxy : listeners) {
+			
+			try {
+				if (aProxy instanceof ActProxyCoordinator)
+					((ActProxyCoordinator)aProxy).ieRequestDelivered();
+				
+			} catch (RemoteException e) {
+				
+				Log4JUtils.getInstance().getLogger().error(e);
+			}
+		}
+
+		return new PtBoolean(true);
 	}
 
 	@Override
