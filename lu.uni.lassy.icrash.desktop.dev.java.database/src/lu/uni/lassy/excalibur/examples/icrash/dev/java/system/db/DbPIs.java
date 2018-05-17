@@ -5,10 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Hashtable;
 
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.*;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.*;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.ICrashUtils;
 
 /**
  * The Class DbPIs for updating and retrieving information from the table PIs in the database.
@@ -319,8 +322,6 @@ public class DbPIs extends DbAbstract {
 		return cmpSystemCtPI;
 	}
 
-	/* Implement association methods */
-
 	/**
 	 * Deletes a PI from the database, it will use the ID from the CtPI to delete it.
 	 *
@@ -356,6 +357,119 @@ public class DbPIs extends DbAbstract {
 			
 			logException(e);
 		}
+	}
+	
+	/**
+	 * Gets PIs and their associated persons and inserts them into a hashtable, using the PI as a key.
+	 *
+	 * @return the hashtable of the associated persons and PIs
+	 */
+	static public Hashtable<CtPI, CtPerson> getAssCtPICtPerson() {
+
+		Hashtable<CtPI, CtPerson> assCtPICtPerson = new Hashtable<CtPI, CtPerson>();
+
+		try {
+			conn = DriverManager.getConnection(url + dbName, userName, password);
+			log.debug("Connected to the database");
+
+			/********************/
+			//Select
+
+			try {
+				String sql = "SELECT * FROM " + dbName + ".PIs "
+						+ "INNER JOIN " + dbName + ".persons ON " + dbName
+						+ ".PIs.person = " + dbName + ".persons.phone";
+
+				PreparedStatement statement = conn.prepareStatement(sql);
+				ResultSet res = statement.executeQuery(sql);
+
+				CtPI ctPI = null;
+				CtPerson ctPerson = null;
+
+				while (res.next()) {
+
+					ctPI = new CtPI();
+					//PI's id
+					DtID aId = new DtID(new PtString(res.getString("PIs.id")));
+
+					//PI's name  
+					DtName aName = new DtName(new PtString(
+							res.getString("PIs.name")));
+					
+					//PI's city 
+					DtCity aCity = new DtCity(new PtString(
+							res.getString("PIs.city")));
+					
+					//PI's category -> [supermarket,market,hobby,petrolstation,university,school]
+					String theCategory = res.getString("PIs.category");
+					EtCategory aCategory = null;
+					
+					if (theCategory.equals(EtCategory.supermarket.name()))
+						aCategory = EtCategory.supermarket;
+					if (theCategory.equals(EtCategory.market.name()))
+						aCategory = EtCategory.market;
+					if (theCategory.equals(EtCategory.hobby.name()))
+						aCategory = EtCategory.hobby;
+					if (theCategory.equals(EtCategory.petrolstation.name()))
+						aCategory = EtCategory.petrolstation;
+					if (theCategory.equals(EtCategory.university.name()))
+						aCategory = EtCategory.university;
+					if (theCategory.equals(EtCategory.school.name()))
+						aCategory = EtCategory.school;
+					
+					//PI's location
+					DtLatitude aLatitude = new DtLatitude(new PtReal(
+							res.getDouble("PIs.latitude")));
+					DtLongitude aLongitude = new DtLongitude(new PtReal(
+							res.getDouble("PIs.longitude")));
+					DtGPSLocation aGPSLocation = new DtGPSLocation(
+							aLatitude, aLongitude);
+
+					//PI's description
+					DtDescription aDescription = new DtDescription(new PtString(
+							res.getString("PIs.description")));
+
+					//init ctPI instance
+					ctPI.init(aId, aName, aCity, aCategory, aGPSLocation, aDescription);
+
+					//*************************************
+					
+					ctPerson = new CtPerson();
+					
+					//person's id
+					DtPhoneNumber aId1 = new DtPhoneNumber(new PtString(
+							res.getString("phone")));
+					
+					//person's kind  -> [witness,victim,anonym]
+					String theType = res.getString("type");
+					EtHumanKind aType = null;
+					
+					if (theType.equals(EtHumanKind.witness.name()))
+						aType = EtHumanKind.witness;
+					if (theType.equals(EtHumanKind.victim.name()))
+						aType = EtHumanKind.victim;
+					if (theType.equals(EtHumanKind.anonym.name()))
+						aType = EtHumanKind.anonym;
+
+					ctPerson.init(aId1, aType);
+
+					//add instances to the hash
+					assCtPICtPerson.put(ctPI, ctPerson);
+				}
+			} catch (SQLException s) {
+				
+				log.error("SQL statement is not executed! " + s);
+			}
+			
+			conn.close();
+			log.debug("Disconnected from database");
+
+		} catch (Exception e) {
+			
+			logException(e);
+		}
+
+		return assCtPICtPerson;
 	}
 
 	/* Implement bind association methods */
