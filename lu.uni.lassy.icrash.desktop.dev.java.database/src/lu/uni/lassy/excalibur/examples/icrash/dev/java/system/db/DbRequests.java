@@ -274,6 +274,61 @@ public class DbRequests extends DbAbstract {
 	}
 
 	/**
+	 * Updates a request in the database to have the same details as the CtRequest
+	 * It will update the request with the same ID as the ID in the CtRequest.
+	 *
+	 * @param ctRequest The request to update
+	 */
+	
+	static public void updateRequest(CtRequest ctRequest) {
+
+		try {
+			conn = DriverManager.getConnection(url + dbName, userName, password);
+			log.debug("Connected to the database");
+
+			/********************/
+			//Update
+
+			try {
+				log.debug("[DATABASE]-Update request");
+				
+				String sql = "UPDATE "
+						+ dbName
+						+ ".requests SET `name` = ?, `city` = ?, `category` = ?,"
+						+ " `status` = ?, `ignored` = ? WHERE id = ?";
+				
+				String id = ctRequest.id.value.getValue();
+				String name = ctRequest.name.toString();
+				String city = ctRequest.city.toString();
+				String category = ctRequest.category.toString();
+				String status = ctRequest.status.toString();
+				Boolean ignored = ctRequest.ignored.getValue();
+
+				PreparedStatement statement = conn.prepareStatement(sql);
+				statement.setString(1, name);
+				statement.setString(2, city);
+				statement.setString(3, category);
+				statement.setString(4, status);
+				statement.setBoolean(5, ignored);
+				statement.setString(6, id);
+				
+				int rows = statement.executeUpdate();
+				log.debug(rows + " row affected");
+				
+			} catch (SQLException s) {
+				
+				log.error("SQL statement is not executed! " + s);
+			}
+
+			conn.close();
+			log.debug("Disconnected from database");
+			
+		} catch (Exception e) {
+			logException(e);
+		}
+	}
+	
+	/**
 	 * Deletes a request from the database, it will use the ID from the CtRequest to delete it.
 	 *
 	 * @param ctRequest The request to delete from the database

@@ -44,11 +44,11 @@ public class ActProxyPersonImpl extends ActProxyAuthenticatedImpl implements Act
 			return new PtBoolean(false);
 	}
 
-	synchronized public PtBoolean oeSendNewRequest(DtName aPIName, EtCategory aPICategory, DtCity aPICity) throws RemoteException, NotBoundException {
+	synchronized public PtBoolean oeSendNewRequest(DtID aPIID, DtName aPIName, EtCategory aPICategory, DtCity aPICity) throws RemoteException, NotBoundException {
 	
 	if(getServerSideActor() !=null)
 		
-		return ((ActPerson) getServerSideActor()).oeSendNewRequest(aPIName, aPICategory, aPICity);
+		return ((ActPerson) getServerSideActor()).oeSendNewRequest(aPIID, aPIName, aPICategory, aPICity);
 	else
 		
 		return new PtBoolean(false);

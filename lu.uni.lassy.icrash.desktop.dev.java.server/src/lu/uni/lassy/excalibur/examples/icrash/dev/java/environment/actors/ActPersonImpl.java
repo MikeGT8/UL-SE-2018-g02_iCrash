@@ -58,7 +58,7 @@ public class ActPersonImpl extends ActAuthenticatedImpl implements ActPerson {
 	}
 
 	@Override
-	public PtBoolean oeSendNewRequest(DtName aPIName, EtCategory aPICategory, DtCity aPICity)
+	public PtBoolean oeSendNewRequest(DtID aPIID, DtName aPIName, EtCategory aPICategory, DtCity aPICity)
 			throws RemoteException, NotBoundException {
 		
 		Logger log = Log4JUtils.getInstance().getLogger();
@@ -72,7 +72,7 @@ public class ActPersonImpl extends ActAuthenticatedImpl implements ActPerson {
 		iCrashSys_Server.setCurrentRequestingAuthenticatedActor(this);
 
 		log.info("message ActCoordinator.oeSendNewRequest sent to system");
-		PtBoolean res = iCrashSys_Server.oeSendNewRequest(aPIName, aPICategory, aPICity);
+		PtBoolean res = iCrashSys_Server.oeSendNewRequest(aPIID, aPIName, aPICategory, aPICity);
 			
 		if(res.getValue() == true)
 			log.info("operation oeSendNewRequest successfully executed by the system");

@@ -5,13 +5,15 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 
 public enum EtRequestStatus implements JIntIs {
 	
+	empty,
 	pending,
 	treated,
 	solved;
 	
 	public PtBoolean is() {
 		
-		return new PtBoolean(this.name() == EtRequestStatus.pending.name() || 
+		return new PtBoolean(this.name() == EtRequestStatus.empty.name() ||
+				this.name() == EtRequestStatus.pending.name() || 
 				this.name() == EtRequestStatus.treated.name()|| 
 				this.name() == EtRequestStatus.solved.name());
 	}

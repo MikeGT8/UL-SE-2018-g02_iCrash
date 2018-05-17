@@ -41,6 +41,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCoordinators;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCrises;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbHumans;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbPIs;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbRequests;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAuthenticated;
@@ -60,6 +61,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtDescription;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtIgnored;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPIID;
@@ -71,6 +73,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCa
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtHumanKind;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtRequestStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.secondary.DtSMS;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDate;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDateAndTime;
@@ -1529,46 +1532,114 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	
 	public PtBoolean oeGetAllRequestsFromCoordinator() throws RemoteException {
 		
-		/*
-		 	The Administrator has the method to retrieve all the requests
-		 	which have been checked by the actor Coordinator.
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
 			
-			- Access the request data
-			- Retrieve requests which are pending
+			//PreP2 to make sure that the administrator is logged in.
+			isAdminLoggedIn();
 			
-			INPUT EVENT
-			- Show them in a list
-		 */
+			// PostF1 and PostF2 combined to return a list of requests or a message
+			ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+				
+			for (String requestKey : cmpSystemCtRequest.keySet()) {
+				
+				CtRequest ctRequest = cmpSystemCtRequest.get(requestKey);
+				
+				if (ctRequest.status.toString().equals("pending")) {
+					
+					//PostF1 to send a list of pending requests
+					admin.ieRequestList();
+					
+					return new PtBoolean(true);
+				}
+				else {
+					//PostF2 to send a message that no pending request is available
+					PtString aMessage = new PtString("There are no pending requests!");
+					admin.ieMessage(aMessage);
+					
+					return new PtBoolean(false);
+				}
+			}					
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeGetAllRequestsFromCoordinator..." + ex);
+			return new PtBoolean(false);
+		}
 		
 		return new PtBoolean(false);
 	}
 	
 	public PtBoolean oeTreatRequest(DtID aRequestID) throws RemoteException {
 		
-		/*
-		 	The Administrator has the method to treat a specific request.
-		 	
-		 	- Access the request data
-		 	- Change the request status to treating
-		 	
-		 	INPUT EVENT
-		 	- Show a message that the request was treated
-		 */
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
+			
+			//PreP2 to make sure that the administrator is logged in.
+			isAdminLoggedIn();
+			
+			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
+			
+			//PreF1 to check if the pending request is already in the system.
+			if (ctRequestAvailable.status.toString().equals("pending")) {
+				
+				//PostF1 to change the status to treated
+				ctRequestAvailable.status = EtRequestStatus.treated;
+				DbRequests.updateRequest(ctRequestAvailable);
+				
+				//PostF2 to send the input event to the administrator
+				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+				admin.ieRequestBeingTreated();
+				
+				//PostF3 update the request in relation to the system
+				cmpSystemCtRequest.replace(ctRequestAvailable.id.value.getValue(), ctRequestAvailable);
+				
+				return new PtBoolean(true);
+			}
+						
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeTreatRequest..." + ex);
+			return new PtBoolean(false);
+		}
 		
 		return new PtBoolean(false);
 	}
 
 	public PtBoolean oeSolveRequest(DtID aRequestID) throws RemoteException {
 		
-		/*
-		 	The Administrator has the method to solve a specific request.
-		 	
-		 	- Access the request data
-		 	- Change the request status to solved
-		 	
-		 	INPUT EVENT
-		 	- Show a message that the request was solved
-		 */
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
+			
+			//PreP2 to make sure that the administrator is logged in.
+			isAdminLoggedIn();
+			
+			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
+			
+			//PreF1 to check if the treated request is already in the system.
+			if (ctRequestAvailable.status.toString().equals("treated")) {
+				
+				//PostF1 to change the status to solved
+				ctRequestAvailable.status = EtRequestStatus.solved;
+				DbRequests.updateRequest(ctRequestAvailable);
+				
+				//PostF2 to send the input event to the administrator
+				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+				admin.ieRequestSolved();
+				
+				//PostF3 update the request in relation to the system
+				cmpSystemCtRequest.replace(ctRequestAvailable.id.value.getValue(), ctRequestAvailable);
+				
+				return new PtBoolean(true);
+			}
+						
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeSolveRequest..." + ex);
+			return new PtBoolean(false);
+		}
 		
 		return new PtBoolean(false);
 	}
@@ -1654,7 +1725,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 						
 		} catch (Exception ex) {
 			
-			log.error("Exception in oeAddPI..." + ex);
+			log.error("Exception in oeUpdatePI..." + ex);
 			return new PtBoolean(false);
 		}
 		
@@ -1704,50 +1775,122 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	
 	public PtBoolean oeGetAllRequests() throws RemoteException {
 		
-		/*
-			The Coordinator has the method to retrieve all the requests which have been sent by the actor Person.
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
 			
-			- Access the request table
-			- Retrieve requests
+			//PreP2 to make sure that the coordinator is logged in.
+			isAdminLoggedIn();
 			
-			INPUT EVENT
-			- Show them in a list
-		*/
+			// PostF1 and PostF2 combined to return a list of requests or a message
+			ActCoordinator coord = (ActCoordinator) currentRequestingAuthenticatedActor;
+				
+			for (String requestKey : cmpSystemCtRequest.keySet()) {
+				
+				CtRequest ctRequest = cmpSystemCtRequest.get(requestKey);
+				
+				if (ctRequest.status.toString().equals("")) {
+					
+					//PostF1 to send a list of requests with no status
+					coord.ieRequestList();
+					
+					return new PtBoolean(true);
+				}
+				else {
+					//PostF2 to send a message that there are no requests with no status
+					PtString aMessage = new PtString("There are no requests with empty status!");
+					coord.ieMessage(aMessage);
+					
+					return new PtBoolean(false);
+				}
+			}					
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeGetAllRequests..." + ex);
+			return new PtBoolean(false);
+		}
 		
 		return new PtBoolean(false);
 	}
 	
 	public PtBoolean oeCheckAvailability(DtID aRequestID) throws RemoteException {
 		
-		 /*
-		  	The Coordinator has the method to check if the point of interest of the request is already in the system.
-		  	
-		  	- Access the request table
-		  	- Get the request data
-		  	- Compare to point of interest data
-		  	- If PI exists, change request ignored to true
-		  	- If PI not exists, change request ignored to false
-		  	
-		  	INPUT EVENT
-		 	- Show a message that the request is ignored or not
-		 */
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
+			
+			//PreP2 to make sure that the coordinator is logged in.
+			isAdminLoggedIn();
+			
+			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
+			CtPI ctPIAvailable = getCtPI(aRequestID);
+			ActCoordinator coord = (ActCoordinator) currentRequestingAuthenticatedActor;
+			
+			//PreF1 and PreF2 combined to check if the point of interest is not already in the system, but the request of the PI is.
+			if ((ctPIAvailable == null) && ctRequestAvailable != null && ctRequestAvailable instanceof CtRequest) {
+				
+				//PostF1 to modify ignored to false (new PI to add)
+				ctRequestAvailable.ignored = (DtIgnored) new PtBoolean(false);
+				DbRequests.updateRequest(ctRequestAvailable);
+				PtString aMessage = new PtString("A new PI shall be added! Deliver request to admin.");
+				coord.ieMessage(aMessage);
+			}
+			else {
+					
+				//PostF2 to modify ignored to true (request to ignore)
+				ctRequestAvailable.ignored = (DtIgnored) new PtBoolean(true);
+				DbRequests.updateRequest(ctRequestAvailable);
+				PtString aMessage = new PtString("The request shall be ignored");
+				coord.ieMessage(aMessage);
+				
+				//PostF4 add the new added PI in relation to the system
+				cmpSystemCtRequest.replace(ctRequestAvailable.id.value.getValue(), ctRequestAvailable);
+				
+				return new PtBoolean(true);
+			}
+						
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeCheckAvailability..." + ex);
+			return new PtBoolean(false);
+		}
 		
 		return new PtBoolean(false);
 	}
 	
 	public PtBoolean oeDeliverRequest(DtID aRequestID) throws RemoteException {
 		
-		/*
-		 	The Coordinator has the method to deliver the request to the Administrator
-		 	
-		 	- Access the request table
-		 	- Get the request data
-		 	- Change the request status to pending
-		 	
-		 	INPUT EVENT
-		 	- Receive message that the request has been delivered
-		 	- (Send message to the Administrator that the request has been delivered)
-		 */
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
+			
+			//PreP2 to make sure that the coordinator is logged in.
+			isAdminLoggedIn();
+			
+			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
+			
+			//PreF1 to check if the request is already in the system.
+			if (ctRequestAvailable != null && ctRequestAvailable instanceof CtRequest) {
+				
+				//PostF1 to change the status to pending
+				ctRequestAvailable.status = EtRequestStatus.pending;
+				DbRequests.updateRequest(ctRequestAvailable);
+				
+				//PostF2 to send the input event to the coordinator
+				ActCoordinator coord = (ActCoordinator) currentRequestingAuthenticatedActor;
+				coord.ieRequestDelivered();
+				
+				//PostF3 update the request in relation to the system
+				cmpSystemCtRequest.replace(ctRequestAvailable.id.value.getValue(), ctRequestAvailable);
+				
+				return new PtBoolean(true);
+			}
+						
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeDeliverRequest..." + ex);
+			return new PtBoolean(false);
+		}
 		
 		return new PtBoolean(false);
 	}
@@ -1758,68 +1901,144 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	
 	public PtBoolean oeSearchPI(DtName aPIName, EtCategory aPICategory, DtCity aPICity) throws RemoteException {
 		
-		/*
-		 	The Person has the method to search for a point of interest.
-		 	
-		 	- Access the PI table
-		 	- Retrieve entered values
-		 	- Compare the entered values to the database
-		 	- If the query found a record, then the Person sends a Sms
-		 	- If not, then the Person sends a request to add this PI
-		 	
-		 	INPUT EVENT
-		 	- Show a message that the PI has NOT been found
-		 	- Show a record with the properties of the PI
-		 */
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
+			
+			//PreP2 to make sure that the person is logged in.
+			isAdminLoggedIn();
+			
+			ActPerson person = (ActPerson) currentRequestingAuthenticatedActor;
+			
+			for (String PIKey : cmpSystemCtPI.keySet()) {
+				
+				CtPI ctPI = cmpSystemCtPI.get(PIKey);
+			
+				//PreF1 to check if the point of interest is already in the system.
+				if ((ctPI.name == aPIName) && (ctPI.category == aPICategory) && (ctPI.city == aPICity)) {
+					
+					//PostF1 PI found
+					PtString aMessage = new PtString("PI found. How to proceed?");
+					person.ieMessage(aMessage);
+				}
+				else {
+						
+					//PostF2 PI NOT found
+					PtString aMessage = new PtString("PI NOT found.");
+					person.ieMessage(aMessage);
+					
+					return new PtBoolean(true);
+				}
+			}
+						
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeSearchPI..." + ex);
+			return new PtBoolean(false);
+		}
 		
 		return new PtBoolean(false);
 	}
 	
 	
-	public PtBoolean oeSendNewRequest(DtName aPIName, EtCategory aPICategory, DtCity aPICity) throws RemoteException {
+	public PtBoolean oeSendNewRequest(DtID aRequestID, DtName aPIName, EtCategory aPICategory, DtCity aPICity) throws RemoteException {
 		
-		/*
-		 	The Person has the method to send a request to add a new point of interest.
-		 	
-		 	- Access the PI table
-		 	- Retrieve entered values
-		 	- Store the values into the database into Request with Request status and ignored field NULL
-		 	
-		 	INPUT EVENT
-		 	- Receive a message about the request has been sent
-		 	- Send message to the Coordinator that new requests have been created
-		 */
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
+			
+			//PreP2 to make sure that the person is logged in.
+			isAdminLoggedIn();
+			
+			ActPerson person = (ActPerson) currentRequestingAuthenticatedActor;
+			
+			for (String PIKey : cmpSystemCtPI.keySet()) {
+				
+				CtPI ctPI = cmpSystemCtPI.get(PIKey);
+				CtRequest ctRequestAvailable = cmpSystemCtRequest.get(PIKey);
+			
+				//PreF1 to check if the point of interest is NOT already in the system, but also the request.
+				if ((ctPI == null) && (ctRequestAvailable == null)) {
+					
+					CtRequest ctRequest = new CtRequest();
+					
+					//PostF1 to initialise a new request
+					ctRequest.init(aRequestID, aPIName, aPICity, aPICategory, EtRequestStatus.empty, new DtIgnored(false));
+					DbRequests.insertRequest(ctRequest);
+					
+					//PostF2 to send a message to person
+					PtString aMessage = new PtString("New request sent!");
+					person.ieMessage(aMessage);
+				}
+			}
+						
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeSendNewRequest..." + ex);
+			return new PtBoolean(false);
+		}
 		
 		return new PtBoolean(false);
 	}
 	
 	public PtBoolean oeGetGPSLocation(DtID aPIID) throws RemoteException {
 		
-		/*
-		 	The Person has the method to retrieve the GPS location of a point of interest to further 
-		 	send a message with the needed GPS data.
-		 	
-		 	- Access the PI table
-		 	- Retrieve the GPS location of the point of interest chosen
-		 	
-		 	INPUT EVENT
-		 	- Get a message with the GPS location of the PI
-		 */
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
+			
+			//PreP2 to make sure that the person is logged in.
+			isAdminLoggedIn();
+			
+			CtPI ctPIAvailable = getCtPI(aPIID);
+			
+			//PreF1 to check if the PI is already in the system.
+			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
+						
+				//PostF1 to send the input event to the person
+				ActPerson person = (ActPerson) currentRequestingAuthenticatedActor;
+				PtString aMessage = new PtString("The GPS location of the PI is: " + ctPIAvailable.location);
+				person.ieMessage(aMessage);
+				
+				return new PtBoolean(true);
+			}
+						
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeGetGPSLocation..." + ex);
+			return new PtBoolean(false);
+		}
 		
 		return new PtBoolean(false);
 	}
 
 	public PtBoolean oeGetPIDescription(DtID aPIID) throws RemoteException {
 	
-		/*
-	 		The Person has the method to retrieve a brief description of a point of interest.
-		 	
-		 	- Access the PI table
-		 	- Retrieve the description of the point of interest chosen
-		 	
-		 	INPUT EVENT
-		 	- Get a message with the brief description of the PI
-		 */
+		try {
+			//PreP1 to make sure that the system has been deployed.
+			isSystemStarted();
+			
+			//PreP2 to make sure that the person is logged in.
+			isAdminLoggedIn();
+			
+			CtPI ctPIAvailable = getCtPI(aPIID);
+			
+			//PreF1 to check if the PI is already in the system.
+			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
+						
+				//PostF1 to send the input event to the person
+				ActPerson person = (ActPerson) currentRequestingAuthenticatedActor;
+				PtString aMessage = new PtString("The description of the PI is the following: " + ctPIAvailable.description);
+				person.ieMessage(aMessage);
+				
+				return new PtBoolean(true);
+			}
+						
+		} catch (Exception ex) {
+			
+			log.error("Exception in oeGetPIDescription..." + ex);
+			return new PtBoolean(false);
+		}
 		
 		return new PtBoolean(false);
 	}

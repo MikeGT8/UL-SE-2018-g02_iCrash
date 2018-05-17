@@ -31,6 +31,7 @@ public interface ActPerson extends ActAuthenticated {
 	/**
 	 * Send new request of a PI to the system, using the parameters passed.
 	 *
+	 * @param aId The PI id to use when requesting the PI
 	 * @param aName The PI name to use when requesting the PI
 	 * @param aCategory The category to use when requesting the PI
 	 * @param aCity The city to use when requesting the PI
@@ -39,7 +40,7 @@ public interface ActPerson extends ActAuthenticated {
 	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
 	 */
 	
-	public PtBoolean oeSendNewRequest(DtName aPIName, EtCategory aPICategory, DtCity aPICity) 
+	public PtBoolean oeSendNewRequest(DtID aPIID, DtName aPIName, EtCategory aPICategory, DtCity aPICity) 
 			throws RemoteException, NotBoundException;
 	
 	/**
