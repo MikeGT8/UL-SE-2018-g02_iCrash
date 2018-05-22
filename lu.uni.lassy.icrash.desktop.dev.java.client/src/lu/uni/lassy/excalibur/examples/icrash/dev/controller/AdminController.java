@@ -56,16 +56,18 @@ public class AdminController extends AbstractUserController {
 	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
 	 * @throws IncorrectFormatException is thrown when a Dt/Et information type does not match the is() method specified in the specification
 	 */
-	public PtBoolean oeAddCoordinator(String coordinatorID, String login, String password, EtCrisisType aAccessRights) throws ServerOfflineException, ServerNotBoundException, IncorrectFormatException{
+	public PtBoolean oeAddCoordinator(String coordinatorID, String login, String password, EtCrisisType accessRights) throws ServerOfflineException, ServerNotBoundException, IncorrectFormatException{
 		if (getUserType() == UserType.Admin){
 			ActProxyAdministratorImpl actorAdmin = (ActProxyAdministratorImpl)getAuth();
 			DtCoordinatorID aDtCoordinatorID = new DtCoordinatorID(new PtString(coordinatorID));
 			DtLogin aDtLogin = new DtLogin(new PtString(login));
 			DtPassword aDtPassword = new DtPassword(new PtString(password));
+			EtCrisisType aAccessRights = accessRights;
 			Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
 			ht.put(aDtCoordinatorID, aDtCoordinatorID.value.getValue());
 			ht.put(aDtLogin, aDtLogin.value.getValue());
 			ht.put(aDtPassword, aDtPassword.value.getValue());
+			ht.put(aAccessRights, aAccessRights.toString());
 			try {
 				return actorAdmin.oeAddCoordinator(aDtCoordinatorID, aDtLogin, aDtPassword, aAccessRights);
 			} catch (RemoteException e) {
@@ -96,6 +98,35 @@ public class AdminController extends AbstractUserController {
 				return new PtBoolean(false);
 			try {
 				return actorAdmin.oeDeleteCoordinator(aDtCoordinatorID);
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerOfflineException();
+			} catch (NotBoundException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerNotBoundException();
+			}
+		}
+		return new PtBoolean(false);
+	}
+	
+	/**
+	 * If an administrator is logged in, will send a updateCoordinatorAccessRights request to the server. If successful, it will return a PtBoolean of true
+	 * @param coordinatorID The ID of the coordinator to update
+	 * @return Returns a PtBoolean true if the user was deleted, otherwise will return false
+	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
+	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
+	 * @throws IncorrectFormatException is thrown when a Dt/Et information type does not match the is() method specified in the specification
+	 */
+	public PtBoolean oeUpdateCoordinatorAccessRights(String coordinatorID, EtCrisisType accessRights) throws ServerOfflineException, ServerNotBoundException, IncorrectFormatException{
+		if (getUserType() == UserType.Admin){
+			ActProxyAdministratorImpl actorAdmin = (ActProxyAdministratorImpl)getAuth();
+			DtCoordinatorID aDtCoordinatorID = new DtCoordinatorID(new PtString(coordinatorID));
+			Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
+			ht.put(aDtCoordinatorID, aDtCoordinatorID.value.getValue());
+			if (!aDtCoordinatorID.is().getValue())
+				return new PtBoolean(false);
+			try {
+				return actorAdmin.oeUpdateCoordinatorAccessRights(aDtCoordinatorID, accessRights);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();

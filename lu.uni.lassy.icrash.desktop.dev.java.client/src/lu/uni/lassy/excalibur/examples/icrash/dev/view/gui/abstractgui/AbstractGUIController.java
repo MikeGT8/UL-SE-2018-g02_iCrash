@@ -334,6 +334,7 @@ public abstract class AbstractGUIController implements Initializable {
 		TableColumn<CtCoordinator, String> idCol = new TableColumn<CtCoordinator, String>("ID");
 		TableColumn<CtCoordinator, String> nameCol = new TableColumn<CtCoordinator, String>("Username");
 		TableColumn<CtCoordinator, String> passwordCol = new TableColumn<CtCoordinator, String>("Password");
+		TableColumn<CtCoordinator, String> arCol = new TableColumn<CtCoordinator, String>("Acces Rights");
 		idCol.setCellValueFactory(new Callback<CellDataFeatures<CtCoordinator, String>, ObservableValue<String>>() {
 			public ObservableValue<String> call(CellDataFeatures<CtCoordinator, String> coord) {
 				return new ReadOnlyObjectWrapper<String>(coord.getValue().id.value.getValue());
@@ -349,10 +350,16 @@ public abstract class AbstractGUIController implements Initializable {
 				return new ReadOnlyObjectWrapper<String>(coord.getValue().pwd.value.getValue());
 			}
 		});
+		arCol.setCellValueFactory(new Callback<CellDataFeatures<CtCoordinator, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtCoordinator, String> coord) {
+				return new ReadOnlyObjectWrapper<String>(coord.getValue().accessRights.toString());
+			}
+		});
 		tblvw.getColumns().add(idCol);
 		tblvw.getColumns().add(nameCol);
 		if (showPassword)
 			tblvw.getColumns().add(passwordCol);
+		tblvw.getColumns().add(arCol);
 		setColumnsSameWidth(tblvw);
 	}
 	

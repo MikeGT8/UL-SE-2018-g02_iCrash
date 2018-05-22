@@ -71,6 +71,16 @@ public class ActProxyAdministratorImpl extends ActProxyAuthenticatedImpl impleme
 		else
 			return new PtBoolean(false);
 	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAdministrator#oeUpdateCoordinatorAccessRights(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID)
+	 */
+	synchronized public PtBoolean oeUpdateCoordinatorAccessRights(DtCoordinatorID aDtCoordinatorID, EtCrisisType accessRights) throws RemoteException, NotBoundException{
+		if(getServerSideActor() !=null)
+			return ((ActAdministrator) getServerSideActor()).oeUpdateCoordinatorAccessRights(aDtCoordinatorID, accessRights);
+		else
+			return new PtBoolean(false);
+	}
 
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAdministrator#ieCoordinatorAdded()
@@ -99,6 +109,17 @@ public class ActProxyAdministratorImpl extends ActProxyAuthenticatedImpl impleme
 	public PtBoolean ieCoordinatorUpdated() throws RemoteException {
 		Logger log = Log4JUtils.getInstance().getLogger();
 		log.info("message ActAdministrator.ieCoordinatorUpdated received from system");
+		listOfMessages.add(new Message(MessageType.ieCoordinatorUpdated));
+		return new PtBoolean(true);
+	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAdministrator#ieCoordinatorUpdated()
+	 */
+	@Override
+	public PtBoolean ieCoordinatorAccessRightsUpdated() throws RemoteException {
+		Logger log = Log4JUtils.getInstance().getLogger();
+		log.info("message ActAdministrator.ieCoordinatorAccessRightsUpdated received from system");
 		listOfMessages.add(new Message(MessageType.ieCoordinatorUpdated));
 		return new PtBoolean(true);
 	}

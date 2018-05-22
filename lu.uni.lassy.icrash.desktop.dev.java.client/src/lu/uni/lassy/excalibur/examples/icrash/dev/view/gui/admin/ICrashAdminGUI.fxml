@@ -56,6 +56,11 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Button>
+                              <Button id="bttnBottomAdminCoordinatorUpdateACoordinatorAccessRights" fx:id="bttnBottomAdminCoordinatorUpdateACoordinatorAccessRights" mnemonicParsing="false" onAction="#bttnBottomAdminCoordinatorUpdateACoordinatorAccessRights_OnClick" prefHeight="50.0" prefWidth="150.0" text="Update a coordinator's access rights" textAlignment="CENTER" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
                            </children>
                         </HBox>
                      </top>
