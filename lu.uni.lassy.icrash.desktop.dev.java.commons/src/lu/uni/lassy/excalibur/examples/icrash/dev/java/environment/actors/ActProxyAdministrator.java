@@ -80,6 +80,14 @@ public interface ActProxyAdministrator extends ActProxyAuthenticated {
 	 */
 	public PtBoolean ieCoordinatorUpdated() throws RemoteException;
 	
+	/**
+	 * A message received from the server side actor saying the coordinator was updated.
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	PtBoolean ieCoordinatorAccessRightsUpdated() throws RemoteException;
+	
 	/* PI variant */
 	
 	/**
@@ -226,4 +234,5 @@ public interface ActProxyAdministrator extends ActProxyAuthenticated {
 	
 	public PtBoolean iePIDeleted() 
 			throws RemoteException;
+
 }

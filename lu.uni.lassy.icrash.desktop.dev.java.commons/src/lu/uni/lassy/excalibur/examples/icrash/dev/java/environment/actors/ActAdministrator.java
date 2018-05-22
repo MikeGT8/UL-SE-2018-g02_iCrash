@@ -61,6 +61,19 @@ public interface ActAdministrator extends ActAuthenticated {
 			throws RemoteException, NotBoundException;
 	
 	/**
+	 * Update a coordinators access rights to the system, using the parameters passed.
+	 *
+	 * @param aDtCoordinatorID The ID to use when looking for the coordinator to update
+	 * @param accessRights The new access rights
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+
+	public PtBoolean oeUpdateCoordinatorAccessRights(DtCoordinatorID aDtCoordinatorID, EtCrisisType accessRights)
+			throws RemoteException, NotBoundException;
+	
+	/**
 	 * A message sent to the listening actor saying the coordinator was created .
 	 *
 	 * @return The success of the method
@@ -83,6 +96,14 @@ public interface ActAdministrator extends ActAuthenticated {
 	 * @throws RemoteException Thrown if the server is offline
 	 */
 	public PtBoolean ieCoordinatorUpdated() throws RemoteException;
+	
+	/**
+	 * A message sent to the listening actor saying the coordinator was updated.
+	 *
+	 * @return The success of the method
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public PtBoolean ieCoordinatorAccessRightsUpdated() throws RemoteException;
 	
 	/* PI variant */
 	
@@ -230,4 +251,5 @@ public interface ActAdministrator extends ActAuthenticated {
 	
 	public PtBoolean iePIDeleted() 
 			throws RemoteException;
+
 }
