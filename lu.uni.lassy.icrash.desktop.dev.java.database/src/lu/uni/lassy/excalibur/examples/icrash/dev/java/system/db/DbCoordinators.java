@@ -52,11 +52,12 @@ public class DbCoordinators extends DbAbstract{
 				String id = aCtCoordinator.id.value.getValue();
 				String login =  aCtCoordinator.login.value.getValue();
 				String pwd =  aCtCoordinator.pwd.value.getValue();
+				String accessRights = aCtCoordinator.accessRights.toString();
 	
 				log.debug("[DATABASE]-Insert coordinator");
 				int val = st.executeUpdate("INSERT INTO "+ dbName+ ".coordinators" +
-											"(id,login,pwd)" + 
-											"VALUES("+"'"+id+"'"+",'"+login+"','"+pwd+"')");
+											"(id,login,pwd, accessRights)" + 
+											"VALUES("+"'"+id+"'"+",'"+login+"','"+pwd+"','"+accessRights+"')");
 				
 				log.debug(val + " row affected");
 			}
@@ -192,6 +193,44 @@ public class DbCoordinators extends DbAbstract{
 				String pwd =  aCtCoordinator.pwd.value.getValue();
 				String statement = "UPDATE "+ dbName+ ".coordinators" +
 						" SET pwd='"+pwd+"',  login='"+ login+"' " +
+						"WHERE id='"+id+"'";
+				int val = st.executeUpdate(statement);
+				log.debug(val+" row updated");
+				success = new PtBoolean(val == 1);
+			}
+			catch (SQLException s){
+				log.error("SQL statement is not executed! "+s);
+			}
+			conn.close();
+			log.debug("Disconnected from database");
+		} catch (Exception e) {
+			logException(e);
+		}
+		return success;
+	}
+	
+	/**
+	 * Updates a coordinator's access rights with the data passed. It uses the ID to update the details in the database
+	 *
+	 * @param aCtCoordinator The coordinator to update
+	 * @param aAcessRights The new accessrights
+	 * @return the pt boolean
+	 */
+	static public PtBoolean updateCoordinatorAccessRights(CtCoordinator aCtCoordinator, EtCrisisType aAccessRights){
+		PtBoolean success = new PtBoolean(false);
+		try {
+			conn = DriverManager.getConnection(url+dbName,userName,password);
+			log.debug("Connected to the database");
+
+			/********************/
+			//edit
+			
+			try{
+				Statement st = conn.createStatement();
+				String id = aCtCoordinator.id.value.getValue();
+				String accessRights = aCtCoordinator.accessRights.toString();
+				String statement = "UPDATE "+ dbName+ ".coordinators" +
+						" SET accessRights='"+accessRights+
 						"WHERE id='"+id+"'";
 				int val = st.executeUpdate(statement);
 				log.debug(val+" row updated");
