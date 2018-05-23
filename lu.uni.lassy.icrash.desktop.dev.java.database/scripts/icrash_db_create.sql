@@ -79,6 +79,64 @@ LOCK TABLES `crises` WRITE;
 /*!40000 ALTER TABLE `crises` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `requests`
+--
+
+DROP TABLE IF EXISTS `requests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `requests` (
+	  `id` varchar(80) NOT NULL,
+	  `name` varchar(80) DEFAULT NULL,
+	  `city` varchar(80) DEFAULT NULL,
+	  `category` varchar(80) DEFAULT NULL,
+      `status` varchar(80) DEFAULT NULL,
+	  `ignored` Boolean DEFAULT NULL,
+  `PI` varchar(80) DEFAULT NULL,
+  `person` varchar(80) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `requests`
+--
+
+LOCK TABLES `requests` WRITE;
+/*!40000 ALTER TABLE `requests` DISABLE KEYS */;
+/*!40000 ALTER TABLE `requests` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
+--
+-- Table structure for table `PIs`
+--
+
+DROP TABLE IF EXISTS `PIs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PIs` (
+  `id` varchar(80) NOT NULL,
+  `name` varchar(80) DEFAULT NULL,
+  `city` varchar(80) DEFAULT NULL,
+  `category` varchar(80) DEFAULT NULL,
+  `location` double DEFAULT NULL,
+  `description` varchar(80) DEFAULT NULL,
+  `person` varchar(80) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PIs`
+--
+
+LOCK TABLES `PIs` WRITE;
+/*!40000 ALTER TABLE `PIs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PIs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `coordinators`
@@ -154,7 +212,29 @@ LOCK TABLES `humans` WRITE;
 UNLOCK TABLES;
 
 
+--
+-- Table structure for table `persons`
+--
 
+DROP TABLE IF EXISTS `persons`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `persons` (
+ `phone` varchar(80) NOT NULL,
+  `type` varchar(80) DEFAULT NULL,
+  `comcompany` varchar(80) DEFAULT NULL,
+ PRIMARY KEY (`phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `humans`
+--
+
+LOCK TABLES `persons` WRITE;
+/*!40000 ALTER TABLE `persons` DISABLE KEYS */;
+/*!40000 ALTER TABLE `persons` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 --
