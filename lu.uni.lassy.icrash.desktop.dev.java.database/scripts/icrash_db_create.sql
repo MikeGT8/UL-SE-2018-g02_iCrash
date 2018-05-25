@@ -122,7 +122,8 @@ CREATE TABLE `PIs` (
   `name` varchar(80) DEFAULT NULL,
   `city` varchar(80) DEFAULT NULL,
   `category` varchar(80) DEFAULT NULL,
-  `location` double DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
   `description` varchar(80) DEFAULT NULL,
   `person` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`id`)
