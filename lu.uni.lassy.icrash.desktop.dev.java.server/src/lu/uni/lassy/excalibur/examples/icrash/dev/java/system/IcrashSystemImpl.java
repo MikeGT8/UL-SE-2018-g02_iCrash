@@ -1587,7 +1587,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
 			
-			//PreF1 to check if the pending request is already in the system.
 			if (ctRequestAvailable.status.toString().equals("pending")) {
 				
 				//PostF1 to change the status to treated
@@ -1624,7 +1623,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
 			
-			//PreF1 to check if the treated request is already in the system.
 			if (ctRequestAvailable.status.toString().equals("treated")) {
 				
 				//PostF1 to change the status to solved
@@ -1662,7 +1660,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			CtRequest ctRequestAvailable = getCtRequest(aPIID);
 			CtPI ctPIAvailable = getCtPI(aPIID);
 			
-			//PreF1 and PreF2 combined to check if the point of interest is not already in the system, but the request of the PI is.
 			if ((ctPIAvailable == null) && ctRequestAvailable != null && ctRequestAvailable instanceof CtRequest) {
 				
 				//PostF1 to add the new PI to the system
@@ -1704,7 +1701,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			CtPI ctPIAvailable = getCtPI(aPIID);
 			
-			//PreF1 to check if the PI is in the system
 			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
 				
 				//PostF1 to update the PI in the system
@@ -1749,7 +1745,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			CtPI ctPIAvailable = getCtPI(aPIID);
 			
-			//PreF1 to check if the point of interest is in the system
 			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
 				
 				//PostF1 to delete the PI
@@ -1832,7 +1827,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			CtPI ctPIAvailable = getCtPI(aRequestID);
 			ActCoordinator coord = (ActCoordinator) currentRequestingAuthenticatedActor;
 			
-			//PreF1 and PreF2 combined to check if the point of interest is not already in the system, but the request of the PI is.
 			if ((ctPIAvailable == null) && ctRequestAvailable != null && ctRequestAvailable instanceof CtRequest) {
 				
 				//PostF1 to modify ignored to false (new PI to add)
@@ -1875,7 +1869,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
 			
-			//PreF1 to check if the request is already in the system.
 			if (ctRequestAvailable != null && ctRequestAvailable instanceof CtRequest) {
 				
 				//PostF1 to change the status to pending
@@ -1920,7 +1913,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				
 				CtPI ctPI = cmpSystemCtPI.get(PIKey);
 			
-				//PreF1 to check if the point of interest is already in the system.
 				if ((ctPI.name == aPIName) && (ctPI.category == aPICategory) && (ctPI.city == aPICity)) {
 					
 					//PostF1 PI found
@@ -1963,7 +1955,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				CtPI ctPI = cmpSystemCtPI.get(PIKey);
 				CtRequest ctRequestAvailable = cmpSystemCtRequest.get(PIKey);
 			
-				//PreF1 to check if the point of interest is NOT already in the system, but also the request.
 				if ((ctPI == null) && (ctRequestAvailable == null)) {
 					
 					CtRequest ctRequest = new CtRequest();
@@ -1998,7 +1989,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			CtPI ctPIAvailable = getCtPI(aPIID);
 			
-			//PreF1 to check if the PI is already in the system.
 			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
 						
 				//PostF1 to send the input event to the person
@@ -2029,7 +2019,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			CtPI ctPIAvailable = getCtPI(aPIID);
 			
-			//PreF1 to check if the PI is already in the system.
 			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
 						
 				//PostF1 to send the input event to the person
