@@ -31,7 +31,7 @@ public class DbPIs extends DbAbstract {
 			conn = DriverManager.getConnection(url + dbName, userName, password);
 			
 			try {
-				String sql = "SELECT COUNT(id)  AS numberOfPIsl FROM "+ dbName + ".PIs" ;
+				String sql = "SELECT COUNT(id)  AS numberOfPIsl FROM "+ dbName + ".pis" ;
 
 				Statement statement = conn.createStatement();
 				ResultSet  res = statement.executeQuery(sql);
@@ -79,7 +79,7 @@ public class DbPIs extends DbAbstract {
 				String description = ctPI.description.value.getValue();
 
 				log.debug("[DATABASE]-Insert PI");
-				int val = st.executeUpdate("INSERT INTO " + dbName + ".PIs"
+				int val = st.executeUpdate("INSERT INTO " + dbName + ".pis"
 						+ "(id,name,city,category,location,description)"
 						+ "VALUES(" + "'" + id + "'" + ",'" + name + "', "
 						+ city + ", " + category + ", '" + location + "','"
@@ -127,7 +127,7 @@ public class DbPIs extends DbAbstract {
 				String description = ctPI.description.value.getValue();
 
 				log.debug("[DATABASE]-Update PI");
-				int val = st.executeUpdate("Update INTO " + dbName + ".PIs"
+				int val = st.executeUpdate("Update INTO " + dbName + ".pis"
 						+ "(id,name,city,category,location,description)"
 						+ "VALUES(" + "'" + id + "'" + ",'" + name + "', "
 						+ city + ", " + category + ", '" + location + "','"
@@ -167,7 +167,7 @@ public class DbPIs extends DbAbstract {
 			//Select
 
 			try {
-				String sql = "SELECT * FROM " + dbName + ".requests WHERE id = " + aPIId;
+				String sql = "SELECT * FROM " + dbName + ".pis WHERE id = " + aPIId;
 
 				PreparedStatement statement = conn.prepareStatement(sql);
 				ResultSet res = statement.executeQuery(sql);
@@ -250,7 +250,7 @@ public class DbPIs extends DbAbstract {
 			//Select
 
 			try {
-				String sql = "SELECT * FROM " + dbName + ".PIs ";
+				String sql = "SELECT * FROM " + dbName + ".pis ";
 
 				PreparedStatement statement = conn.prepareStatement(sql);
 				ResultSet res = statement.executeQuery(sql);
@@ -337,7 +337,7 @@ public class DbPIs extends DbAbstract {
 			//Delete
 
 			try {
-				String sql = "DELETE FROM " + dbName + ".PIs WHERE id = ?";
+				String sql = "DELETE FROM " + dbName + ".pis WHERE id = ?";
 				String id = ctPI.id.value.getValue();
 
 				PreparedStatement statement = conn.prepareStatement(sql);
@@ -376,9 +376,9 @@ public class DbPIs extends DbAbstract {
 			//Select
 
 			try {
-				String sql = "SELECT * FROM " + dbName + ".PIs "
+				String sql = "SELECT * FROM " + dbName + ".pis "
 						+ "INNER JOIN " + dbName + ".persons ON " + dbName
-						+ ".PIs.person = " + dbName + ".persons.phone";
+						+ ".pis.person = " + dbName + ".persons.phone";
 
 				PreparedStatement statement = conn.prepareStatement(sql);
 				ResultSet res = statement.executeQuery(sql);
@@ -390,18 +390,18 @@ public class DbPIs extends DbAbstract {
 
 					ctPI = new CtPI();
 					//PI's id
-					DtID aId = new DtID(new PtString(res.getString("PIs.id")));
+					DtID aId = new DtID(new PtString(res.getString("pis.id")));
 
 					//PI's name  
 					DtName aName = new DtName(new PtString(
-							res.getString("PIs.name")));
+							res.getString("pis.name")));
 					
 					//PI's city 
 					DtCity aCity = new DtCity(new PtString(
-							res.getString("PIs.city")));
+							res.getString("pis.city")));
 					
 					//PI's category -> [supermarket,market,hobby,petrolstation,university,school]
-					String theCategory = res.getString("PIs.category");
+					String theCategory = res.getString("pis.category");
 					EtCategory aCategory = null;
 					
 					if (theCategory.equals(EtCategory.supermarket.name()))
@@ -419,15 +419,15 @@ public class DbPIs extends DbAbstract {
 					
 					//PI's location
 					DtLatitude aLatitude = new DtLatitude(new PtReal(
-							res.getDouble("PIs.latitude")));
+							res.getDouble("pis.latitude")));
 					DtLongitude aLongitude = new DtLongitude(new PtReal(
-							res.getDouble("PIs.longitude")));
+							res.getDouble("pis.longitude")));
 					DtGPSLocation aGPSLocation = new DtGPSLocation(
 							aLatitude, aLongitude);
 
 					//PI's description
 					DtDescription aDescription = new DtDescription(new PtString(
-							res.getString("PIs.description")));
+							res.getString("pis.description")));
 
 					//init ctPI instance
 					ctPI.init(aId, aName, aCity, aCategory, aGPSLocation, aDescription);
@@ -483,7 +483,7 @@ static public void bindPIPerson(CtPI ctPI, CtPerson ctPerson) {
 
 			try {
 				String sql = "UPDATE " + dbName
-						+ ".PIs SET person =? WHERE id = ?";
+						+ ".pis SET person =? WHERE id = ?";
 				
 				String id = ctPI.id.value.getValue();
 				String personid = ctPerson.id.value.getValue();

@@ -26,6 +26,8 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOf
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIsActor;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCategory;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
@@ -98,6 +100,18 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
     @FXML
     private Button bttnBottomAdminCoordinatorUpdateACoordinatorAccessRights;
 
+    /** The button that shows the controls for adding a PI */
+    @FXML
+    private Button bttnBottomAdminPIAddAPI;
+
+    /** The button that shows the controls for deleting a PI */
+    @FXML
+    private Button bttnBottomAdminPIDeleteAPI;
+    
+    /** The button that shows the controls for updating a PI */
+    @FXML
+    private Button bttnBottomAdminPIUpdateAPI;
+    
     /** The tableview of the recieved messages from the system */
     @FXML
     private TableView<Message> tblvwAdminMessages;
@@ -106,6 +120,39 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
     @FXML
     private Button bttnAdminLogoff;
 
+    /**
+     * The button event that will show the controls for adding a PI
+     *
+     * @param event The event type thrown, we do not need this, but it must be specified
+     */
+    @FXML
+    void bttnBottomAdminPIAddAPI_OnClick(ActionEvent event) {
+    	
+    	showPIScreen(TypeOfEdit.Add);
+    }
+
+    /**
+     * The button event that will show the controls for deleting a PI
+     *
+     * @param event The event type thrown, we do not need this, but it must be specified
+     */
+    @FXML
+    void bttnBottomAdminPIDeleteAPI_OnClick(ActionEvent event) {
+    	
+    	showPIScreen(TypeOfEdit.Delete);
+    }
+    
+    /**
+     * The button event that will show the controls for updating a PI
+     *
+     * @param event The event type thrown, we do not need this, but it must be specified
+     */
+    @FXML
+    void bttnBottomAdminPIUpdateAPI_OnClick(ActionEvent event) {
+    	
+    	showPIScreen(TypeOfEdit.Update);
+    }
+    
     /**
      * The button event that will show the controls for adding a coordinator
      *
@@ -173,13 +220,13 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 	 */
 	private enum TypeOfEdit{
 		
-		/** Adding a coordinator. */
+		/** Adding a coordinator or PI. */
 		Add,
 		
-		/** Deleting a coordinator. */
+		/** Deleting a coordinator or PI. */
 		Delete,
 		
-		/** Updating a coordinator's access rights*/
+		/** Updating a coordinator's access rights or PI.*/
 		Update
 	}
 	
@@ -311,6 +358,124 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 		AnchorPane.setBottomAnchor(grdpn, 0.0);
 		AnchorPane.setRightAnchor(grdpn, 0.0);
 		txtfldUserID.requestFocus();
+	}
+	
+	/**
+	 * Shows the modify PI screen.
+	 *
+	 * @param type The type of edit to be done, this could be add, update or delete
+	 */
+	private void showPIScreen(TypeOfEdit type) {
+		
+		for(int i = anchrpnCoordinatorDetails.getChildren().size() -1; i >= 0; i--)
+			anchrpnCoordinatorDetails.getChildren().remove(i);
+		
+		TextField txtfldPIID = new TextField();
+		TextField txtfldPIName = new TextField();
+		TextField txtfldPICity = new TextField();
+		TextField txtfldPILongitude = new TextField();
+		TextField txtfldPILatitude = new TextField();
+		TextField txtfldPIDescription = new TextField();
+		ComboBox<EtCategory> cmbbxPICategory = new ComboBox<EtCategory>();
+		cmbbxPICategory.getItems().addAll(EtCategory.supermarket, EtCategory.market, EtCategory.hobby, EtCategory.petrolstation, EtCategory.university, EtCategory.school);
+		
+		txtfldPIID.setPromptText("PI id:");
+		Button bttntypOK = null;
+		GridPane grdpn = new GridPane();
+		grdpn.add(txtfldPIID, 1, 1);
+		
+		switch(type) {
+		
+		case Add:
+			bttntypOK = new Button("Add");
+			
+			txtfldPIName.setPromptText("Name:");
+			txtfldPICity.setPromptText("City:");
+			txtfldPILongitude.setPromptText("Longitude:");
+			txtfldPILatitude.setPromptText("Latitude:");
+			txtfldPIDescription.setPromptText("Description:");
+			
+			grdpn.add(txtfldPIName, 1, 2);
+			grdpn.add(txtfldPICity, 1, 3);
+			grdpn.add(txtfldPILongitude, 1, 4);
+			grdpn.add(txtfldPILatitude, 1, 5);
+			grdpn.add(txtfldPIDescription, 1, 6);
+			grdpn.add(cmbbxPICategory, 1, 7);
+			grdpn.add(bttntypOK, 1, 8);
+			
+			break;
+			
+		case Delete:
+			bttntypOK = new Button("Delete");
+			grdpn.add(bttntypOK, 1, 2);
+			
+			break;
+			
+		case Update:
+			bttntypOK = new Button("Update");
+			
+			grdpn.add(txtfldPIName, 1, 2);
+			grdpn.add(txtfldPICity, 1, 3);
+			grdpn.add(txtfldPILongitude, 1, 4);
+			grdpn.add(txtfldPILatitude, 1, 5);
+			grdpn.add(txtfldPIDescription, 1, 6);
+			grdpn.add(cmbbxPICategory, 1, 7);
+			grdpn.add(bttntypOK, 1, 8);
+			
+			break;
+		}
+		
+		bttntypOK.setDefaultButton(true);
+		bttntypOK.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+				if (!checkIfAllDialogHasBeenFilledIn(grdpn))
+					showWarningNoDataEntered();
+				else {
+					try {	
+						switch(type){
+						
+						case Add:
+							if (userController.oeAddPI(txtfldPIID.getText(), txtfldPIName.getText(), txtfldPICity.getText(), txtfldPILatitude.getText(), txtfldPILongitude.getText(), txtfldPIDescription.getText(), cmbbxPICategory.getValue()).getValue()){
+								
+								anchrpnCoordinatorDetails.getChildren().remove(grdpn);
+							}
+							else
+								showErrorMessage("Unable to add PI", "An error occured when adding the PI");
+							break;
+							
+						case Delete:
+							if (userController.oeDeleteCoordinator(txtfldPIID.getText()).getValue()) {
+								
+								anchrpnCoordinatorDetails.getChildren().remove(grdpn);
+							}
+							else
+								showErrorMessage("Unable to delete PI", "An error occured when deleting the PI");
+							break;
+							
+						case Update:
+							if (userController.oeUpdatePI(txtfldPIID.getText(), txtfldPIName.getText(), txtfldPICity.getText(), txtfldPILatitude.getText(), txtfldPILongitude.getText(), txtfldPIDescription.getText(), cmbbxPICategory.getValue()).getValue()){
+								
+								anchrpnCoordinatorDetails.getChildren().remove(grdpn);
+							}
+							break;
+						}
+						
+					} catch (ServerOfflineException | ServerNotBoundException | IncorrectFormatException e) {
+						
+						showExceptionErrorMessage(e);
+					}					
+				}
+			}
+		});
+		
+		anchrpnCoordinatorDetails.getChildren().add(grdpn);
+		AnchorPane.setTopAnchor(grdpn, 0.0);
+		AnchorPane.setLeftAnchor(grdpn, 0.0);
+		AnchorPane.setBottomAnchor(grdpn, 0.0);
+		AnchorPane.setRightAnchor(grdpn, 0.0);
+		txtfldPIID.requestFocus();
 	}
 
 	/* (non-Javadoc)
