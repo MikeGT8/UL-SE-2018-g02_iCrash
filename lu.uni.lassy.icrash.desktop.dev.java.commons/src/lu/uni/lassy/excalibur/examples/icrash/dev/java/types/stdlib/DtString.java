@@ -32,6 +32,11 @@ public class DtString implements Serializable {
 		public DtString(PtString s){
 			value = s;
 		}
+		
+		public DtString() {
+			// Used for captcha only!!!
+			value = new PtString("");
+		}
 
 
 		/**

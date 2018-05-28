@@ -2130,7 +2130,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					ActAuthenticated authActorCheck = assCtAuthenticatedActAuthenticated.get(ctAuthenticatedInstance);
 					log.debug("The logging in actor is " + authActorCheck.getLogin().value.getValue());
 					if (authActorCheck != null){
-						if(aDtCaptcha.value.getValue().equals("Test")) {
+						if(aDtCaptcha.value.getValue().equals(ctAuthenticatedInstance.captcha2Solve.value.toString())) {
 							if(authActorCheck.getLogin().value.getValue().equals(currentRequestingAuthenticatedActor.getLogin().value.getValue())) {
 								ctAuthenticatedInstance.tries.value = new PtInteger(0);
 								ctAuthenticatedInstance.lastAccess.value = new PtInteger(-181);
@@ -2147,6 +2147,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 								else
 									ctAuthenticatedInstance.lastAccess.value = new PtInteger(1);
 							}
+						} else {
+							ctAuthenticatedInstance.captcha2Solve.generateNewCaptcha();
 						}
 					}
 				}

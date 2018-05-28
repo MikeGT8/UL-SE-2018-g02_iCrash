@@ -16,6 +16,7 @@ import java.io.Serializable;
 
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtInteger;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 
 /**
  * The Class CtAuthenticated, which is the base class that all users inherit from.
@@ -43,6 +44,9 @@ public abstract class CtAuthenticated implements Serializable {
 	/** Determines if the user who is trying to log in, needs to also solve a captcha or not */
 	public PtBoolean capReq;
 	
+	/** the captcha to solve */
+	public DtCaptcha captcha2Solve;
+	
 	/**
 	 * Initialisation of the user.
 	 *
@@ -58,6 +62,9 @@ public abstract class CtAuthenticated implements Serializable {
 			tries = new DtInteger(0);
 			lastAccess = new DtInteger(-181);
 			capReq = new PtBoolean(false);
+			
+			captcha2Solve = new DtCaptcha();
+			//System.out.println("New Captcha generated: "+ captcha2Solve);
 			
 			return new PtBoolean(true); 
 	}
