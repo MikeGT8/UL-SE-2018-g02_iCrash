@@ -46,6 +46,9 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAl
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPI;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPerson;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRequest;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
@@ -513,6 +516,120 @@ public abstract class AbstractGUIController implements Initializable {
 	}
 	
 	/**
+	 * * Sets up the request tableviews with the correct columns.
+	 *
+	 * @param tblvw The tableview to add the columns to
+	 */
+	public void setUpRequestsTables(TableView<CtRequest>tblvw) {
+		
+		TableColumn<CtRequest, String> idCol = new TableColumn<CtRequest, String>("ID");
+		TableColumn<CtRequest, String> nameCol = new TableColumn<CtRequest, String>("Name");
+		TableColumn<CtRequest, String> cityCol = new TableColumn<CtRequest, String>("City");
+		TableColumn<CtRequest, String> categoryCol = new TableColumn<CtRequest, String>("Category");
+		TableColumn<CtRequest, String> statusCol = new TableColumn<CtRequest, String>("Status");
+		TableColumn<CtRequest, Boolean> ignoredCol = new TableColumn<CtRequest, Boolean>("Ignored");
+		
+		idCol.setCellValueFactory(new Callback<CellDataFeatures<CtRequest, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtRequest, String> request) {
+				return new ReadOnlyObjectWrapper<String>(request.getValue().id.value.getValue());
+			}
+		});
+		nameCol.setCellValueFactory(new Callback<CellDataFeatures<CtRequest, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtRequest, String> request) {
+				return new ReadOnlyObjectWrapper<String>(request.getValue().name.value.getValue());
+			}
+		});
+		cityCol.setCellValueFactory(new Callback<CellDataFeatures<CtRequest, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtRequest, String> request) {
+				return new ReadOnlyObjectWrapper<String>(request.getValue().city.value.getValue());
+			}
+		});
+		statusCol.setCellValueFactory(new Callback<CellDataFeatures<CtRequest, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtRequest, String> request) {
+				return new ReadOnlyObjectWrapper<String>(request.getValue().status.name());
+			}
+		});
+		ignoredCol.setCellValueFactory(new Callback<CellDataFeatures<CtRequest, Boolean>, ObservableValue<Boolean>>() {
+			public ObservableValue<Boolean> call(CellDataFeatures<CtRequest, Boolean> request) {
+				return new ReadOnlyObjectWrapper<Boolean>(request.getValue().ignored.getValue());
+			}
+		});
+		categoryCol.setCellValueFactory(new Callback<CellDataFeatures<CtRequest, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtRequest, String> request) {
+				return new ReadOnlyObjectWrapper<String>(request.getValue().category.name());
+			}
+		});
+		tblvw.getColumns().add(idCol);
+		tblvw.getColumns().add(nameCol);
+		tblvw.getColumns().add(cityCol);
+		tblvw.getColumns().add(categoryCol);
+		tblvw.getColumns().add(statusCol);
+		tblvw.getColumns().add(ignoredCol);
+		setColumnsSameWidth(tblvw);
+	}
+	
+	/**
+	 * * Sets up the PI tableviews with the correct columns.
+	 *
+	 * @param tblvw The tableview to add the columns to
+	 */
+	public void setUpPIsTables(TableView<CtPI>tblvw) {
+		
+		TableColumn<CtPI, String> idCol = new TableColumn<CtPI, String>("ID");
+		TableColumn<CtPI, String> nameCol = new TableColumn<CtPI, String>("Name");
+		TableColumn<CtPI, String> cityCol = new TableColumn<CtPI, String>("City");
+		TableColumn<CtPI, String> categoryCol = new TableColumn<CtPI, String>("Category");
+		TableColumn<CtPI, Double> longitudeCol = new TableColumn<CtPI, Double>("Longitude");
+		TableColumn<CtPI, Double> latitudeCol = new TableColumn<CtPI, Double>("Latitude");
+		TableColumn<CtPI, String> descriptionCol = new TableColumn<CtPI, String>("Description");
+		
+		idCol.setCellValueFactory(new Callback<CellDataFeatures<CtPI, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtPI, String> PI) {
+				return new ReadOnlyObjectWrapper<String>(PI.getValue().id.value.getValue());
+			}
+		});
+		nameCol.setCellValueFactory(new Callback<CellDataFeatures<CtPI, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtPI, String> PI) {
+				return new ReadOnlyObjectWrapper<String>(PI.getValue().name.value.getValue());
+			}
+		});
+		cityCol.setCellValueFactory(new Callback<CellDataFeatures<CtPI, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtPI, String> PI) {
+				return new ReadOnlyObjectWrapper<String>(PI.getValue().city.value.getValue());
+			}
+		});
+		categoryCol.setCellValueFactory(new Callback<CellDataFeatures<CtPI, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtPI, String> PI) {
+				return new ReadOnlyObjectWrapper<String>(PI.getValue().category.name());
+			}
+		});
+		longitudeCol.setCellValueFactory(new Callback<CellDataFeatures<CtPI, Double>, ObservableValue<Double>>() {
+			public ObservableValue<Double> call(CellDataFeatures<CtPI, Double> PI) {
+				return new ReadOnlyObjectWrapper<Double>(PI.getValue().location.longitude.value.getValue());
+			}
+		});
+		latitudeCol.setCellValueFactory(new Callback<CellDataFeatures<CtPI, Double>, ObservableValue<Double>>() {
+			public ObservableValue<Double> call(CellDataFeatures<CtPI, Double> PI) {
+				return new ReadOnlyObjectWrapper<Double>(PI.getValue().location.latitude.value.getValue());
+			}
+		});
+		descriptionCol.setCellValueFactory(new Callback<CellDataFeatures<CtPI, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtPI, String> PI) {
+				return new ReadOnlyObjectWrapper<String>(PI.getValue().description.value.getValue());
+			}
+		});
+		
+		tblvw.getColumns().add(idCol);
+		tblvw.getColumns().add(nameCol);
+		tblvw.getColumns().add(cityCol);
+		tblvw.getColumns().add(categoryCol);
+		tblvw.getColumns().add(longitudeCol);
+		tblvw.getColumns().add(latitudeCol);
+		tblvw.getColumns().add(descriptionCol);
+		setColumnsSameWidth(tblvw);
+	}
+	
+	/**
 	 * Sets up the human tableviews with the correct columns.
 	 *
 	 * @param tblvw The tableview to add the columns to
@@ -532,6 +649,31 @@ public abstract class AbstractGUIController implements Initializable {
 		});
 		tblvw.getColumns().add(idCol);
 		tblvw.getColumns().add(kindCol);
+		setColumnsSameWidth(tblvw);
+	}
+	
+	/**
+	 * Sets up the human tableviews with the correct columns.
+	 *
+	 * @param tblvw The tableview to add the columns to
+	 */
+	public void setUpPersonsTables(TableView<CtPerson> tblvw) {
+		
+		TableColumn<CtPerson, String> idCol = new TableColumn<CtPerson, String>("Phone Number");
+		TableColumn<CtPerson, String> typeCol = new TableColumn<CtPerson, String>("Type");
+		
+		idCol.setCellValueFactory(new Callback<CellDataFeatures<CtPerson, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtPerson, String> person) {
+				return new ReadOnlyObjectWrapper<String>(person.getValue().id.value.getValue());
+			}
+		});
+		typeCol.setCellValueFactory(new Callback<CellDataFeatures<CtPerson, String>, ObservableValue<String>>() {
+			public ObservableValue<String> call(CellDataFeatures<CtPerson, String> person) {
+				return new ReadOnlyObjectWrapper<String>(person.getValue().type.name());
+			}
+		});
+		tblvw.getColumns().add(idCol);
+		tblvw.getColumns().add(typeCol);
 		setColumnsSameWidth(tblvw);
 	}
 	
@@ -728,6 +870,39 @@ public abstract class AbstractGUIController implements Initializable {
 	 * @param listOfItems the list of items to add to the tableview
 	 */
 	public void addHumansToTableView(TableView<CtHuman> tblvw, ArrayList<CtHuman> listOfItems){
+		tblvw.getItems().clear();
+		tblvw.getItems().addAll(listOfItems);
+	}
+	
+	/**
+	 * Adds the provided list of requests to the tableview.
+	 *
+	 * @param tblvw The tableview to add the data to
+	 * @param collection the list of items to add to the tableview
+	 */
+	public void addRequestsToTableView(TableView<CtRequest> tblvw, Collection<? extends CtRequest> collection){
+		tblvw.getItems().clear();
+		tblvw.getItems().addAll(collection);
+	}
+	
+	/**
+	 * Adds the provided list of PIs to the tableview.
+	 *
+	 * @param tblvw The tableview to add the data to
+	 * @param collection the list of items to add to the tableview
+	 */
+	public void addPIsToTableView(TableView<CtPI> tblvw, Collection<? extends CtPI> collection){
+		tblvw.getItems().clear();
+		tblvw.getItems().addAll(collection);
+	}
+	
+	/**
+	 * Adds the provided list of persons to the tableview.
+	 *
+	 * @param tblvw The tableview to add the data to
+	 * @param listOfItems the list of items to add to the tableview
+	 */
+	public void addPersonsToTableView(TableView<CtPerson> tblvw, ArrayList<CtPerson> listOfItems){
 		tblvw.getItems().clear();
 		tblvw.getItems().addAll(listOfItems);
 	}

@@ -22,12 +22,16 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdm
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAuthenticated;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompany;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPerson;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAuthenticated;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPI;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPerson;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRequest;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtAlertID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCaptcha;
@@ -146,6 +150,22 @@ public interface IcrashSystem extends Remote {
      * @throws RemoteException Thrown if the server is offline
      */
     public ArrayList<CtAdministrator> getAllCtAdministrators() throws RemoteException;
+    
+    /**
+     * Gets all of the actor persons in the system.
+     *
+     * @return all of the actor persons in the system
+     * @throws RemoteException Thrown if the server is offline
+     */
+    public List<ActPerson> getAllActPersons() throws RemoteException;
+    
+    /**
+     * Gets all of the class type persons in the system.
+     *
+     * @return all of the class type persons in the system
+     * @throws RemoteException Thrown if the server is offline
+     */
+    public ArrayList<CtPerson> getAllCtPersons() throws RemoteException;
 	
 	/**
 	 * Gets the actor communication company from the system associated with the class type human passed.
@@ -179,6 +199,22 @@ public interface IcrashSystem extends Remote {
 	 * @throws RemoteException Thrown if the server is offline
 	 */
 	public ArrayList <CtAlert> getAllCtAlerts() throws RemoteException;
+	
+	/**
+	 * Gets a list of all class types requests in the system.
+	 *
+	 * @return a list of all class type requests
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public ArrayList <CtRequest> getAllCtRequests() throws RemoteException;
+	
+	/**
+	 * Gets a list of all class types PIs in the system.
+	 *
+	 * @return a list of all class type PIs
+	 * @throws RemoteException Thrown if the server is offline
+	 */
+	public ArrayList <CtPI> getAllCtPIs() throws RemoteException;
 	
 	/**
 	 * Gets a list of all class type humans in the system.

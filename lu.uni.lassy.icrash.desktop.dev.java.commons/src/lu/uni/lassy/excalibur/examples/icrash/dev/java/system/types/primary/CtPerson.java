@@ -14,7 +14,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.RmiUtils;
 
-public class CtPerson {
+public class CtPerson extends CtAuthenticated {
 
 	private static final long serialVersionUID = 227L;
 

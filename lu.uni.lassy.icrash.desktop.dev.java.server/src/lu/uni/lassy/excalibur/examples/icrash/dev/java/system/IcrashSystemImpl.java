@@ -35,6 +35,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCom
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinatorImpl;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPerson;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPersonImpl;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbAlerts;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbComCompanies;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.db.DbCoordinators;
@@ -156,6 +157,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 	/**  A hashtable of the joint class coordinators and actors coordiantors in the system, stored by their class type. */
 	Hashtable<CtCoordinator, ActCoordinator> assCtCoordinatorActCoordinator = new Hashtable<CtCoordinator, ActCoordinator>();
 	
+	/**  A hashtable of the joint class persons and actors persons in the system, stored by their class type. */
+	Hashtable<CtPerson, ActPerson> assCtPersonActPerson = new Hashtable<CtPerson, ActPerson>();
+	
 	/**  A hashtable of the joint crises and coordinators in the system, stored by their crisis as a key. */
 	Hashtable<CtCrisis, CtCoordinator> assCtCrisisCtCoordinator = new Hashtable<CtCrisis, CtCoordinator>();
 	
@@ -206,6 +210,28 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					return ctAuth;
 			}
 		}
+		return null;
+	}
+	
+	/**
+	 * Gets the class Authenticated (Of a person type) that has the associated ID provided.
+	 *
+	 * @param aPersonID The ID to use to search for the user
+	 * @return the class Authenticated that was associated with the ID provided, if none found then return a null
+	 */
+	public CtAuthenticated getCtPerson(DtPhoneNumber aPersonID) {
+
+		for (CtAuthenticated ctAuth : assCtAuthenticatedActAuthenticated.keySet()) {
+			
+			if (ctAuth instanceof CtPerson) {
+				
+				PtBoolean res = ((CtPerson) ctAuth).id.eq(aPersonID);
+				
+				if (res.getValue())
+					return ctAuth;
+			}
+		}
+		
 		return null;
 	}
 
@@ -417,6 +443,11 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			throws RemoteException {
 		return assCtCoordinatorActCoordinator.get(keyCtCoordinator);
 	}
+	
+	public ActPerson getActPerson(CtPerson keyCtPerson) throws RemoteException {
+		
+		return assCtPersonActPerson.get(keyCtPerson);
+	}
 
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#bindCtCrisisCtCoordinator(lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis, lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator)
@@ -442,6 +473,20 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 								.get(ctAuth));
 		}
 		return listAdmins;
+	}
+	
+	public List<ActPerson> getAllActPersons() throws RemoteException {
+		
+		List<ActPerson> listPersons = new ArrayList<ActPerson>();
+		
+		for (CtAuthenticated ctAuth : assCtAuthenticatedActAuthenticated.keySet()) {
+			
+			if (ctAuth instanceof CtPerson)
+				
+				listPersons.add((ActPersonImpl) assCtAuthenticatedActAuthenticated.get(ctAuth));
+		}
+		
+		return listPersons;
 	}
 	
 	/* (non-Javadoc)
@@ -504,6 +549,19 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		if (cmpSystemCtHuman != null){
 			for(CtHuman human : cmpSystemCtHuman.values())
 				result.add(human);
+		}
+		return result;
+	}
+	
+	public ArrayList<CtPerson> getAllCtPersons() throws java.rmi.RemoteException {
+		
+		ArrayList<CtPerson> result = new ArrayList<CtPerson>();
+		
+		if (cmpSystemCtPerson != null) {
+			
+			for(CtPerson person : cmpSystemCtPerson.values())
+				
+				result.add(person);
 		}
 		return result;
 	}

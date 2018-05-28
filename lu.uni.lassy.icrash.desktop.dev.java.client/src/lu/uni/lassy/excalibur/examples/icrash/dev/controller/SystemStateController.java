@@ -23,8 +23,10 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdm
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompany;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActMsrCreator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPerson;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPerson;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtDateAndTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -171,6 +173,31 @@ public class SystemStateController {
 	}
 	
 	/**
+	 * Gets the act person.
+	 *
+	 * @param userName the user name
+	 * @return the act coordinator
+	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
+	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
+	 */
+	public ActPerson getActPerson(String userName) throws ServerNotBoundException, ServerOfflineException {
+		
+		try {
+			return server.env().getActPerson(userName);
+			
+		} catch (RemoteException e) {
+			
+			Log4JUtils.getInstance().getLogger().error(e);
+			throw new ServerOfflineException();
+			
+		} catch (NotBoundException e) {
+			
+			Log4JUtils.getInstance().getLogger().error(e);
+			throw new ServerNotBoundException();
+		}
+	}
+	
+	/**
 	 * Gets all the actor communication company in the server.
 	 *
 	 * @return A list of all the actor communication companies in the system
@@ -227,6 +254,31 @@ public class SystemStateController {
 			throw new ServerNotBoundException();
 		}
 	}
+	
+	/**
+	 * Gets an ArrayList of all CtPersons in the system.
+	 *
+	 * @return An ArrayList of all CtPersons from the server
+	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
+	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
+	 */
+	public ArrayList<CtPerson> getAllPersons() throws ServerOfflineException, ServerNotBoundException {
+		
+		try {
+			return server.sys().getAllCtPersons();
+			
+		} catch (RemoteException e) {
+			
+			Log4JUtils.getInstance().getLogger().error(e);
+			throw new ServerOfflineException();
+			
+		} catch (NotBoundException e) {
+			
+			Log4JUtils.getInstance().getLogger().error(e);
+			throw new ServerNotBoundException();
+		}
+	}
+	
 	/**
 	 * Gets an ArrayList of all CtAdministrators in the system.
 	 *

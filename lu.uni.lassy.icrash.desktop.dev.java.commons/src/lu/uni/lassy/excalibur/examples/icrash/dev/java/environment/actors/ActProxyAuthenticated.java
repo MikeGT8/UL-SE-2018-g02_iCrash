@@ -78,6 +78,9 @@ public interface ActProxyAuthenticated extends Remote, JIntHasServerSideActor, J
 		/** The actor Coordinator. */
 		Coordinator,
 		
+		/** The actor Person. */
+		Person,
+		
 		/** The actor Communication company. */
 		ComCompany,
 		

@@ -20,9 +20,7 @@ import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import lu.uni.lassy.excalibur.examples.icrash.dev.controller.AlertController;
-import lu.uni.lassy.excalibur.examples.icrash.dev.controller.CrisisController;
-import lu.uni.lassy.excalibur.examples.icrash.dev.controller.HumanController;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.*;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.SystemStateController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.NullValueException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
@@ -33,6 +31,9 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAl
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCoordinator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtHuman;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPI;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPerson;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRequest;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtState;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
@@ -74,10 +75,22 @@ public class MonitorGUIController extends AbstractGUIController implements HasTa
     @FXML
     private TableView<CtCrisis> tblvwCrises;
 
+    /** The tableview of the requests in the system. */
+	@FXML
+    private TableView<CtRequest> tblvwRequests;
+
+	/** The tableview of the PIs in the system. */
+    @FXML
+    private TableView<CtPI> tblvwPIs;
+    
     /** The tableview of the humans in the system. */
     @FXML
     private TableView<CtHuman> tblvwHumans;
 
+    /** The tableview of the persons in the system. */
+    @FXML
+    private TableView<CtPerson> tblvwPersons;
+    
     /** The tableview of the administrators in the system. */
     @FXML
     private TableView<CtAdministrator> tblvwAdministrators;
@@ -117,8 +130,17 @@ public class MonitorGUIController extends AbstractGUIController implements HasTa
     /** The alert controller, which allows alert specific functions, like getting a list of alerts. */
     private AlertController alertController;
     
+    /** The request controller, which allows request specific functions, like getting a list of requests. */
+    private RequestController requestController;
+    
+    /** The PI controller, which allows PI specific functions, like getting a list of PIs.*/
+    private PIController PIController;
+    
     /** The human controller, which allows human specific functions, like getting a list of humans.*/
     private HumanController humanController;
+    
+    /** The person controller, which allows person specific functions, like getting a list of persons.*/
+    private PersonController personController;
     
     /** The crisis controller, which allows crisis specific functions, like getting a list of crises. */
     private CrisisController crisisController;
@@ -146,6 +168,13 @@ public class MonitorGUIController extends AbstractGUIController implements HasTa
 			addAlertsToTableView(tblvwAlerts, alertController.getListOfAlerts());
 			addHumansToTableView(tblvwHumans, humanController.getAllHumans());
 			addCrisesToTableView(tblvwCrises, crisisController.getAllCtCrises());
+			
+			/* Returns me an error I cannot find/solve
+			addPersonsToTableView(tblvwPersons, personController.getAllPersons());
+			addRequestsToTableView(tblvwRequests, requestController.getListOfRequests());
+			addPIsToTableView(tblvwPIs, PIController.getAllCtPIs());
+			*/
+			
 			//Moved these to the bottom, as most likely to throw the null pointer exception error
 			addAdminsToTableView(tblvwAdministrators, systemStateController.getAllAdministrators());
 			addCoordsToTableView(tblvwCoordinators, systemStateController.getAllCoordinators());
@@ -169,6 +198,9 @@ public class MonitorGUIController extends AbstractGUIController implements HasTa
     	setUpCoordTables(tblvwCoordinators, true);
     	setUpCrisesTables(tblvwCrises);
     	setUpHumansTables(tblvwHumans);
+    	setUpRequestsTables(tblvwRequests);
+    	setUpPIsTables(tblvwPIs);
+    	setUpPersonsTables(tblvwPersons);
     	setUpStateTables(tblvwCtState);
     }
 
@@ -182,6 +214,8 @@ public class MonitorGUIController extends AbstractGUIController implements HasTa
 		humanController.closeServerConnection();
 		crisisController.closeServerConnection();
 		humanController.closeServerConnection();
+		requestController.closeServerConnection();
+		PIController.closeServerConnection();
 	}
 
 	@Override
@@ -190,6 +224,8 @@ public class MonitorGUIController extends AbstractGUIController implements HasTa
     	crisisController = new CrisisController();
     	alertController = new AlertController();
     	humanController = new HumanController();
+    	requestController = new RequestController();
+    	PIController = new PIController();
     	setUpTables();
     	populateTables();
     	tbpnMonitor.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
