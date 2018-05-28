@@ -93,6 +93,10 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
     /** The button that shows the controls for deleting a coordinator */
     @FXML
     private Button bttnBottomAdminCoordinatorDeleteACoordinator;
+    
+    /** The button that shows the controls for updating a coordinators access rights */
+    @FXML
+    private Button bttnBottomAdminCoordinatorUpdateACoordinatorAccessRights;
 
     /** The tableview of the recieved messages from the system */
     @FXML
@@ -120,6 +124,16 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
     @FXML
     void bttnBottomAdminCoordinatorDeleteACoordinator_OnClick(ActionEvent event) {
     	showCoordinatorScreen(TypeOfEdit.Delete);
+    }
+    
+    /**
+     * The button event that will show the controls for updating a coordinator's access rights
+     *
+     * @param event The event type thrown, we do not need this, but it must be specified
+     */
+    @FXML
+    void bttnBottomAdminCoordinatorUpdateACoordinatorAccessRights_OnClick(ActionEvent event) {
+    	showCoordinatorScreen(TypeOfEdit.Update);
     }
 
     /**
@@ -163,7 +177,10 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 		Add,
 		
 		/** Deleting a coordinator. */
-		Delete
+		Delete,
+		
+		/** Updating a coordinator's access rights*/
+		Update
 	}
 	
 	/**
@@ -222,6 +239,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 		TextField txtfldUserName = new TextField();
 		PasswordField psswrdfldPassword = new PasswordField();
 		ComboBox<EtCrisisType> cmbbxAccessRights = new ComboBox<EtCrisisType>();
+		cmbbxAccessRights.getItems().addAll(EtCrisisType.huge, EtCrisisType.medium, EtCrisisType.small);
 		txtfldUserID.setPromptText("User ID");
 		Button bttntypOK = null;
 		GridPane grdpn = new GridPane();
@@ -233,12 +251,18 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 			psswrdfldPassword.setPromptText("Password");
 			grdpn.add(txtfldUserName, 1, 2);
 			grdpn.add(psswrdfldPassword, 1, 3);
-			grdpn.add(bttntypOK, 1, 4);
+			grdpn.add(cmbbxAccessRights, 1, 4);
+			grdpn.add(bttntypOK, 1, 5);
 			break;
 		case Delete:
 			bttntypOK = new Button("Delete");
 			grdpn.add(bttntypOK, 1, 2);
-			break;		
+			break;
+		case Update:
+			bttntypOK = new Button("Update");
+			grdpn.add(cmbbxAccessRights, 1, 2);
+			grdpn.add(bttntypOK, 1, 3);
+			break;
 		}
 		bttntypOK.setDefaultButton(true);
 		bttntypOK.setOnAction(new EventHandler<ActionEvent>() {
@@ -268,6 +292,11 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 							}
 							else
 								showErrorMessage("Unable to delete coordinator", "An error occured when deleting the coordinator");
+							break;
+						case Update:
+							if (userController.oeUpdateCoordinatorAccessRights(txtfldUserID.getText(), cmbbxAccessRights.getValue()).getValue()){
+								anchrpnCoordinatorDetails.getChildren().remove(grdpn);
+							}
 							break;
 						}
 					} catch (ServerOfflineException | ServerNotBoundException | IncorrectFormatException e) {
