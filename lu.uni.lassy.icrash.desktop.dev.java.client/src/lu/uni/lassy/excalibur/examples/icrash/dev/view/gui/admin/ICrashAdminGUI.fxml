@@ -30,13 +30,13 @@
                            <children>
                               <TextField fx:id="txtfldAdminUserName" prefHeight="25.0" prefWidth="200.0" promptText="Username" GridPane.columnSpan="2" />
                               <PasswordField fx:id="psswrdfldAdminPassword" prefHeight="25.0" prefWidth="200.0" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                              <TextField fx:id="txtfldAdminCaptcha" prefHeight="25.0" prefWidth="200.0" promptText="captcha" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                              <Button fx:id="bttnAdminLogin" defaultButton="true" mnemonicParsing="false" onAction="#bttnBottomLoginPaneLogin_OnClick" text="Logon" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <TextField fx:id="txtfldAdminCaptcha" prefHeight="25.0" prefWidth="200.0" promptText="captcha" GridPane.columnSpan="2" GridPane.rowIndex="2" visible="false" />
+                              <Button fx:id="bttnAdminLogin" defaultButton="true" mnemonicParsing="false" onAction="#bttnBottomLoginPaneLogin_OnClick" text="Logon" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="bttnAdminLoginWithCaptcha" defaultButton="true" mnemonicParsing="false" onAction="#bttnBottomLoginPaneLoginWithCaptcha_OnClick" text="Logon with captcha" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                              <Button fx:id="bttnAdminLoginWithCaptcha" defaultButton="false" mnemonicParsing="false" onAction="#bttnBottomLoginPaneLoginWithCaptcha_OnClick" text="Logon with captcha" GridPane.columnIndex="1" GridPane.rowIndex="3" visible="false">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>

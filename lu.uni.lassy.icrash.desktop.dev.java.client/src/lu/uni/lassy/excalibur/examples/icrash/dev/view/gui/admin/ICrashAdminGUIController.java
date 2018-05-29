@@ -271,8 +271,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 		pnAdminLogon.setVisible(!loggedOn);
 		brdpnAdmin.setVisible(loggedOn);
 		bttnAdminLogoff.setDisable(!loggedOn);
-		if(login < 3) bttnAdminLogin.setDefaultButton(!loggedOn);
-		else bttnAdminLoginWithCaptcha.setDefaultButton(!loggedOn);
+		bttnAdminLogin.setDefaultButton(!loggedOn);
 		if (!loggedOn){
 			txtfldAdminUserName.setText("");
 			psswrdfldAdminPassword.setText("");
@@ -288,10 +287,10 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonWithCaptchaShowPanes(boolean)
 	 */
 	protected void logonWithCaptchaShowPanes(boolean loggedOn) {
-		pnAdminLogonWC.setVisible(!loggedOn);
-		brdpnAdmin.setVisible(loggedOn);
-		bttnAdminLogoff.setDisable(!loggedOn);
-		bttnAdminLoginWithCaptcha.setDefaultButton(!loggedOn);
+		pnAdminLogonWC.setVisible(loggedOn);
+		brdpnAdmin.setVisible(!loggedOn);
+		bttnAdminLogoff.setDisable(loggedOn);
+		bttnAdminLoginWithCaptcha.setDefaultButton(loggedOn);
 		if (!loggedOn){
 			txtfldAdminUserName.setText("");
 			psswrdfldAdminPassword.setText("");
@@ -532,7 +531,25 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 				if (userController.oeLogin(txtfldAdminUserName.getText(), psswrdfldAdminPassword.getText()).getValue()) {
 					logonShowPanes(true);
 					login = 0;
-				} else login++;
+					txtfldAdminUserName.setText("");
+					psswrdfldAdminPassword.setText("");
+					txtfldAdminCaptcha.setText("");
+				} else {
+					login++;
+					if(login < 3) {
+						txtfldAdminCaptcha.setVisible(false);
+						bttnAdminLoginWithCaptcha.setVisible(false);
+						bttnAdminLogin.setVisible(true);
+						bttnAdminLoginWithCaptcha.setDefaultButton(false);
+						bttnAdminLogin.setDefaultButton(true);
+					} else {
+						txtfldAdminCaptcha.setVisible(true);
+						bttnAdminLogin.setVisible(false);
+						bttnAdminLoginWithCaptcha.setVisible(true);
+						bttnAdminLoginWithCaptcha.setDefaultButton(true);
+						bttnAdminLogin.setDefaultButton(false);
+					}
+				}
 			}
 			catch (ServerOfflineException | ServerNotBoundException e) {
 				showExceptionErrorMessage(e);
@@ -550,8 +567,14 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 		if(txtfldAdminUserName.getText().length() > 0 && psswrdfldAdminPassword.getText().length() > 0 && txtfldAdminCaptcha.getText().length() > 0){
 			try {
 				if (userController.oeLoginWithCaptcha(txtfldAdminUserName.getText(), psswrdfldAdminPassword.getText(), txtfldAdminCaptcha.getText()).getValue()) {
-					logonWithCaptchaShowPanes(true);
+					logonShowPanes(true);
 					login = 0;
+					txtfldAdminUserName.setText("");
+					psswrdfldAdminPassword.setText("");
+					txtfldAdminCaptcha.setText("");
+					txtfldAdminCaptcha.setVisible(false);
+					bttnAdminLoginWithCaptcha.setVisible(false);
+					bttnAdminLogin.setVisible(true);
 				} else login++;
 			}
 			catch (ServerOfflineException | ServerNotBoundException e) {

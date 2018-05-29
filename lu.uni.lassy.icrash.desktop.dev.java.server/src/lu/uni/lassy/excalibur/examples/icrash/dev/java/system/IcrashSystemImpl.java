@@ -1389,7 +1389,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					ActAuthenticated authActorCheck = assCtAuthenticatedActAuthenticated.get(ctAuthenticatedInstance);
 					log.debug("The logging in actor is " + authActorCheck.getLogin().value.getValue());
 					if (authActorCheck != null){
-						if(aDtCaptcha.value.getValue().equals(ctAuthenticatedInstance.captcha2Solve.value.toString())) {
+						if(aDtCaptcha.value.getValue().equals(ctAuthenticatedInstance.captcha2Solve.value.getValue())) {
 							if(authActorCheck.getLogin().value.getValue().equals(currentRequestingAuthenticatedActor.getLogin().value.getValue())) {
 								ctAuthenticatedInstance.tries.value = new PtInteger(0);
 								//ctAuthenticatedInstance.lastAccess.value = new PtInteger(-181);
@@ -1404,7 +1404,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 							ctAuthenticatedInstance.captcha2Solve.generateNewCaptcha();
 						}
 					}
-				}else { // ELSE of pw and/or login being incorrect
+				} else { // ELSE of pw and/or login being incorrect
 					//ctAuthenticatedInstance.lastAccess.value = new PtInteger(((int)(System.currentTimeMillis()/1000)) - ctAuthenticatedInstance.lastAccess.value.getValue());
 					//if(ctAuthenticatedInstance.lastAccess.value.getValue() <= 180)
 						ctAuthenticatedInstance.tries.value = new PtInteger(ctAuthenticatedInstance.tries.value.getValue() + 1);
@@ -1413,8 +1413,10 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				}
 			}
 			//PostF1
-			PtString aMessage = new PtString(
-					"Wrong identification information! Please try again ...");
+			String s = "Wrong identification information! Please try again ...";
+			if(ctAuthenticatedInstance.capReq.getValue())
+				s+=" Captcha to solve: " + ctAuthenticatedInstance.captcha2Solve.toString();
+			PtString aMessage = new PtString(s);
 			currentRequestingAuthenticatedActor.ieMessage(aMessage);
 			Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(), RmiUtils.getInstance().getPort());
 			IcrashEnvironment env = (IcrashEnvironment) registry
