@@ -1645,29 +1645,24 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
 			
-			if (ctRequestAvailable.status.toString().equals("pending")) {
+			//PostF1 to change the status to treated
+			ctRequestAvailable.status = EtRequestStatus.treated;
+			DbRequests.updateRequest(ctRequestAvailable);
 				
-				//PostF1 to change the status to treated
-				ctRequestAvailable.status = EtRequestStatus.treated;
-				DbRequests.updateRequest(ctRequestAvailable);
+			//PostF2 to send the input event to the administrator
+			ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+			admin.ieRequestBeingTreated();
 				
-				//PostF2 to send the input event to the administrator
-				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
-				admin.ieRequestBeingTreated();
-				
-				//PostF3 update the request in relation to the system
-				cmpSystemCtRequest.replace(ctRequestAvailable.id.value.getValue(), ctRequestAvailable);
-				
-				return new PtBoolean(true);
-			}
+			//PostF3 update the request in relation to the system
+			cmpSystemCtRequest.replace(ctRequestAvailable.id.value.getValue(), ctRequestAvailable);
+			
+			return new PtBoolean(true);
 						
 		} catch (Exception ex) {
 			
 			log.error("Exception in oeTreatRequest..." + ex);
 			return new PtBoolean(false);
 		}
-		
-		return new PtBoolean(false);
 	}
 
 	public PtBoolean oeSolveRequest(DtID aRequestID) throws RemoteException {
@@ -1680,30 +1675,25 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			isAdminLoggedIn();
 			
 			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
-			
-			if (ctRequestAvailable.status.toString().equals("treated")) {
 				
-				//PostF1 to change the status to solved
-				ctRequestAvailable.status = EtRequestStatus.solved;
-				DbRequests.updateRequest(ctRequestAvailable);
+			//PostF1 to change the status to solved
+			ctRequestAvailable.status = EtRequestStatus.solved;
+			DbRequests.updateRequest(ctRequestAvailable);
 				
-				//PostF2 to send the input event to the administrator
-				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
-				admin.ieRequestSolved();
+			//PostF2 to send the input event to the administrator
+			ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+			admin.ieRequestSolved();
 				
-				//PostF3 update the request in relation to the system
-				cmpSystemCtRequest.replace(ctRequestAvailable.id.value.getValue(), ctRequestAvailable);
+			//PostF3 update the request in relation to the system
+			cmpSystemCtRequest.replace(ctRequestAvailable.id.value.getValue(), ctRequestAvailable);
 				
-				return new PtBoolean(true);
-			}
-						
+			return new PtBoolean(true);
+									
 		} catch (Exception ex) {
 			
 			log.error("Exception in oeSolveRequest..." + ex);
 			return new PtBoolean(false);
 		}
-		
-		return new PtBoolean(false);
 	}
 	
 	public PtBoolean oeAddPI(DtID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException {
@@ -1714,38 +1704,30 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			//PreP2 to make sure that the administrator is logged in.
 			isAdminLoggedIn();
-			
-			CtRequest ctRequestAvailable = getCtRequest(aPIID);
-			CtPI ctPIAvailable = getCtPI(aPIID);
-			
-			if ((ctPIAvailable == null) && ctRequestAvailable != null && ctRequestAvailable instanceof CtRequest) {
 				
-				//PostF1 to add the new PI to the system
-				CtPI ctPI = new CtPI();
-				ctPI.init(aPIID, aPIName, aPICity, aGPSLocation, aPIDescription, aPICategory);
-				DbPIs.insertPI(ctPI);
+			//PostF1 to add the new PI to the system
+			CtPI ctPI = new CtPI();
+			ctPI.init(aPIID, aPIName, aPICity, aGPSLocation, aPIDescription, aPICategory);
+			DbPIs.insertPI(ctPI);
 				
-				//PostF2 to send the input event to the administrator
-				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
-				admin.iePIAdded();
+			//PostF2 to send the input event to the administrator
+			ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+			admin.iePIAdded();
 				
-				//PostF3 to send the input event to the which requested the PI
-				ActPerson person = (ActPerson) requestingNewPIActor;
-				person.iePIAdded();
+			//PostF3 to send the input event to the which requested the PI
+			ActPerson person = (ActPerson) requestingNewPIActor;
+			person.iePIAdded();
 				
-				//PostF4 add the new added PI in relation to the system
-				cmpSystemCtPI.put(ctPI.id.value.getValue(), ctPI);
+			//PostF4 add the new added PI in relation to the system
+			cmpSystemCtPI.put(ctPI.id.value.getValue(), ctPI);
 				
-				return new PtBoolean(true);
-			}
+			return new PtBoolean(true);
 						
 		} catch (Exception ex) {
 			
 			log.error("Exception in oeAddPI..." + ex);
 			return new PtBoolean(false);
 		}
-		
-		return new PtBoolean(false);
 	}
 	
 	public PtBoolean oeUpdatePI(DtID aPIID, DtName aPIName, DtCity aPICity, DtGPSLocation aGPSLocation, DtDescription aPIDescription, EtCategory aPICategory) throws RemoteException {
@@ -1758,38 +1740,33 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			isAdminLoggedIn();
 			
 			CtPI ctPIAvailable = getCtPI(aPIID);
+				
+			//PostF1 to update the PI in the system
+			CtPI ctPI = (CtPI) ctPIAvailable;
+				
+			ctPI.id = aPIID;
+			ctPI.name =aPIName;
+			ctPI.city = aPICity;
+			ctPI.location = aGPSLocation;
+			ctPI.description = aPIDescription;
+			ctPI.category = aPICategory;
+				
+			DbPIs.updatePI(ctPI);
+				
+			//PostF2 to send the input event to the administrator
+			ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+			admin.iePIUpToDate();
+				
+			//PostF3 update the PI in relation to the system
+			cmpSystemCtPI.replace(ctPI.id.value.getValue(), ctPI);
 			
-			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
-				
-				//PostF1 to update the PI in the system
-				CtPI ctPI = (CtPI) ctPIAvailable;
-				
-				ctPI.id = aPIID;
-				ctPI.name =aPIName;
-				ctPI.city = aPICity;
-				ctPI.location = aGPSLocation;
-				ctPI.description = aPIDescription;
-				ctPI.category = aPICategory;
-				
-				DbPIs.updatePI(ctPI);
-				
-				//PostF2 to send the input event to the administrator
-				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
-				admin.iePIUpToDate();
-				
-				//PostF3 update the PI in relation to the system
-				cmpSystemCtPI.replace(ctPI.id.value.getValue(), ctPI);
-				
-				return new PtBoolean(true);
-			}
+			return new PtBoolean(true);
 						
 		} catch (Exception ex) {
 			
 			log.error("Exception in oeUpdatePI..." + ex);
 			return new PtBoolean(false);
 		}
-		
-		return new PtBoolean(false);
 	}
 	
 	public PtBoolean oeDeletePI(DtID aPIID) throws RemoteException {
@@ -1802,30 +1779,25 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			isAdminLoggedIn();
 			
 			CtPI ctPIAvailable = getCtPI(aPIID);
-			
-			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
 				
-				//PostF1 to delete the PI
-				CtPI ctPI = (CtPI) ctPIAvailable;
-				DbPIs.deletePI(ctPI);
+			//PostF1 to delete the PI
+			CtPI ctPI = (CtPI) ctPIAvailable;
+			DbPIs.deletePI(ctPI);
 				
-				//PostF2 to send a message to the administrator
-				ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
-				admin.iePIDeleted();
+			//PostF2 to send a message to the administrator
+			ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
+			admin.iePIDeleted();
 				
-				//PostF3 delete the PI in relation to the system
-				cmpSystemCtPI.remove(ctPIAvailable.id.value.getValue());
+			//PostF3 delete the PI in relation to the system
+			cmpSystemCtPI.remove(ctPIAvailable.id.value.getValue());
 				
-				return new PtBoolean(true);
-			}
+			return new PtBoolean(true);
 			
 		} catch (Exception e) {
 			
 			log.error("Exception in oeDeletePI..." + e);
 			return new PtBoolean(false);
 		}
-		
-		return new PtBoolean(false);
 	}
 	
 	/*
@@ -1926,30 +1898,25 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			isAdminLoggedIn();
 			
 			CtRequest ctRequestAvailable = getCtRequest(aRequestID);
-			
-			if (ctRequestAvailable != null && ctRequestAvailable instanceof CtRequest) {
 				
-				//PostF1 to change the status to pending
-				ctRequestAvailable.status = EtRequestStatus.pending;
-				DbRequests.updateRequest(ctRequestAvailable);
+			//PostF1 to change the status to pending
+			ctRequestAvailable.status = EtRequestStatus.pending;
+			DbRequests.updateRequest(ctRequestAvailable);
 				
-				//PostF2 to send the input event to the coordinator
-				ActCoordinator coord = (ActCoordinator) currentRequestingAuthenticatedActor;
-				coord.ieRequestDelivered();
+			//PostF2 to send the input event to the coordinator
+			ActCoordinator coord = (ActCoordinator) currentRequestingAuthenticatedActor;
+			coord.ieRequestDelivered();
 				
-				//PostF3 update the request in relation to the system
-				cmpSystemCtRequest.replace(ctRequestAvailable.id.value.getValue(), ctRequestAvailable);
+			//PostF3 update the request in relation to the system
+			cmpSystemCtRequest.replace(ctRequestAvailable.id.value.getValue(), ctRequestAvailable);
 				
-				return new PtBoolean(true);
-			}
+			return new PtBoolean(true);
 						
 		} catch (Exception ex) {
 			
 			log.error("Exception in oeDeliverRequest..." + ex);
 			return new PtBoolean(false);
 		}
-		
-		return new PtBoolean(false);
 	}
 	
 	/*
@@ -2007,25 +1974,16 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			isAdminLoggedIn();
 			
 			ActPerson person = (ActPerson) currentRequestingAuthenticatedActor;
-			
-			for (String PIKey : cmpSystemCtPI.keySet()) {
-				
-				CtPI ctPI = cmpSystemCtPI.get(PIKey);
-				CtRequest ctRequestAvailable = cmpSystemCtRequest.get(PIKey);
-			
-				if ((ctPI == null) && (ctRequestAvailable == null)) {
 					
-					CtRequest ctRequest = new CtRequest();
+			CtRequest ctRequest = new CtRequest();
 					
-					//PostF1 to initialise a new request
-					ctRequest.init(aRequestID, aPIName, aPICity, aPICategory, EtRequestStatus.empty, new DtIgnored(false));
-					DbRequests.insertRequest(ctRequest);
+			//PostF1 to initialise a new request
+			ctRequest.init(aRequestID, aPIName, aPICity, aPICategory, EtRequestStatus.empty, new DtIgnored(false));
+			DbRequests.insertRequest(ctRequest);
 					
-					//PostF2 to send a message to person
-					PtString aMessage = new PtString("New request sent!");
-					person.ieMessage(aMessage);
-				}
-			}
+			//PostF2 to send a message to person
+			PtString aMessage = new PtString("New request sent!");
+			person.ieMessage(aMessage);
 						
 		} catch (Exception ex) {
 			
@@ -2046,24 +2004,19 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			isAdminLoggedIn();
 			
 			CtPI ctPIAvailable = getCtPI(aPIID);
-			
-			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
 						
-				//PostF1 to send the input event to the person
-				ActPerson person = (ActPerson) currentRequestingAuthenticatedActor;
-				PtString aMessage = new PtString("The GPS location of the PI is: " + ctPIAvailable.location);
-				person.ieMessage(aMessage);
+			//PostF1 to send the input event to the person
+			ActPerson person = (ActPerson) currentRequestingAuthenticatedActor;
+			PtString aMessage = new PtString("The GPS location of the PI is: " + ctPIAvailable.location);
+			person.ieMessage(aMessage);
 				
-				return new PtBoolean(true);
-			}
+			return new PtBoolean(true);
 						
 		} catch (Exception ex) {
 			
 			log.error("Exception in oeGetGPSLocation..." + ex);
 			return new PtBoolean(false);
 		}
-		
-		return new PtBoolean(false);
 	}
 
 	public PtBoolean oeGetPIDescription(DtID aPIID) throws RemoteException {
@@ -2076,24 +2029,19 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			isAdminLoggedIn();
 			
 			CtPI ctPIAvailable = getCtPI(aPIID);
-			
-			if (ctPIAvailable != null && ctPIAvailable instanceof CtPI) {
 						
-				//PostF1 to send the input event to the person
-				ActPerson person = (ActPerson) currentRequestingAuthenticatedActor;
-				PtString aMessage = new PtString("The description of the PI is the following: " + ctPIAvailable.description);
-				person.ieMessage(aMessage);
+			//PostF1 to send the input event to the person
+			ActPerson person = (ActPerson) currentRequestingAuthenticatedActor;
+			PtString aMessage = new PtString("The description of the PI is the following: " + ctPIAvailable.description);
+			person.ieMessage(aMessage);
 				
-				return new PtBoolean(true);
-			}
+			return new PtBoolean(true);
 						
 		} catch (Exception ex) {
 			
 			log.error("Exception in oeGetPIDescription..." + ex);
 			return new PtBoolean(false);
 		}
-		
-		return new PtBoolean(false);
 	}
 	
 	//*****************************************************************************************
