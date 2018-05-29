@@ -24,6 +24,11 @@ public abstract class AbstractAuthGUIController extends AbstractGUIController im
 	public abstract void logon();
 	
 	/**
+	 * A method that allows the user to logon with captcha to the sever. Will often call a function from inside the user's specific controller class.
+	 */
+	public abstract void logonWithCaptcha();
+	
+	/**
 	 * A method that allows the user to logoff the sever. Will often call a function from inside the user's specific controller class.
 	 */
 	public abstract void logoff();
@@ -34,5 +39,13 @@ public abstract class AbstractAuthGUIController extends AbstractGUIController im
 	 * @param loggedOn Is the user logged onto the system?
 	 */
 	protected abstract void logonShowPanes(boolean loggedOn);
+	
+	/**
+	 * Runs the function to show the logon with captcha pane or hide it depending on the boolean passed.
+	 * If true, will hide the logon with captcha pane otherwise will show the logon pane
+	 *
+	 * @param loggedOn Is the user logged onto the system?
+	 */
+	protected abstract void logonWithCaptchaShowPanes(boolean loggedOn);
 	
 }

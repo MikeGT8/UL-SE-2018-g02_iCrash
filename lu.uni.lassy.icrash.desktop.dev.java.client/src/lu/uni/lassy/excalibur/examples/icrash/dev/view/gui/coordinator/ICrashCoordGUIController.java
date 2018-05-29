@@ -31,7 +31,11 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRequest;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
+<<<<<<< HEAD
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
+=======
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtRequestStatus;
+>>>>>>> branch 'master' of https://github.com/MikeGT8/UL-SE-2018-g02_iCrash.git
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Message;
@@ -85,6 +89,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     /** The passwordfield for entering in the password for logging on. */
     @FXML
     private PasswordField psswrdfldCoordLogonPassword;
+    
+    /** The captchafield that allows input of a captcha for logon with captcha. */
+    @FXML
+    private TextField txtfldCoordCaptcha;
 
     /** The button that allows a user to initiate the logon function. */
     @FXML
@@ -137,6 +145,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     /** The button that allows a user to change the status of a crisis. */
     @FXML
     private Button bttnChangeStatusCrisis;
+    
+    /** The button that allows a user to change the type of a crisis. */
+    @FXML
+    private Button bttnChangeTypeCrisis;
 
     /** The combobox that allows a user to select which crisis status type to view. */
     @FXML
@@ -166,6 +178,16 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     @FXML
     void bttnChangeStatusCrisis_OnClick(ActionEvent event) {
     	changeCrisisStatus();
+    }
+    
+    /**
+     * Button event that deals with changing the type of a crisis
+     *
+     * @param event The event type fired, we do not need it's details
+     */
+    @FXML
+    void bttnChangeTypeCrisis_OnClick(ActionEvent event) {
+    	changeCrisisType();
     }
 
     /**
@@ -459,6 +481,56 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 	}
 	
 	/**
+	 * Runs the function that will allow the current user to change the selected crisis' type.
+	 */
+	private void changeCrisisType(){
+		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
+		if (crisis != null){
+			Dialog<PtBoolean> dialog = new Dialog<PtBoolean>();
+			dialog.setTitle("Change the crisis type");
+			TextField txtfldCtCrisisID = new TextField();
+			txtfldCtCrisisID.setText(crisis.id.value.getValue());
+			txtfldCtCrisisID.setDisable(true);
+			ComboBox<EtCrisisType> cmbbx = new ComboBox<EtCrisisType>();
+			cmbbx.setItems( FXCollections.observableArrayList( EtCrisisType.values()));
+			cmbbx.setValue(crisis.type);
+			ButtonType bttntypOK = new ButtonType("Change type", ButtonData.OK_DONE);
+			ButtonType bttntypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+			GridPane grdpn = new GridPane();
+			grdpn.add(txtfldCtCrisisID, 1, 1);
+			grdpn.add(cmbbx, 1, 2);
+			dialog.getDialogPane().setContent(grdpn);
+			dialog.getDialogPane().getButtonTypes().add(bttntypeCancel);
+			dialog.getDialogPane().getButtonTypes().add(bttntypOK);
+			dialog.setResultConverter(new Callback<ButtonType, PtBoolean>(){
+				@Override
+				public PtBoolean call(ButtonType param) {
+					if (param.getButtonData() == ButtonData.OK_DONE && checkIfAllDialogHasBeenFilledIn(grdpn)){
+						try {
+							return userController.changeCrisisType(crisis.id.value.getValue(), cmbbx.getValue());
+						} catch (ServerOfflineException | ServerNotBoundException e) {
+							showServerOffLineMessage(e);
+						} catch (IncorrectFormatException e) {
+							showWarningIncorrectInformationEntered(e);
+						}
+					}
+					//User cancelled the dialog
+					return new PtBoolean(true);
+				}
+			});
+			dialog.initOwner(window);
+			dialog.initModality(Modality.WINDOW_MODAL);
+			Optional<PtBoolean> result = dialog.showAndWait();
+			if (result.isPresent()){
+				if (!result.get().getValue())
+					showWarningMessage("Unable to change type of crisis", "Unable to change type of crisis, please try again");
+			}
+		}
+		populateCrisis();
+	}
+	
+	
+	/**
 	 * Runs the function that will allow the current user to get all the requests.
 	 */
 	private void getAllRequests() {
@@ -535,6 +607,23 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     	else
     		showWarningNoDataEntered();
 	}
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonWithCaptcha()
+	 */
+	@Override
+	public void logonWithCaptcha() {
+		if(txtfldCoordLogonUserName.getText().length() > 0 && psswrdfldCoordLogonPassword.getText().length() > 0 && txtfldCoordCaptcha.getText().length() > 0){
+			try {
+				if (userController.oeLoginWithCaptcha(txtfldCoordLogonUserName.getText(), psswrdfldCoordLogonPassword.getText(), txtfldCoordCaptcha.getText()).getValue())
+					logonWithCaptchaShowPanes(true);
+			}
+			catch (ServerOfflineException | ServerNotBoundException e) {
+				showExceptionErrorMessage(e);
+			}	
+    	}
+    	else
+    		showWarningNoDataEntered();		
+	}
 
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logoff()
@@ -554,6 +643,27 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonShowPanes(boolean)
 	 */
 	protected void logonShowPanes(boolean loggedOn){
+		tbpnMain.setVisible(loggedOn);
+		bttnCoordLogoff.setDisable(!loggedOn);
+		pnLogon.setVisible(!loggedOn);
+		bttnCoordLogon.setDefaultButton(!loggedOn);
+		if (loggedOn){
+			tbpnMain.getSelectionModel().selectFirst();
+			cmbbxAlertStatus.setValue(EtAlertStatus.pending);
+			cmbbxCrisisStatus.setValue(EtCrisisStatus.pending);
+		}
+		else{
+			txtfldCoordLogonUserName.setText("");
+			psswrdfldCoordLogonPassword.setText("");
+			txtfldCoordLogonUserName.requestFocus();
+			
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonWithCaptchaShowPanes(boolean)
+	 */
+	protected void logonWithCaptchaShowPanes(boolean loggedOn) {
 		tbpnMain.setVisible(loggedOn);
 		bttnCoordLogoff.setDisable(!loggedOn);
 		pnLogon.setVisible(!loggedOn);

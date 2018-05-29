@@ -231,7 +231,7 @@ public class DbCoordinators extends DbAbstract{
 				String accessRights = aCtCoordinator.accessRights.toString();
 				String statement = "UPDATE "+ dbName+ ".coordinators" +
 						" SET accessRights='"+accessRights+
-						"WHERE id='"+id+"'";
+						"' WHERE id='"+id+"'";
 				int val = st.executeUpdate(statement);
 				log.debug(val+" row updated");
 				success = new PtBoolean(val == 1);

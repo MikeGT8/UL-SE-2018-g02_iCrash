@@ -19,6 +19,7 @@ import java.rmi.RemoteException;
 
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntHasServerSideActor;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIsActor;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCaptcha;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -48,7 +49,18 @@ public interface ActProxyAuthenticated extends Remote, JIntHasServerSideActor, J
 	 */
 	public PtBoolean oeLogin(DtLogin aDtLogin, DtPassword aDtPassword)
 			throws RemoteException, NotBoundException;
-
+	/**
+	 * Performs the oeLogin with captcha function with the username, password and captcha provided.
+	 *
+	 * @param aDtLogin The username to logon with
+	 * @param aDtPassword The password to logon with
+	 * @param aDtCaptcha The captcha to logon with
+	 * @return The success of the operation
+	 * @throws RemoteException Thrown if the server is offline
+	 * @throws NotBoundException Thrown if the server has not been bound correctly in RMI settings
+	 */
+	public PtBoolean oeLoginWithCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha)throws RemoteException, NotBoundException;
+	
 	/**
 	 * Performs the oeLogut function with the current user.
 	 *
