@@ -271,10 +271,12 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 		pnAdminLogon.setVisible(!loggedOn);
 		brdpnAdmin.setVisible(loggedOn);
 		bttnAdminLogoff.setDisable(!loggedOn);
-		bttnAdminLogin.setDefaultButton(!loggedOn);
+		if(login < 3) bttnAdminLogin.setDefaultButton(!loggedOn);
+		else bttnAdminLoginWithCaptcha.setDefaultButton(!loggedOn);
 		if (!loggedOn){
 			txtfldAdminUserName.setText("");
 			psswrdfldAdminPassword.setText("");
+			txtfldAdminCaptcha.setText("");
 			txtfldAdminUserName.requestFocus();
 			for (int i = anchrpnCoordinatorDetails.getChildren().size() -1; i >= 0; i--)
 				anchrpnCoordinatorDetails.getChildren().remove(i);
@@ -527,13 +529,10 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 	public void logon() {
 		if(txtfldAdminUserName.getText().length() > 0 && psswrdfldAdminPassword.getText().length() > 0){
 			try {
-				if (userController.oeLogin(txtfldAdminUserName.getText(), psswrdfldAdminPassword.getText()).getValue())
+				if (userController.oeLogin(txtfldAdminUserName.getText(), psswrdfldAdminPassword.getText()).getValue()) {
 					logonShowPanes(true);
-				else login++;
-				if(login > 2) {
-					logonShowPanes(true);
-					logonWithCaptchaShowPanes(false);
-				}
+					login = 0;
+				} else login++;
 			}
 			catch (ServerOfflineException | ServerNotBoundException e) {
 				showExceptionErrorMessage(e);
