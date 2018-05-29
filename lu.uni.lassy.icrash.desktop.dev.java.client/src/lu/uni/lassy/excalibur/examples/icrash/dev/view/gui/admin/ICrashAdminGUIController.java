@@ -286,7 +286,7 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 		TextField txtfldUserName = new TextField();
 		PasswordField psswrdfldPassword = new PasswordField();
 		ComboBox<EtCrisisType> cmbbxAccessRights = new ComboBox<EtCrisisType>();
-		cmbbxAccessRights.getItems().addAll(EtCrisisType.huge, EtCrisisType.medium, EtCrisisType.small);
+		cmbbxAccessRights.getItems().addAll(EtCrisisType.values());
 		txtfldUserID.setPromptText("User ID");
 		Button bttntypOK = null;
 		GridPane grdpn = new GridPane();
@@ -343,7 +343,8 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 						case Update:
 							if (userController.oeUpdateCoordinatorAccessRights(txtfldUserID.getText(), cmbbxAccessRights.getValue()).getValue()){
 								anchrpnCoordinatorDetails.getChildren().remove(grdpn);
-							}
+							}else
+								showErrorMessage("Unable to update coordinator", "An error occured when updating the coordinator");
 							break;
 						}
 					} catch (ServerOfflineException | ServerNotBoundException | IncorrectFormatException e) {
