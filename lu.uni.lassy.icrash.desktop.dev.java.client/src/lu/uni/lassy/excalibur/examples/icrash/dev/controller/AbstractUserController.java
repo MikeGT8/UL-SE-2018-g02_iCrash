@@ -18,6 +18,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNo
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOfflineException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAuthenticated;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAuthenticated.UserType;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCaptcha;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -57,6 +58,30 @@ public abstract class AbstractUserController implements HasListeners {
 		DtPassword aDtPassword = new DtPassword(new PtString(password));
 		try {
 			return this.getAuth().oeLogin(aDtLogin, aDtPassword);
+		} catch (RemoteException e) {
+			Log4JUtils.getInstance().getLogger().error(e);
+			throw new ServerOfflineException();
+		} catch (NotBoundException e) {
+			Log4JUtils.getInstance().getLogger().error(e);
+			throw new ServerNotBoundException();
+		}
+	}
+	/**
+	 * The method that allows the user to logon with captcha.
+	 *
+	 * @param login The username to logon with
+	 * @param password The password to use
+	 * @param captcha The captcha to use
+	 * @return The success of the method
+	 * @throws ServerOfflineException Thrown if the server is currently offline
+	 * @throws ServerNotBoundException Thrown if the server hasn't been bound in the RMI settings
+	 */
+	public PtBoolean oeLoginWithCaptcha(String login, String password, String captcha) throws ServerOfflineException, ServerNotBoundException{
+		DtLogin aDtLogin = new DtLogin(new PtString(login));
+		DtPassword aDtPassword = new DtPassword(new PtString(password));
+		DtCaptcha aDtCaptcha = new DtCaptcha(new PtString(captcha));
+		try {
+			return this.getAuth().oeLoginWithCaptcha(aDtLogin, aDtPassword, aDtCaptcha);
 		} catch (RemoteException e) {
 			Log4JUtils.getInstance().getLogger().error(e);
 			throw new ServerOfflineException();

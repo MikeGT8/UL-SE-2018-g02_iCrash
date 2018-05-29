@@ -75,6 +75,10 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
     /** The passwordfield that allows input of a password for logon. */
     @FXML
     private PasswordField psswrdfldAdminPassword;
+    
+    /** The captchafield that allows input of a captcha for logon with captcha. */
+    @FXML
+    private TextField txtfldAdminCaptcha;
 
     /** The button that initiates the login function. */
     @FXML
@@ -255,7 +259,25 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 				anchrpnCoordinatorDetails.getChildren().remove(i);
 		}
 		
-	}	
+	}
+
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonWithCaptchaShowPanes(boolean)
+	 */
+	protected void logonWithCaptchaShowPanes(boolean loggedOn) {
+		pnAdminLogon.setVisible(!loggedOn);
+		brdpnAdmin.setVisible(loggedOn);
+		bttnAdminLogoff.setDisable(!loggedOn);
+		bttnAdminLogin.setDefaultButton(!loggedOn);
+		if (!loggedOn){
+			txtfldAdminUserName.setText("");
+			psswrdfldAdminPassword.setText("");
+			txtfldAdminUserName.requestFocus();
+			for (int i = anchrpnCoordinatorDetails.getChildren().size() -1; i >= 0; i--)
+				anchrpnCoordinatorDetails.getChildren().remove(i);
+		}
+		
+	}
 	
 	/**
 	 * Server has gone down.
@@ -495,7 +517,25 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
     	else
     		showWarningNoDataEntered();
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonWithCaptcha()
+	 */
+	@Override
+	public void logonWithCaptcha() {
+		if(txtfldAdminUserName.getText().length() > 0 && psswrdfldAdminPassword.getText().length() > 0 && txtfldAdminCaptcha.getText().length() > 0){
+			try {
+				if (userController.oeLoginWithCaptcha(txtfldAdminUserName.getText(), psswrdfldAdminPassword.getText(), txtfldAdminCaptcha.getText()).getValue())
+					logonWithCaptchaShowPanes(true);
+			}
+			catch (ServerOfflineException | ServerNotBoundException e) {
+				showExceptionErrorMessage(e);
+			}	
+    	}
+    	else
+    		showWarningNoDataEntered();		
+	}
+	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logoff()
 	 */
@@ -560,5 +600,5 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 			return new PtBoolean(false);
 		}
 		return new PtBoolean(false);
-	}	
+	}
 }
