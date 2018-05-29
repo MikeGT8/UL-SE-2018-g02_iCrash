@@ -75,6 +75,10 @@ public class ICrashPersonGUIController extends AbstractAuthGUIController {
     /** The passwordfield for entering in the password for logging on. */
     @FXML
     private PasswordField psswrdfldPersonLogonPassword;
+    
+    /** The textfield for entering in the captcha for logging on. */
+    @FXML
+    private TextField txtfldPersonCaptcha;
 
     /** The button that allows a user to initiate the logon function. */
     @FXML
@@ -266,6 +270,31 @@ public class ICrashPersonGUIController extends AbstractAuthGUIController {
     	else
     		showWarningNoDataEntered();
 	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonWithCaptcha()
+	 */
+	@Override
+	public void logonWithCaptcha() {
+		
+		if(txtfldPersonLogonUserName.getText().length() > 0 && psswrdfldPersonLogonPassword.getText().length() > 0 && txtfldPersonCaptcha.getText().length() > 0) {
+			
+			try {
+				if (userController.oeLoginWithCaptcha(txtfldPersonLogonUserName.getText(), psswrdfldPersonLogonPassword.getText(), txtfldPersonCaptcha.getText()).getValue()) {
+					
+					if (userController.getUserType() == UserType.Person) {
+						logonWithCaptchaShowPanes(true);
+					}
+				}
+			}
+			catch (ServerOfflineException | ServerNotBoundException e) {
+				
+				showExceptionErrorMessage(e);
+			}
+    	}
+    	else
+    		showWarningNoDataEntered();
+	}
 
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logoff()
@@ -289,6 +318,28 @@ public class ICrashPersonGUIController extends AbstractAuthGUIController {
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonShowPanes(boolean)
 	 */
 	protected void logonShowPanes(boolean loggedOn) {
+		
+		tbpnMain.setVisible(loggedOn);
+		bttnPersonLogoff.setDisable(!loggedOn);
+		pnLogon.setVisible(!loggedOn);
+		bttnPersonLogon.setDefaultButton(!loggedOn);
+		
+		if (loggedOn) {
+			
+			tbpnMain.getSelectionModel().selectFirst();
+		}
+		else{
+			txtfldPersonLogonUserName.setText("");
+			psswrdfldPersonLogonPassword.setText("");
+			txtfldPersonLogonUserName.requestFocus();
+			
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonShowPanes(boolean)
+	 */
+	protected void logonWithCaptchaShowPanes(boolean loggedOn) {
 		
 		tbpnMain.setVisible(loggedOn);
 		bttnPersonLogoff.setDisable(!loggedOn);

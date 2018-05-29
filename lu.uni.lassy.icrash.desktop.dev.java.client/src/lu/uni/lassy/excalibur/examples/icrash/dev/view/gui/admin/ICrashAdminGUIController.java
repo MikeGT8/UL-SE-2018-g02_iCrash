@@ -276,7 +276,6 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 			for (int i = anchrpnCoordinatorDetails.getChildren().size() -1; i >= 0; i--)
 				anchrpnCoordinatorDetails.getChildren().remove(i);
 		}
-		
 	}
 	
 	/**
