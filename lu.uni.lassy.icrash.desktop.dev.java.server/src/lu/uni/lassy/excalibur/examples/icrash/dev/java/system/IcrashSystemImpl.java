@@ -63,7 +63,9 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtDe
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtGPSLocation;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtIgnored;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLatitude;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLogin;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtLongitude;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPIID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPassword;
@@ -84,6 +86,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.DtTime;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtInteger;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtReal;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.AdminActors;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.ICrashUtils;
@@ -1738,11 +1741,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			
 			//PreP2 to make sure that the administrator is logged in.
 			isAdminLoggedIn();
-			
-			CtPI ctPIAvailable = getCtPI(aPIID);
 				
 			//PostF1 to update the PI in the system
-			CtPI ctPI = (CtPI) ctPIAvailable;
+			CtPI ctPI = new CtPI();
 				
 			ctPI.id = aPIID;
 			ctPI.name =aPIName;
@@ -1778,10 +1779,9 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			//PreP2
 			isAdminLoggedIn();
 			
-			CtPI ctPIAvailable = getCtPI(aPIID);
-				
 			//PostF1 to delete the PI
-			CtPI ctPI = (CtPI) ctPIAvailable;
+			CtPI ctPI = new CtPI();
+			ctPI.init(aPIID, new DtName(new PtString("")), new DtCity(new PtString("")), new DtGPSLocation(new DtLatitude(new PtReal(0)), new DtLongitude(new PtReal(0))), new DtDescription(new PtString("")), EtCategory.supermarket);
 			DbPIs.deletePI(ctPI);
 				
 			//PostF2 to send a message to the administrator
@@ -1789,7 +1789,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			admin.iePIDeleted();
 				
 			//PostF3 delete the PI in relation to the system
-			cmpSystemCtPI.remove(ctPIAvailable.id.value.getValue());
+			cmpSystemCtPI.remove(ctPI.id.value.getValue());
 				
 			return new PtBoolean(true);
 			

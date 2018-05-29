@@ -174,6 +174,11 @@ public class IcrashEnvironmentImpl extends UnicastRemoteObject implements Icrash
 	
 	/* PI variant */
 	
+	public void setActPerson(String keyName, ActPerson aActPerson) {
+		
+		persons.put(keyName, aActPerson);
+	}
+	
 	public ActPerson getActPerson(String keyName){
 		
 		return persons.get(keyName);
