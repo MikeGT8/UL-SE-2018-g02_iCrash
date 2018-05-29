@@ -28,6 +28,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
@@ -67,6 +68,35 @@ public class CoordinatorController extends AbstractUserController {
 			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
 			try {
 				return actCoord.oeSetCrisisStatus(aDtCrisisID, status);
+			} catch (RemoteException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerOfflineException();
+			} catch (NotBoundException e) {
+				Log4JUtils.getInstance().getLogger().error(e);
+				throw new ServerNotBoundException();
+			}
+		}
+		return new PtBoolean(false);
+	}
+	/**
+	 * Takes an crisis that exists in the system and will change it's type to the one specified.
+	 *
+	 * @param crisisID The ID of the crisis to change the status of
+	 * @param type The EtCrisistype to set the crisis type to
+	 * @return Returns a PtBoolean of true if done successfully, otherwise will return a false
+	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
+	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable
+	 * @throws IncorrectFormatException is thrown when a Dt/Et information type does not match the is() method specified in the specification
+	 */
+	public PtBoolean changeCrisisType(String crisisID, EtCrisisType type) throws ServerNotBoundException, ServerOfflineException, IncorrectFormatException{
+		DtCrisisID aDtCrisisID = new DtCrisisID(new PtString(crisisID));
+		Hashtable<JIntIs, String> ht = new Hashtable<JIntIs, String>();
+		ht.put(aDtCrisisID, aDtCrisisID.value.getValue());
+		ht.put(type, type.name());
+		if (this.getUserType() == UserType.Coordinator){
+			ActProxyCoordinator actCoord = (ActProxyCoordinator)this.getAuth();
+			try {
+				return actCoord.oeSetCrisisType(aDtCrisisID, type);
 			} catch (RemoteException e) {
 				Log4JUtils.getInstance().getLogger().error(e);
 				throw new ServerOfflineException();
