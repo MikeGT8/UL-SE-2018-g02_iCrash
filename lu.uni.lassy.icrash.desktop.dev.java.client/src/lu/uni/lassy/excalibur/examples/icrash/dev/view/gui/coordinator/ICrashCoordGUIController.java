@@ -31,7 +31,11 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRequest;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
+<<<<<<< HEAD
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisType;
+=======
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtRequestStatus;
+>>>>>>> branch 'master' of https://github.com/MikeGT8/UL-SE-2018-g02_iCrash.git
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Message;
@@ -85,6 +89,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     /** The passwordfield for entering in the password for logging on. */
     @FXML
     private PasswordField psswrdfldCoordLogonPassword;
+    
+    /** The captchafield that allows input of a captcha for logon with captcha. */
+    @FXML
+    private TextField txtfldCoordCaptcha;
 
     /** The button that allows a user to initiate the logon function. */
     @FXML
@@ -114,6 +122,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     @FXML
     private TableView<CtAlert> tblvwAlerts;
 
+    /** The tableview of the requests the user has retrieved from the system. */
+    @FXML
+    private TableView<CtRequest> tblvwRequests;
+    
     /** The tab containing the controls for crises. */
     @FXML
     private Tab tbCoordCrisis;
@@ -141,6 +153,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     /** The combobox that allows a user to select which crisis status type to view. */
     @FXML
     private ComboBox<EtCrisisStatus> cmbbxCrisisStatus;
+    
+    /** The combobox that allows a user to select which request status type to view. */
+    @FXML
+    private ComboBox<EtRequestStatus> cmbbxRequestStatus;
 
     /** The tablview that shows the user the crises they have selected. */
     @FXML
@@ -300,10 +316,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 		setUpMessageTables(tblvwCoordMessages);
 		setUpCrisesTables(tblvwCrisis);
 		setUpAlertTables(tblvwAlerts);
-		/*
+		
 		setUpRequestTables(tblvwRequests);
 		cmbbxRequestStatus.setItems( FXCollections.observableArrayList( EtRequestStatus.values()));
-		*/
+		
 		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
 		cmbbxAlertStatus.setItems( FXCollections.observableArrayList( EtAlertStatus.values()));
 	}
@@ -591,6 +607,23 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     	else
     		showWarningNoDataEntered();
 	}
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonWithCaptcha()
+	 */
+	@Override
+	public void logonWithCaptcha() {
+		if(txtfldCoordLogonUserName.getText().length() > 0 && psswrdfldCoordLogonPassword.getText().length() > 0 && txtfldCoordCaptcha.getText().length() > 0){
+			try {
+				if (userController.oeLoginWithCaptcha(txtfldCoordLogonUserName.getText(), psswrdfldCoordLogonPassword.getText(), txtfldCoordCaptcha.getText()).getValue())
+					logonWithCaptchaShowPanes(true);
+			}
+			catch (ServerOfflineException | ServerNotBoundException e) {
+				showExceptionErrorMessage(e);
+			}	
+    	}
+    	else
+    		showWarningNoDataEntered();		
+	}
 
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logoff()
@@ -610,6 +643,27 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonShowPanes(boolean)
 	 */
 	protected void logonShowPanes(boolean loggedOn){
+		tbpnMain.setVisible(loggedOn);
+		bttnCoordLogoff.setDisable(!loggedOn);
+		pnLogon.setVisible(!loggedOn);
+		bttnCoordLogon.setDefaultButton(!loggedOn);
+		if (loggedOn){
+			tbpnMain.getSelectionModel().selectFirst();
+			cmbbxAlertStatus.setValue(EtAlertStatus.pending);
+			cmbbxCrisisStatus.setValue(EtCrisisStatus.pending);
+		}
+		else{
+			txtfldCoordLogonUserName.setText("");
+			psswrdfldCoordLogonPassword.setText("");
+			txtfldCoordLogonUserName.requestFocus();
+			
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonWithCaptchaShowPanes(boolean)
+	 */
+	protected void logonWithCaptchaShowPanes(boolean loggedOn) {
 		tbpnMain.setVisible(loggedOn);
 		bttnCoordLogoff.setDisable(!loggedOn);
 		pnLogon.setVisible(!loggedOn);

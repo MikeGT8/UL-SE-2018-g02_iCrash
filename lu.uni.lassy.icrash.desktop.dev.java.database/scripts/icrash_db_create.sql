@@ -92,7 +92,7 @@ CREATE TABLE `requests` (
 	  `city` varchar(80) DEFAULT NULL,
 	  `category` varchar(80) DEFAULT NULL,
       `status` varchar(80) DEFAULT NULL,
-	  `ignored` Boolean DEFAULT NULL,
+	  `ignored` varchar(80) DEFAULT NULL,
   `PI` varchar(80) DEFAULT NULL,
   `person` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -223,6 +223,8 @@ DROP TABLE IF EXISTS `persons`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `persons` (
  `phone` varchar(80) NOT NULL,
+ `login` varchar(80) DEFAULT NULL,
+  `pwd` varchar(80) DEFAULT NULL,
   `type` varchar(80) DEFAULT NULL,
   `comcompany` varchar(80) DEFAULT NULL,
  PRIMARY KEY (`phone`)

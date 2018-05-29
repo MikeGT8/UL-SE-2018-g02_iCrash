@@ -172,7 +172,7 @@ public class MonitorGUIController extends AbstractGUIController implements HasTa
 			/* Returns me an error I cannot find/solve
 			addPersonsToTableView(tblvwPersons, personController.getAllPersons());
 			addRequestsToTableView(tblvwRequests, requestController.getListOfRequests());
-			addPIsToTableView(tblvwPIs, PIController.getAllCtPIs());
+			addPisToTableView(tblvwPIs, PIController.getAllCtPIs());
 			*/
 			
 			//Moved these to the bottom, as most likely to throw the null pointer exception error
@@ -198,8 +198,8 @@ public class MonitorGUIController extends AbstractGUIController implements HasTa
     	setUpCoordTables(tblvwCoordinators, true);
     	setUpCrisesTables(tblvwCrises);
     	setUpHumansTables(tblvwHumans);
-    	setUpRequestsTables(tblvwRequests);
-    	setUpPIsTables(tblvwPIs);
+    	setUpRequestTables(tblvwRequests);
+    	setUpPITables(tblvwPIs);
     	setUpPersonsTables(tblvwPersons);
     	setUpStateTables(tblvwCtState);
     }

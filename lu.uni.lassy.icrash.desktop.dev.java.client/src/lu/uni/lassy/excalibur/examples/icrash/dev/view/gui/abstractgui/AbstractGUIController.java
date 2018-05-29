@@ -520,7 +520,7 @@ public abstract class AbstractGUIController implements Initializable {
 	 *
 	 * @param tblvw The tableview to add the columns to
 	 */
-	public void setUpRequestsTables(TableView<CtRequest>tblvw) {
+	public void setUpRequestTables(TableView<CtRequest>tblvw) {
 		
 		TableColumn<CtRequest, String> idCol = new TableColumn<CtRequest, String>("ID");
 		TableColumn<CtRequest, String> nameCol = new TableColumn<CtRequest, String>("Name");
@@ -573,7 +573,7 @@ public abstract class AbstractGUIController implements Initializable {
 	 *
 	 * @param tblvw The tableview to add the columns to
 	 */
-	public void setUpPIsTables(TableView<CtPI>tblvw) {
+	public void setUpPITables(TableView<CtPI>tblvw) {
 		
 		TableColumn<CtPI, String> idCol = new TableColumn<CtPI, String>("ID");
 		TableColumn<CtPI, String> nameCol = new TableColumn<CtPI, String>("Name");
@@ -891,7 +891,7 @@ public abstract class AbstractGUIController implements Initializable {
 	 * @param tblvw The tableview to add the data to
 	 * @param collection the list of items to add to the tableview
 	 */
-	public void addPIsToTableView(TableView<CtPI> tblvw, Collection<? extends CtPI> collection){
+	public void addPisToTableView(TableView<CtPI> tblvw, Collection<? extends CtPI> collection){
 		tblvw.getItems().clear();
 		tblvw.getItems().addAll(collection);
 	}

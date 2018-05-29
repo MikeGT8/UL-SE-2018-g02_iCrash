@@ -33,6 +33,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.controller.SystemStateControll
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActComCompany;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIsActor;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCoordinatorID;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtPhoneNumber;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtInteger;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtString;
@@ -43,6 +44,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.admin.CreateICrashAdm
 import lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.comcompany.CreateICrashComCompany;
 import lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.coordinator.CreateICrashCoordGUI;
 import lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.monitor.CreateMonitor;
+import lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.person.CreateICrashPersonGUI;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -96,6 +98,7 @@ public class CreatorGUIController extends AbstractGUIController{
 						double rangeY = bounds.getMaxY() - bounds.getMinY();
 						listOfWindows.add(new CreateICrashAdminGUI(systemStatecontroller.getActAdministrator(), bounds.getMinX(), bounds.getMinY()));
 						listOfWindows.add(new CreateICrashCoordGUI(new DtCoordinatorID(new PtString("1")), systemStatecontroller.getActCoordinator("bob")));
+						listOfWindows.add(new CreateICrashPersonGUI(new DtPhoneNumber(new PtString("661898989")), systemStatecontroller.getActPerson("patrick")));
 						double percent = 0.1;
 						//Dealing with com company window placement
 						ArrayList<ActComCompany> listOfComCompanies = systemStatecontroller.getActComCompany();

@@ -24,7 +24,7 @@ public class CtPI implements Serializable {
 	public DtDescription description;
 
 	/* Initialises the PI */
-	public PtBoolean init(DtID aId, DtName aName, DtCity aCity, EtCategory aCategory, DtGPSLocation aLocation, DtDescription aDescription) {
+	public PtBoolean init(DtID aId, DtName aName, DtCity aCity, DtGPSLocation aLocation, DtDescription aDescription, EtCategory aCategory) {
 			
 		id = aId;
 		name = aName;

@@ -7,21 +7,25 @@ import java.util.ResourceBundle;
 
 import javafx.util.Callback;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.CoordinatorController;
+import lu.uni.lassy.excalibur.examples.icrash.dev.controller.PersonController;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectActorException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.IncorrectFormatException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerNotBoundException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.controller.exceptions.ServerOfflineException;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActCoordinator;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPerson;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyAuthenticated.UserType;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIsActor;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPI;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Message;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.actors.ActProxyCoordinatorImpl;
+import lu.uni.lassy.excalibur.examples.icrash.dev.model.actors.ActProxyPersonImpl;
 import lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -66,94 +70,76 @@ public class ICrashPersonGUIController extends AbstractAuthGUIController {
 
     /** The textfield for entering in the username for logging on. */
     @FXML
-    private TextField txtfldCoordLogonUserName;
+    private TextField txtfldPersonLogonUserName;
 
     /** The passwordfield for entering in the password for logging on. */
     @FXML
-    private PasswordField psswrdfldCoordLogonPassword;
+    private PasswordField psswrdfldPersonLogonPassword;
+    
+    /** The textfield for entering in the captcha for logging on. */
+    @FXML
+    private TextField txtfldPersonCaptcha;
 
     /** The button that allows a user to initiate the logon function. */
     @FXML
-    private Button bttnCoordLogon;
+    private Button bttnPersonLogon;
 
     /** The main tabpane that holds the normal user controls. */
     @FXML
     private TabPane tbpnMain;
 
-    /** The tab containing the controls for alerts. */
+    /** The tab containing the controls for PIs. */
     @FXML
-    private Tab tbCoordAlerts;
+    private Tab tbPersonPis;
 
-    /** The button that allows validation of the alert. */
+    /** The button that allows searching for a PI. */
     @FXML
-    private Button bttnValidateAlert;
+    private Button bttnSearchPI;
 
-    /** The button that allows invalidation of the alert. */
+    /** The button that allows a user to send a new request. */
     @FXML
-    private Button bttnInvalidateAlert;
+    private Button bttnSendNewRequest;
 
-    /** The combobox that allows a user to select which alert status type to view. */
+    /** The button that allows a user to get a GPS location of a PI. */
     @FXML
-    private ComboBox<EtAlertStatus> cmbbxAlertStatus;
+    private Button bttnGetGPSLocation;
 
-    /** The tableview of the alerts the user has retrieved from the system. */
+    /** The button that allows a user to a description of a PI. */
     @FXML
-    private TableView<CtAlert> tblvwAlerts;
+    private Button bttnGetDescription;
 
-    /** The tab containing the controls for crises. */
+    /** The tablview that shows the user the PIs they have selected. */
     @FXML
-    private Tab tbCoordCrisis;
-
-    /** The button that allows a user to handle a crisis. */
-    @FXML
-    private Button bttnHandleCrisis;
-
-    /** The button that allows a user to close a crisis. */
-    @FXML
-    private Button bttnCloseCrisis;
-
-    /** The button that allows a user to report on a crisis. */
-    @FXML
-    private Button bttnReportCrisis;
-
-    /** The button that allows a user to change the status of a crisis. */
-    @FXML
-    private Button bttnChangeStatusCrisis;
-
-    /** The combobox that allows a user to select which crisis status type to view. */
-    @FXML
-    private ComboBox<EtCrisisStatus> cmbbxCrisisStatus;
-
-    /** The tablview that shows the user the crises they have selected. */
-    @FXML
-    private TableView<CtCrisis> tblvwCrisis;
+    private TableView<CtPI> tblvwPis;
 
     /** The tableview of the messages the user has recieved. */
     @FXML
-    private TableView<Message> tblvwCoordMessages;
+    private TableView<Message> tblvwPersonMessages;
 
     /** The button that allows a user to logoff. */
     @FXML
-    private Button bttnCoordLogoff;
+    private Button bttnPersonLogoff;
 
     /**
-     * Button event that deals with changing the status of a crisis
+     * Button event that deals with searching for a specific PI
      *
      * @param event The event type fired, we do not need it's details
      */
     @FXML
-    void bttnChangeStatusCrisis_OnClick(ActionEvent event) {
-    	changeCrisisStatus();
+    void bttnSearchPI_OnClick(ActionEvent event) {
+    	
+    	searchPI();
     }
 
     /**
-     * Button event that deals with closing a crisis
+     * Button event that deals with sending a new request
      *
      * @param event The event type fired, we do not need it's details
      */
     @FXML
-    void bttnCloseCrisis_OnClose(ActionEvent event) {
-    	closeCrisis();
+    void bttnSendNewRequest_OnClick(ActionEvent event) {
+    	
+    	sendNewRequest();
     }
 
     /**
@@ -162,7 +148,7 @@ public class ICrashPersonGUIController extends AbstractAuthGUIController {
      * @param event The event type fired, we do not need it's details
      */
     @FXML
-    void bttnCoordLogoff_OnClick(ActionEvent event) {
+    void bttnPersonLogoff_OnClick(ActionEvent event) {
     	logoff();
     }
 
@@ -172,56 +158,38 @@ public class ICrashPersonGUIController extends AbstractAuthGUIController {
      * @param event The event type fired, we do not need it's details
      */
     @FXML
-    void bttnCoordLogon_OnClick(ActionEvent event) {
+    void bttnPersonLogon_OnClick(ActionEvent event) {
     	logon();
     }
 
     /**
-     * Button event that deals with handling of a crisis
+     * Button event that deals with getting the GPS location of a PI
      *
      * @param event The event type fired, we do not need it's details
      */
     @FXML
-    void bttnHandleCrisis_OnClick(ActionEvent event) {
-    	handleCrisis();
+    void bttnGetGPSLocation_OnClick(ActionEvent event) {
+    	
+    	getGPSLocation();
     }
 
     /**
-     * Button event that deals with invalidating of an alert
+     * Button event that deals with getting the description of a PI
      *
      * @param event The event type fired, we do not need it's details
      */
     @FXML
-    void bttnInvalidateAlert_OnClick(ActionEvent event) {
-    	invalidateAlert();
-    }
-
-    /**
-     * Button event that deals with reportinng on a crisis
-     *
-     * @param event The event type fired, we do not need it's details
-     */
-    @FXML
-    void bttnReportCrisis_OnClick(ActionEvent event) {
-    	reportOnCrisis();
-    }
-
-    /**
-     * Button event that deals with validating an alert
-     *
-     * @param event The event type fired, we do not need it's details
-     */
-    @FXML
-    void bttnValidateAlert_OnClick(ActionEvent event) {
-    	validateAlert();
+    void bttnGetDescription_OnClick(ActionEvent event) {
+    	
+    	getDescription();
     }
     
     /*
      * These are other classes accessed by this controller
      */
 	
-	/** The user controller, for this GUI it's the coordinator controller and allows access to coordinator functions like reporting on crises. */
-	private CoordinatorController userController;
+	/** The user controller, for this GUI it's the person controller and allows access to person functions. */
+	private PersonController userController;
 	
 	/*
 	 * Other things created for this controller
@@ -235,217 +203,92 @@ public class ICrashPersonGUIController extends AbstractAuthGUIController {
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.HasTables#setUpTables()
 	 */
-	public void setUpTables(){
-		setUpMessageTables(tblvwCoordMessages);
-		setUpCrisesTables(tblvwCrisis);
-		setUpAlertTables(tblvwAlerts);
-		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
-		cmbbxAlertStatus.setItems( FXCollections.observableArrayList( EtAlertStatus.values()));
+	public void setUpTables() {
+		
+		setUpMessageTables(tblvwPersonMessages);
+		setUpPITables(tblvwPis);
 	}
 	
 	/**
-	 * Populates the tableview with a list of crisis that have the same status as the one provided.
+	 * Runs the function that will allow the current user to search for the specific PI.
 	 */
-	private void populateCrisis(){
-		try {
-			userController.oeGetCrisisSet(cmbbxCrisisStatus.getValue());
-		} catch (ServerOfflineException | ServerNotBoundException e) {
-			showServerOffLineMessage(e);
-		}
+	
+	private void searchPI(){
+		
+		// Further implementation
 	}
 	
 	/**
-	 * Populates the tableview with a list of alerts that have the same status as the one provided.
+	 * Runs the function that will allow the current user to send a new request to add the PI.
 	 */
-	private void populateAlerts(){
-		try {
-			userController.oeGetAlertSet(cmbbxAlertStatus.getValue());
-		} catch (ServerOfflineException | ServerNotBoundException e) {
-			showServerOffLineMessage(e);
-		}
+	
+	private void sendNewRequest() {
+		
+		// Further implementation
 	}
 	
 	/**
-	 * Runs the function that will allow the current user to handle the selected crisis.
+	 * Runs the function that will allow the current user to get the selected PI's GPS location.
 	 */
-	private void handleCrisis(){
-		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
-		if (crisis != null){
-			try {
-				if (!userController.handleCrisis(crisis.id.value.getValue()).getValue())
-					showWarningMessage("Unable to handle crisis", "Unable to handle crisis, please try again");
-			} catch (ServerOfflineException | ServerNotBoundException e) {
-				showServerOffLineMessage(e);
-			} catch (IncorrectFormatException e) {
-				showWarningIncorrectInformationEntered(e);
-			}
-		}
-		populateCrisis();
+	
+	private void getGPSLocation() {
+		
+		// Further implementation
 	}
 	
 	/**
-	 * Runs the function that will allow the current user to close the selected crisis.
+	 * Runs the function that will allow the current user to get the selected PI's description.
 	 */
-	private void closeCrisis(){
-		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
-		if (crisis != null)
-		{
-			try {
-				userController.closeCrisis(crisis.id.value.getValue());
-			} catch (ServerOfflineException | ServerNotBoundException e) {
-				showServerOffLineMessage(e);
-			} catch (IncorrectFormatException e) {
-				showWarningIncorrectInformationEntered(e);
-			}
-		}
-		populateCrisis();
+	
+	private void getDescription() {
+		
+		// Further implementation
 	}
 	
-	/**
-	 * Runs the function that will allow the current user to report on the selected crisis.
-	 */
-	private void reportOnCrisis(){
-		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
-		if (crisis != null)
-		{
-			Dialog<PtBoolean> dialog = new Dialog<PtBoolean>();
-			TextField txtfldCtCrisisID = new TextField();
-			txtfldCtCrisisID.setText(crisis.id.value.getValue());
-			txtfldCtCrisisID.setDisable(true);
-			TextArea txtarCtCrisisReport = new TextArea();
-			txtarCtCrisisReport.setPromptText("Enter in report");
-			ButtonType bttntypReportOK = new ButtonType("Report", ButtonData.OK_DONE);
-			ButtonType bttntypeReportCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-			GridPane grdpn = new GridPane();
-			grdpn.add(txtfldCtCrisisID, 1, 1);
-			grdpn.add(txtarCtCrisisReport, 1, 2);
-			dialog.getDialogPane().setContent(grdpn);
-			dialog.getDialogPane().getButtonTypes().add(bttntypeReportCancel);
-			dialog.getDialogPane().getButtonTypes().add(bttntypReportOK);
-			dialog.setResultConverter(new Callback<ButtonType, PtBoolean>(){
-
-				@Override
-				public PtBoolean call(ButtonType param) {
-					if (param.getButtonData() == ButtonData.OK_DONE && checkIfAllDialogHasBeenFilledIn(grdpn)){
-						try {
-							return userController.reportOnCrisis(crisis.id.value.getValue(), txtarCtCrisisReport.getText());
-						} catch (ServerOfflineException | ServerNotBoundException e) {
-							showServerOffLineMessage(e);
-						} catch (IncorrectFormatException e) {
-							showWarningIncorrectInformationEntered(e);
-						}
-					}
-					//User cancelled the dialog
-					return new PtBoolean(true);
-				}
-			});
-			dialog.initOwner(window);
-			dialog.initModality(Modality.WINDOW_MODAL);
-			Optional<PtBoolean> result = dialog.showAndWait();
-			if (result.isPresent()){
-				if (!result.get().getValue())
-					showWarningMessage("Unable to report on crisis", "Unable to report on the crisis, please try again");
-			}
-		}
-		populateCrisis();
-	}
-	
-	/**
-	 * Runs the function that will allow the current user to change the selected crisis' status.
-	 */
-	private void changeCrisisStatus(){
-		CtCrisis crisis = (CtCrisis)getObjectFromTableView(tblvwCrisis);
-		if (crisis != null){
-			Dialog<PtBoolean> dialog = new Dialog<PtBoolean>();
-			dialog.setTitle("Change the crisis status");
-			TextField txtfldCtCrisisID = new TextField();
-			txtfldCtCrisisID.setText(crisis.id.value.getValue());
-			txtfldCtCrisisID.setDisable(true);
-			ComboBox<EtCrisisStatus> cmbbx = new ComboBox<EtCrisisStatus>();
-			cmbbx.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
-			cmbbx.setValue(crisis.status);
-			ButtonType bttntypOK = new ButtonType("Change status", ButtonData.OK_DONE);
-			ButtonType bttntypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-			GridPane grdpn = new GridPane();
-			grdpn.add(txtfldCtCrisisID, 1, 1);
-			grdpn.add(cmbbx, 1, 2);
-			dialog.getDialogPane().setContent(grdpn);
-			dialog.getDialogPane().getButtonTypes().add(bttntypeCancel);
-			dialog.getDialogPane().getButtonTypes().add(bttntypOK);
-			dialog.setResultConverter(new Callback<ButtonType, PtBoolean>(){
-				@Override
-				public PtBoolean call(ButtonType param) {
-					if (param.getButtonData() == ButtonData.OK_DONE && checkIfAllDialogHasBeenFilledIn(grdpn)){
-						try {
-							return userController.changeCrisisStatus(crisis.id.value.getValue(), cmbbx.getValue());
-						} catch (ServerOfflineException | ServerNotBoundException e) {
-							showServerOffLineMessage(e);
-						} catch (IncorrectFormatException e) {
-							showWarningIncorrectInformationEntered(e);
-						}
-					}
-					//User cancelled the dialog
-					return new PtBoolean(true);
-				}
-			});
-			dialog.initOwner(window);
-			dialog.initModality(Modality.WINDOW_MODAL);
-			Optional<PtBoolean> result = dialog.showAndWait();
-			if (result.isPresent()){
-				if (!result.get().getValue())
-					showWarningMessage("Unable to change status of crisis", "Unable to change status of crisis, please try again");
-			}
-		}
-		populateCrisis();
-	}
-	
-	/**
-	 * Runs the function that will allow the current user to validate the selected alert.
-	 */
-	private void validateAlert(){
-		CtAlert alert = (CtAlert)getObjectFromTableView(tblvwAlerts);
-		if (alert != null)
-			try {
-				userController.validateAlert(alert.id.value.getValue());
-			} catch (ServerOfflineException | ServerNotBoundException e) {
-				showServerOffLineMessage(e);
-			} catch (IncorrectFormatException e) {
-				showWarningIncorrectInformationEntered(e);
-			}
-		populateAlerts();
-	}
-	
-	/**
-	 * Runs the function that will allow the current user to invalidate the selected alert.
-	 */
-	private void invalidateAlert(){
-		CtAlert alert = (CtAlert)getObjectFromTableView(tblvwAlerts);
-		if (alert != null)
-			try {
-				if (!userController.invalidateAlert(alert.id.value.getValue()).getValue())
-					showWarningMessage("Unable to invalidate alert", "Unable to invalidate alert, please try again");
-			} catch (ServerOfflineException | ServerNotBoundException e) {
-				showServerOffLineMessage(e);
-			} catch (IncorrectFormatException e) {
-				showWarningIncorrectInformationEntered(e);
-			}
-		populateAlerts();
-	}
 
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logon()
 	 */
 	@Override
 	public void logon() {
-		if(txtfldCoordLogonUserName.getText().length() > 0 && psswrdfldCoordLogonPassword.getText().length() > 0){
+		
+		if(txtfldPersonLogonUserName.getText().length() > 0 && psswrdfldPersonLogonPassword.getText().length() > 0) {
+			
 			try {
-				if (userController.oeLogin(txtfldCoordLogonUserName.getText(), psswrdfldCoordLogonPassword.getText()).getValue()){
-					if (userController.getUserType() == UserType.Coordinator){
+				if (userController.oeLogin(txtfldPersonLogonUserName.getText(), psswrdfldPersonLogonPassword.getText()).getValue()) {
+					
+					if (userController.getUserType() == UserType.Person) {
 						logonShowPanes(true);
 					}
 				}
 			}
 			catch (ServerOfflineException | ServerNotBoundException e) {
+				
+				showExceptionErrorMessage(e);
+			}
+    	}
+    	else
+    		showWarningNoDataEntered();
+	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonWithCaptcha()
+	 */
+	@Override
+	public void logonWithCaptcha() {
+		
+		if(txtfldPersonLogonUserName.getText().length() > 0 && psswrdfldPersonLogonPassword.getText().length() > 0 && txtfldPersonCaptcha.getText().length() > 0) {
+			
+			try {
+				if (userController.oeLoginWithCaptcha(txtfldPersonLogonUserName.getText(), psswrdfldPersonLogonPassword.getText(), txtfldPersonCaptcha.getText()).getValue()) {
+					
+					if (userController.getUserType() == UserType.Person) {
+						logonWithCaptchaShowPanes(true);
+					}
+				}
+			}
+			catch (ServerOfflineException | ServerNotBoundException e) {
+				
 				showExceptionErrorMessage(e);
 			}
     	}
@@ -458,11 +301,15 @@ public class ICrashPersonGUIController extends AbstractAuthGUIController {
 	 */
 	@Override
 	public void logoff() {
+		
 		try {
-			if (userController.oeLogout().getValue()){
+			
+			if (userController.oeLogout().getValue()) {
+				
 				logonShowPanes(false);
 			}
 		} catch (ServerOfflineException | ServerNotBoundException e) {
+			
 			showExceptionErrorMessage(e);
 		}
 	}
@@ -470,20 +317,43 @@ public class ICrashPersonGUIController extends AbstractAuthGUIController {
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonShowPanes(boolean)
 	 */
-	protected void logonShowPanes(boolean loggedOn){
+	protected void logonShowPanes(boolean loggedOn) {
+		
 		tbpnMain.setVisible(loggedOn);
-		bttnCoordLogoff.setDisable(!loggedOn);
+		bttnPersonLogoff.setDisable(!loggedOn);
 		pnLogon.setVisible(!loggedOn);
-		bttnCoordLogon.setDefaultButton(!loggedOn);
-		if (loggedOn){
+		bttnPersonLogon.setDefaultButton(!loggedOn);
+		
+		if (loggedOn) {
+			
 			tbpnMain.getSelectionModel().selectFirst();
-			cmbbxAlertStatus.setValue(EtAlertStatus.pending);
-			cmbbxCrisisStatus.setValue(EtCrisisStatus.pending);
 		}
 		else{
-			txtfldCoordLogonUserName.setText("");
-			psswrdfldCoordLogonPassword.setText("");
-			txtfldCoordLogonUserName.requestFocus();
+			txtfldPersonLogonUserName.setText("");
+			psswrdfldPersonLogonPassword.setText("");
+			txtfldPersonLogonUserName.requestFocus();
+			
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonShowPanes(boolean)
+	 */
+	protected void logonWithCaptchaShowPanes(boolean loggedOn) {
+		
+		tbpnMain.setVisible(loggedOn);
+		bttnPersonLogoff.setDisable(!loggedOn);
+		pnLogon.setVisible(!loggedOn);
+		bttnPersonLogon.setDefaultButton(!loggedOn);
+		
+		if (loggedOn) {
+			
+			tbpnMain.getSelectionModel().selectFirst();
+		}
+		else{
+			txtfldPersonLogonUserName.setText("");
+			psswrdfldPersonLogonPassword.setText("");
+			txtfldPersonLogonUserName.requestFocus();
 			
 		}
 	}
@@ -493,87 +363,76 @@ public class ICrashPersonGUIController extends AbstractAuthGUIController {
 	 */
 	@Override
 	public void closeForm() {
+		
 		try {
 			userController.removeAllListeners();
+			
 		} catch (ServerOfflineException | ServerNotBoundException e) {
+			
 			showExceptionErrorMessage(e);
 		}
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
 		setUpTables();
-		cmbbxAlertStatus.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				populateAlerts();
-			}
-		});	
-		cmbbxCrisisStatus.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				populateCrisis();
-			}
-		});
-		tbpnMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-			@Override
-			public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-				if (newValue == tbCoordAlerts)
-					populateAlerts();
-				else if (newValue == tbCoordCrisis)
-					populateCrisis();
-			}
-		});
+		
 		logonShowPanes(false);
 	}
 
 	@Override
 	public PtBoolean setActor(JIntIsActor actor) {
 		try { 
-			if (actor instanceof ActCoordinator)
+			if (actor instanceof ActPerson)
 			{
 				try{
-					userController = new CoordinatorController((ActCoordinator)actor);
+					userController = new PersonController((ActPerson)actor);
+					
 					try{
 						userController.getAuthImpl().listOfMessages.addListener(new ListChangeListener<Message>() {
+							
 							@Override
 							public void onChanged(ListChangeListener.Change<? extends Message> c) {
-								addMessageToTableView(tblvwCoordMessages, c.getList());
+								
+								addMessageToTableView(tblvwPersonMessages, c.getList());
 							}
 						});
-						((ActProxyCoordinatorImpl)userController.getAuthImpl()).MapOfCtAlerts.addListener(new MapChangeListener<String, CtAlert>(){
+						
+						((ActProxyPersonImpl)userController.getAuthImpl()).MapOfCtPis.addListener(new MapChangeListener<String, CtPI>(){
 				
 							@Override
 							public void onChanged(
-									javafx.collections.MapChangeListener.Change<? extends String, ? extends CtAlert> change) {
-								addAlertsToTableView(tblvwAlerts, change.getMap().values());
+									javafx.collections.MapChangeListener.Change<? extends String, ? extends CtPI> change) {
+								
+								addPisToTableView(tblvwPis, change.getMap().values());
 							}
 						});
-						((ActProxyCoordinatorImpl)userController.getAuthImpl()).MapOfCtCrisis.addListener(new MapChangeListener<String, CtCrisis>(){
-							
-							@Override
-							public void onChanged(
-									javafx.collections.MapChangeListener.Change<? extends String, ? extends CtCrisis> change) {
-								addCrisesToTableView(tblvwCrisis, change.getMap().values());
-							}
-						});
-					} catch (Exception e){
+						
+					} catch (Exception e) {
+						
 						showExceptionErrorMessage(e);
 					}
-				} catch (RemoteException e){
+				} catch (RemoteException e) {
+					
 					Log4JUtils.getInstance().getLogger().error(e);
 					throw new ServerOfflineException();
-				} catch (NotBoundException e){
+					
+				} catch (NotBoundException e) {
+					
 					Log4JUtils.getInstance().getLogger().error(e);
 					throw new ServerNotBoundException();
 				}
 			}
 			else
-				throw new IncorrectActorException(actor, ActCoordinator.class);
+				throw new IncorrectActorException(actor, ActPerson.class);
+			
 		} catch (IncorrectActorException | ServerOfflineException | ServerNotBoundException e) {
+			
 			showExceptionErrorMessage(e);
 			return new PtBoolean(false);
 		}
+		
 		return new PtBoolean(true);
 	}
 }

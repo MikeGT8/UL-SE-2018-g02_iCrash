@@ -69,8 +69,7 @@ public class DbCrises extends DbAbstract {
 				String type = aCtCrisis.type.toString();
 				String status = aCtCrisis.status.toString();
 				double latitude = aCtCrisis.location.latitude.value.getValue();
-				double longitude = aCtCrisis.location.longitude.value
-						.getValue();
+				double longitude = aCtCrisis.location.longitude.value.getValue();
 
 				int year = aCtCrisis.instant.date.year.value.getValue();
 				int month = aCtCrisis.instant.date.month.value.getValue();

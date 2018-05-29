@@ -1722,7 +1722,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				
 				//PostF1 to add the new PI to the system
 				CtPI ctPI = new CtPI();
-				ctPI.init(aPIID, aPIName, aPICity, aPICategory, aGPSLocation, aPIDescription);
+				ctPI.init(aPIID, aPIName, aPICity, aGPSLocation, aPIDescription, aPICategory);
 				DbPIs.insertPI(ctPI);
 				
 				//PostF2 to send the input event to the administrator
