@@ -28,6 +28,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPro
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.design.JIntIsActor;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCrisis;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRequest;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
@@ -169,6 +170,39 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     }
 
     /**
+     * Button event that gets all the unhandled (with no status) requests
+     *
+     * @param event The event type fired, we do not need it's details
+     */
+    @FXML
+    void bttnGetAllRequests_OnClick(ActionEvent event) {
+    	
+    	getAllRequests();
+    }
+    
+    /**
+     * Button event that checks if the requested PI is already in the system
+     *
+     * @param event The event type fired, we do not need it's details
+     */
+    @FXML
+    void bttnCheckAvailability_OnClick(ActionEvent event) {
+    	
+    	checkAvailability();
+    }
+    
+    /**
+     * Button event that deals with changing the status of a request
+     *
+     * @param event The event type fired, we do not need it's details
+     */
+    @FXML
+    void bttnDeliverRequest_OnClick(ActionEvent event) {
+    	
+    	deliverRequest();
+    }
+    
+    /**
      * Button event that deals with logging off the user
      *
      * @param event The event type fired, we do not need it's details
@@ -251,6 +285,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 		setUpMessageTables(tblvwCoordMessages);
 		setUpCrisesTables(tblvwCrisis);
 		setUpAlertTables(tblvwAlerts);
+		/*
+		setUpRequestTables(tblvwRequests);
+		cmbbxRequestStatus.setItems( FXCollections.observableArrayList( EtRequestStatus.values()));
+		*/
 		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
 		cmbbxAlertStatus.setItems( FXCollections.observableArrayList( EtAlertStatus.values()));
 	}
@@ -409,6 +447,30 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 			}
 		}
 		populateCrisis();
+	}
+	
+	/**
+	 * Runs the function that will allow the current user to get all the requests.
+	 */
+	private void getAllRequests() {
+		
+		// Further implementation
+	}
+	
+	/**
+	 * Runs the function that will allow the current user to get all the requests.
+	 */
+	private void checkAvailability() {
+		
+		// Further implementation
+	}
+	
+	/**
+	 * Runs the function that will allow the current user to get all the requests.
+	 */
+	private void deliverRequest() {
+		
+		// Further implementation
 	}
 	
 	/**
