@@ -81,9 +81,9 @@ public class DbPIs extends DbAbstract {
 
 				log.debug("[DATABASE]-Insert PI");
 				int val = st.executeUpdate("INSERT INTO " + dbName + ".pis"
-						+ "(id,name,city,location,description,category)"
-						+ "VALUES(" + "'" + id + "'" + ",'" + name + "', "
-						+ city + ", " + latitude + ", " + longitude + ", '"
+						+ "(id,name,city,latitude,longitude,description,category)"
+						+ "VALUES(" + "'" + id + "'" + ",'" + name + "', '"
+						+ city + "', " + latitude + ", " + longitude + ", '"
 						+ description + "','" + category + "')");
 
 				log.debug(val + " row affected");
@@ -118,8 +118,12 @@ public class DbPIs extends DbAbstract {
 			//Update
 
 			try {
-				Statement st = conn.createStatement();
-
+				log.debug("[DATABASE]-Update pis");
+				String sql = "UPDATE "
+						+ dbName
+						+ ".pis SET `name` = ?, `city` = ?, `latitude` = ?, `longitude` = ?,"
+						+ " `description` = ?, `category` = ? WHERE id = ?";
+				
 				String id = ctPI.id.value.getValue();
 				String name = ctPI.name.value.getValue();
 				String city = ctPI.city.value.getValue();
@@ -128,14 +132,18 @@ public class DbPIs extends DbAbstract {
 				String description = ctPI.description.value.getValue();
 				String category = ctPI.category.toString();
 
-				log.debug("[DATABASE]-Update PI");
-				int val = st.executeUpdate("Update INTO " + dbName + ".pis"
-						+ "(id,name,city,location,description,category)"
-						+ "VALUES(" + "'" + id + "'" + ",'" + name + "', "
-						+ city + ", " + latitude + ", " + longitude + ", '" 
-						+ description + "','" + category + "')");
-
-				log.debug(val + " row updated");
+				PreparedStatement statement = conn.prepareStatement(sql);
+				
+				statement.setString(1, name);
+				statement.setString(2, city);
+				statement.setDouble(3, latitude);
+				statement.setDouble(4, longitude);
+				statement.setString(5, description);
+				statement.setString(6, category);
+				statement.setString(7, id);
+				
+				int rows = statement.executeUpdate();
+				log.debug(rows + " row affected");
 				
 			} catch (SQLException s) {
 				

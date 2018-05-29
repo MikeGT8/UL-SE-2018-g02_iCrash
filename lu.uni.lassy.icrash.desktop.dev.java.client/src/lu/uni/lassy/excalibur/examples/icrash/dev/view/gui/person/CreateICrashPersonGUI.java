@@ -25,10 +25,9 @@ public class CreateICrashPersonGUI implements CreatedWindows {
 	 * @param aPersonID the ID of the person associated with this window
 	 * @param aPerson the actor associated with this window
 	 */
-	public CreateICrashPersonGUI(DtPhoneNumber aPersonID, ActPerson aActPerson) {
+	public CreateICrashPersonGUI() {
 		
-		this._aPersonID = aPersonID;
-		start(aActPerson);
+		start();
 	}
 	
 	/** The Person ID that was used to create this window, it's used to work out which windows to close when a person has been deleted. */
@@ -51,7 +50,7 @@ public class CreateICrashPersonGUI implements CreatedWindows {
 	 *
 	 * @param aActPerson the actor associated with this window
 	 */
-	private void start(ActPerson aActPerson) {
+	private void start() {
 		
 		try {
 			URL url = this.getClass().getResource("ICrashPersonGUI.fxml");
@@ -59,10 +58,9 @@ public class CreateICrashPersonGUI implements CreatedWindows {
 			Parent root = (Parent)loader.load();
 			
             stage = new Stage();
-            stage.setTitle("iCrash Person - " + aActPerson.getLogin().value.getValue());
+            stage.setTitle("iCrash Person");
             stage.setScene(new Scene(root));
             stage.show();
-            ((ICrashPersonGUIController)loader.getController()).setActor(aActPerson);
             ((ICrashPersonGUIController)loader.getController()).setWindow(stage);
             stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             	

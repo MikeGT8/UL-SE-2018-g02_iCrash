@@ -485,8 +485,6 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 								
 								anchrpnCoordinatorDetails.getChildren().remove(grdpn);
 							}
-							else
-								showErrorMessage("Unable to add PI", "An error occured when adding the PI");
 							break;
 							
 						case Delete:

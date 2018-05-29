@@ -97,8 +97,8 @@ public class CreatorGUIController extends AbstractGUIController{
 						Rectangle2D bounds = screen.getVisualBounds();
 						double rangeY = bounds.getMaxY() - bounds.getMinY();
 						listOfWindows.add(new CreateICrashAdminGUI(systemStatecontroller.getActAdministrator(), bounds.getMinX(), bounds.getMinY()));
-						listOfWindows.add(new CreateICrashCoordGUI(new DtCoordinatorID(new PtString("1")), systemStatecontroller.getActCoordinator("bob")));
-						//listOfWindows.add(new CreateICrashPersonGUI(new DtPhoneNumber(new PtString("661898989")), systemStatecontroller.getActPerson("patrick")));
+						//listOfWindows.add(new CreateICrashCoordGUI(new DtCoordinatorID(new PtString("1")), systemStatecontroller.getActCoordinator("bob")));
+						//listOfWindows.add(new CreateICrashPersonGUI());
 						double percent = 0.1;
 						//Dealing with com company window placement
 						ArrayList<ActComCompany> listOfComCompanies = systemStatecontroller.getActComCompany();
