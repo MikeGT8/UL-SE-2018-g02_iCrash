@@ -67,6 +67,10 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
     /** The pane containing the logon controls. */
 	@FXML
     private Pane pnAdminLogon;
+	
+    /** The pane containing the logon with captcha controls. */
+	@FXML
+    private Pane pnAdminLogonWC;
 
     /** The textfield that allows input of a username for logon. */
     @FXML
@@ -83,6 +87,10 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
     /** The button that initiates the login function. */
     @FXML
     private Button bttnAdminLogin;
+    
+    /** The button that initiates the login with captcha function. */
+    @FXML
+    private Button bttnAdminLoginWithCaptcha;
 
     /** The borderpane that contains the normal controls the user will use. */
     @FXML
@@ -123,6 +131,9 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
     /** The button that allows a user to logoff */
     @FXML
     private Button bttnAdminLogoff;
+    
+    // Cheat to use logonwithcaptcha...
+    private int login = 0; 
 
     /**
      * The button event that will show the controls for adding a PI
@@ -196,6 +207,16 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
     void bttnBottomLoginPaneLogin_OnClick(ActionEvent event) {
     	logon();
     }
+    
+    /**
+     * The button event that will initiate the logging on of a user with usage of captcha
+     *
+     * @param event The event type thrown, we do not need this, but it must be specified
+     */
+    @FXML
+    void bttnBottomLoginPaneLoginWithCaptcha_OnClick(ActionEvent event) {
+    	logonWithCaptcha();
+    }
 
     /**
      * The button event that will initiate the logging off of a user
@@ -265,13 +286,14 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.view.gui.abstractgui.AbstractAuthGUIController#logonWithCaptchaShowPanes(boolean)
 	 */
 	protected void logonWithCaptchaShowPanes(boolean loggedOn) {
-		pnAdminLogon.setVisible(!loggedOn);
+		pnAdminLogonWC.setVisible(!loggedOn);
 		brdpnAdmin.setVisible(loggedOn);
 		bttnAdminLogoff.setDisable(!loggedOn);
-		bttnAdminLogin.setDefaultButton(!loggedOn);
+		bttnAdminLoginWithCaptcha.setDefaultButton(!loggedOn);
 		if (!loggedOn){
 			txtfldAdminUserName.setText("");
 			psswrdfldAdminPassword.setText("");
+			txtfldAdminCaptcha.setText("");
 			txtfldAdminUserName.requestFocus();
 			for (int i = anchrpnCoordinatorDetails.getChildren().size() -1; i >= 0; i--)
 				anchrpnCoordinatorDetails.getChildren().remove(i);
@@ -509,6 +531,11 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 			try {
 				if (userController.oeLogin(txtfldAdminUserName.getText(), psswrdfldAdminPassword.getText()).getValue())
 					logonShowPanes(true);
+				else login++;
+				if(login > 2) {
+					logonShowPanes(true);
+					logonWithCaptchaShowPanes(false);
+				}
 			}
 			catch (ServerOfflineException | ServerNotBoundException e) {
 				showExceptionErrorMessage(e);
@@ -525,8 +552,10 @@ public class ICrashAdminGUIController extends AbstractAuthGUIController {
 	public void logonWithCaptcha() {
 		if(txtfldAdminUserName.getText().length() > 0 && psswrdfldAdminPassword.getText().length() > 0 && txtfldAdminCaptcha.getText().length() > 0){
 			try {
-				if (userController.oeLoginWithCaptcha(txtfldAdminUserName.getText(), psswrdfldAdminPassword.getText(), txtfldAdminCaptcha.getText()).getValue())
+				if (userController.oeLoginWithCaptcha(txtfldAdminUserName.getText(), psswrdfldAdminPassword.getText(), txtfldAdminCaptcha.getText()).getValue()) {
 					logonWithCaptchaShowPanes(true);
+					login = 0;
+				} else login++;
 			}
 			catch (ServerOfflineException | ServerNotBoundException e) {
 				showExceptionErrorMessage(e);

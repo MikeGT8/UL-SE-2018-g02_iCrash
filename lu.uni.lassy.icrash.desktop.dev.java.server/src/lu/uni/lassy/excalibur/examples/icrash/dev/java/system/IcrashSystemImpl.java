@@ -1315,20 +1315,98 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 					if (authActorCheck != null && authActorCheck.getLogin().value.getValue().equals(currentRequestingAuthenticatedActor.getLogin().value.getValue())){
 						ctAuthenticatedInstance.vpIsLogged = new PtBoolean(true);
 						ctAuthenticatedInstance.tries.value = new PtInteger(0);
-						ctAuthenticatedInstance.lastAccess.value = new PtInteger(-181);
+						//ctAuthenticatedInstance.lastAccess.value = new PtInteger(-181);
 						//PostF1
 						PtString aMessage = new PtString("You are logged ! Welcome ...");
 						currentRequestingAuthenticatedActor.ieMessage(aMessage);
 						return new PtBoolean(true);
-					} else if(authActorCheck != null) {
-						ctAuthenticatedInstance.lastAccess.value = new PtInteger(((int)(System.currentTimeMillis()/1000)) - ctAuthenticatedInstance.lastAccess.value.getValue());
-						if(ctAuthenticatedInstance.lastAccess.value.getValue() <= 180) {
-							ctAuthenticatedInstance.tries.value = new PtInteger(ctAuthenticatedInstance.tries.value.getValue() + 1);
-							if(ctAuthenticatedInstance.lastAccess.value.getValue() > 2)
-								ctAuthenticatedInstance.capReq = new PtBoolean(true);
-						}else
-							ctAuthenticatedInstance.lastAccess.value = new PtInteger(1);
 					}
+				} else { // pwd was wrong
+					//ctAuthenticatedInstance.lastAccess.value = new PtInteger(((int)(System.currentTimeMillis()/1000)) - ctAuthenticatedInstance.lastAccess.value.getValue());
+					//if(ctAuthenticatedInstance.lastAccess.value.getValue() <= 180) {
+						//System.out.println("MIKE - Soontm: tries: " + ctAuthenticatedInstance.tries.value.getValue());
+						ctAuthenticatedInstance.tries.value = new PtInteger(ctAuthenticatedInstance.tries.value.getValue() + 1);
+						if(ctAuthenticatedInstance.tries.value.getValue() > 2)
+							ctAuthenticatedInstance.capReq = new PtBoolean(true);
+					//}else
+						//ctAuthenticatedInstance.lastAccess.value = new PtInteger(1);
+				}
+			}
+			//PostF1
+			String s = "Wrong identification information! Please try again ...";
+			if(ctAuthenticatedInstance.capReq.getValue())
+				s+=" Captcha to solve: " + ctAuthenticatedInstance.captcha2Solve.toString();
+			PtString aMessage = new PtString(s);
+			currentRequestingAuthenticatedActor.ieMessage(aMessage);
+			Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(), RmiUtils.getInstance().getPort());
+			IcrashEnvironment env = (IcrashEnvironment) registry
+					.lookup("iCrashEnvironment");
+			//notify to all administrators that exist in the environment
+			for (String adminKey : env.getAdministrators().keySet()) {
+				ActAdministrator admin = env.getActAdministrator(adminKey);
+				aMessage = new PtString("Intrusion tentative !");
+				admin.ieMessage(aMessage);
+			}
+		} catch (Exception ex) {
+			log.error("Exception in oeLogin..." + ex);
+		}
+		return new PtBoolean(false);
+	}
+	//*****************************************************************************************
+	//***							AUTHENTICATION VARIANT									***
+	//*****************************************************************************************
+	// actAuthenticated: loggin in with captcha
+	@Override
+	public PtBoolean oeLoginWitchCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha) throws RemoteException {
+		try {
+			log.debug("The current requesting authenticating actor is " + currentRequestingAuthenticatedActor.getLogin().value.getValue());
+			//PreP1
+			isSystemStarted();
+			/**
+			 * check whether the credentials corresponds to an existing user
+			 *this is done by checking if there exists an instance with
+			 *such credential in the ctAuthenticatedInstances data structure
+			 */
+			CtAuthenticated ctAuthenticatedInstance = cmpSystemCtAuthenticated.get(aDtLogin.value.getValue());
+			if (ctAuthenticatedInstance != null){
+				//PreP2
+				if(ctAuthenticatedInstance.vpIsLogged.getValue())
+					throw new Exception("User " + aDtLogin.value.getValue() + " is already logged in");
+				//PreP3
+				if(!ctAuthenticatedInstance.capReq.getValue())
+					throw new Exception("User " + aDtLogin.value.getValue() + " does not need to solve captcha");
+				PtBoolean pwdCheck = ctAuthenticatedInstance.pwd.eq(aDtPassword);
+				if(pwdCheck.getValue()) {
+					//PostP1
+					/**
+					 * Make sure that the user logging in is the current requesting user
+					 * We do this as each window is a dumb terminal and only one use can logon at each individual window
+					 * So user 1 can only logon at the window for user 1, if user 2 tries, it should fail
+					 */
+					ActAuthenticated authActorCheck = assCtAuthenticatedActAuthenticated.get(ctAuthenticatedInstance);
+					log.debug("The logging in actor is " + authActorCheck.getLogin().value.getValue());
+					if (authActorCheck != null){
+						if(aDtCaptcha.value.getValue().equals(ctAuthenticatedInstance.captcha2Solve.value.toString())) {
+							if(authActorCheck.getLogin().value.getValue().equals(currentRequestingAuthenticatedActor.getLogin().value.getValue())) {
+								ctAuthenticatedInstance.tries.value = new PtInteger(0);
+								//ctAuthenticatedInstance.lastAccess.value = new PtInteger(-181);
+								ctAuthenticatedInstance.capReq = new PtBoolean(false);
+								ctAuthenticatedInstance.vpIsLogged = new PtBoolean(true);
+								//PostF1
+								PtString aMessage = new PtString("You are logged ! Welcome ...");
+								currentRequestingAuthenticatedActor.ieMessage(aMessage);
+								return new PtBoolean(true);
+							}
+						} else {
+							ctAuthenticatedInstance.captcha2Solve.generateNewCaptcha();
+						}
+					}
+				}else { // ELSE of pw and/or login being incorrect
+					//ctAuthenticatedInstance.lastAccess.value = new PtInteger(((int)(System.currentTimeMillis()/1000)) - ctAuthenticatedInstance.lastAccess.value.getValue());
+					//if(ctAuthenticatedInstance.lastAccess.value.getValue() <= 180)
+						ctAuthenticatedInstance.tries.value = new PtInteger(ctAuthenticatedInstance.tries.value.getValue() + 1);
+					//else
+						//ctAuthenticatedInstance.lastAccess.value = new PtInteger(1);
 				}
 			}
 			//PostF1
@@ -1345,11 +1423,10 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				admin.ieMessage(aMessage);
 			}
 		} catch (Exception ex) {
-			log.error("Exception in oeLogin..." + ex);
+			log.error("Exception in oeLoginWithCaptcha..." + ex);
 		}
 		return new PtBoolean(false);
 	}
-	
 	/* (non-Javadoc)
 	 * @see lu.uni.lassy.excalibur.examples.icrash.dev.java.system.IcrashSystem#oeLogout()
 	 */
@@ -2044,81 +2121,6 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 		}
 	}
 	
-	//*****************************************************************************************
-	//***							AUTHENTICATION VARIANT									***
-	//*****************************************************************************************
-	// actAuthenticated: loggin in with captcha
-	@Override
-	public PtBoolean oeLoginWitchCaptcha(DtLogin aDtLogin, DtPassword aDtPassword, DtCaptcha aDtCaptcha) throws RemoteException {
-		try {
-			log.debug("The current requesting authenticating actor is " + currentRequestingAuthenticatedActor.getLogin().value.getValue());
-			//PreP1
-			isSystemStarted();
-			/**
-			 * check whether the credentials corresponds to an existing user
-			 *this is done by checking if there exists an instance with
-			 *such credential in the ctAuthenticatedInstances data structure
-			 */
-			CtAuthenticated ctAuthenticatedInstance = cmpSystemCtAuthenticated.get(aDtLogin.value.getValue());
-			if (ctAuthenticatedInstance != null){
-				//PreP2
-				if(ctAuthenticatedInstance.vpIsLogged.getValue())
-					throw new Exception("User " + aDtLogin.value.getValue() + " is already logged in");
-				//PreP3
-				if(!ctAuthenticatedInstance.capReq.getValue())
-					throw new Exception("User " + aDtLogin.value.getValue() + " does not need to solve captcha");
-				PtBoolean pwdCheck = ctAuthenticatedInstance.pwd.eq(aDtPassword);
-				if(pwdCheck.getValue()) {
-					//PostP1
-					/**
-					 * Make sure that the user logging in is the current requesting user
-					 * We do this as each window is a dumb terminal and only one use can logon at each individual window
-					 * So user 1 can only logon at the window for user 1, if user 2 tries, it should fail
-					 */
-					ActAuthenticated authActorCheck = assCtAuthenticatedActAuthenticated.get(ctAuthenticatedInstance);
-					log.debug("The logging in actor is " + authActorCheck.getLogin().value.getValue());
-					if (authActorCheck != null){
-						if(aDtCaptcha.value.getValue().equals(ctAuthenticatedInstance.captcha2Solve.value.toString())) {
-							if(authActorCheck.getLogin().value.getValue().equals(currentRequestingAuthenticatedActor.getLogin().value.getValue())) {
-								ctAuthenticatedInstance.tries.value = new PtInteger(0);
-								ctAuthenticatedInstance.lastAccess.value = new PtInteger(-181);
-								ctAuthenticatedInstance.capReq = new PtBoolean(false);
-								ctAuthenticatedInstance.vpIsLogged = new PtBoolean(true);
-								//PostF1
-								PtString aMessage = new PtString("You are logged ! Welcome ...");
-								currentRequestingAuthenticatedActor.ieMessage(aMessage);
-								return new PtBoolean(true);
-							}else { // ELSE of pw and/or login being incorrect
-								ctAuthenticatedInstance.lastAccess.value = new PtInteger(((int)(System.currentTimeMillis()/1000)) - ctAuthenticatedInstance.lastAccess.value.getValue());
-								if(ctAuthenticatedInstance.lastAccess.value.getValue() <= 180)
-									ctAuthenticatedInstance.tries.value = new PtInteger(ctAuthenticatedInstance.tries.value.getValue() + 1);
-								else
-									ctAuthenticatedInstance.lastAccess.value = new PtInteger(1);
-							}
-						} else {
-							ctAuthenticatedInstance.captcha2Solve.generateNewCaptcha();
-						}
-					}
-				}
-			}
-			//PostF1
-			PtString aMessage = new PtString(
-					"Wrong identification information! Please try again ...");
-			currentRequestingAuthenticatedActor.ieMessage(aMessage);
-			Registry registry = LocateRegistry.getRegistry(RmiUtils.getInstance().getHost(), RmiUtils.getInstance().getPort());
-			IcrashEnvironment env = (IcrashEnvironment) registry
-					.lookup("iCrashEnvironment");
-			//notify to all administrators that exist in the environment
-			for (String adminKey : env.getAdministrators().keySet()) {
-				ActAdministrator admin = env.getActAdministrator(adminKey);
-				aMessage = new PtString("Intrusion tentative !");
-				admin.ieMessage(aMessage);
-			}
-		} catch (Exception ex) {
-			log.error("Exception in oeLoginWithCaptcha..." + ex);
-		}
-		return new PtBoolean(false);
-	}
 	// actAuthenticated: resetting password
 	@Override
 	public PtBoolean oeResetPassword(DtLogin aDtLogin) throws RemoteException {
