@@ -273,8 +273,8 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 			CtCoordinator ctCoord = (CtCoordinator) getCtCoordinator(((CtCoordinator) ctAuth).id);
 			switch(aEtCrisisType ) {
 			case huge: check = (ctCoord.accessRights == EtCrisisType.huge); break;
-			case medium: check = (ctCoord.accessRights == EtCrisisType.huge && ctCoord.accessRights == EtCrisisType.medium); break;
-			case small: check = (ctCoord.accessRights == EtCrisisType.huge && ctCoord.accessRights == EtCrisisType.medium && ctCoord.accessRights == EtCrisisType.small); break;
+			case medium: check = (ctCoord.accessRights == EtCrisisType.huge || ctCoord.accessRights == EtCrisisType.medium); break;
+			case small: check = (ctCoord.accessRights == EtCrisisType.huge || ctCoord.accessRights == EtCrisisType.medium || ctCoord.accessRights == EtCrisisType.small); break;
 			default: break;
 			}
 		}
@@ -1180,7 +1180,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				//go through all existing crises
 				for (String crisisKey : cmpSystemCtCrisis.keySet()) {
 					CtCrisis crisis = cmpSystemCtCrisis.get(crisisKey);
-					if (crisis.status.toString().equals(aEtCrisisStatus.toString()) && crisis.type.toString().equals("huge"))
+					if (crisis.status.toString().equals(aEtCrisisStatus.toString()) && checkAccessRights(aActCoordinator, crisis.type))
 						//PostF1
 						crisis.isSentToCoordinator(aActCoordinator);
 				}
@@ -1502,7 +1502,7 @@ public class IcrashSystemImpl extends UnicastRemoteObject implements
 				CtCoordinator oldCoordinator = new CtCoordinator();
 				oldCoordinator.init(aCtCoordinator.id, aCtCoordinator.login, aCtCoordinator.pwd, aCtCoordinator.accessRights);
 				aCtCoordinator.updateAccessRights(aAccessRights);
-				if (DbCoordinators.updateCoordinator(aCtCoordinator).getValue()){
+				if (DbCoordinators.updateCoordinatorAccessRights(aCtCoordinator, aAccessRights).getValue()){
 					cmpSystemCtAuthenticated.remove(oldCoordinator.login.value.getValue());
 					cmpSystemCtAuthenticated.put(aCtCoordinator.login.value.getValue(), aCtCoordinator);
 					ActAdministrator admin = (ActAdministrator) currentRequestingAuthenticatedActor;
