@@ -74,16 +74,17 @@ public class DbPIs extends DbAbstract {
 				String id = ctPI.id.value.getValue();
 				String name = ctPI.name.value.getValue();
 				String city = ctPI.city.value.getValue();
-				String category = ctPI.category.toString();
-				String location = ctPI.location.toString();
+				double latitude = ctPI.location.latitude.value.getValue();
+				double longitude = ctPI.location.longitude.value.getValue();
 				String description = ctPI.description.value.getValue();
+				String category = ctPI.category.toString();
 
 				log.debug("[DATABASE]-Insert PI");
 				int val = st.executeUpdate("INSERT INTO " + dbName + ".pis"
-						+ "(id,name,city,category,location,description)"
+						+ "(id,name,city,location,description,category)"
 						+ "VALUES(" + "'" + id + "'" + ",'" + name + "', "
-						+ city + ", " + category + ", '" + location + "','"
-						+ description + "')");
+						+ city + ", " + latitude + ", " + longitude + ", '"
+						+ description + "','" + category + "')");
 
 				log.debug(val + " row affected");
 				
@@ -122,16 +123,17 @@ public class DbPIs extends DbAbstract {
 				String id = ctPI.id.value.getValue();
 				String name = ctPI.name.value.getValue();
 				String city = ctPI.city.value.getValue();
-				String category = ctPI.category.toString();
-				String location = ctPI.location.toString();
+				double latitude = ctPI.location.latitude.value.getValue();
+				double longitude = ctPI.location.longitude.value.getValue();
 				String description = ctPI.description.value.getValue();
+				String category = ctPI.category.toString();
 
 				log.debug("[DATABASE]-Update PI");
 				int val = st.executeUpdate("Update INTO " + dbName + ".pis"
-						+ "(id,name,city,category,location,description)"
+						+ "(id,name,city,location,description,category)"
 						+ "VALUES(" + "'" + id + "'" + ",'" + name + "', "
-						+ city + ", " + category + ", '" + location + "','"
-						+ description + "')");
+						+ city + ", " + latitude + ", " + longitude + ", '" 
+						+ description + "','" + category + "')");
 
 				log.debug(val + " row updated");
 				
@@ -214,7 +216,7 @@ public class DbPIs extends DbAbstract {
 					DtDescription aDescription = new DtDescription(new PtString(
 							res.getString("description")));
 
-					ctPI.init(aId, aName, aCity, aCategory, aGPSLocation, aDescription);
+					ctPI.init(aId, aName, aCity, aGPSLocation, aDescription, aCategory);
 				}
 
 			} catch (SQLException s) {
@@ -299,7 +301,7 @@ public class DbPIs extends DbAbstract {
 					DtDescription aDescription = new DtDescription(new PtString(
 							res.getString("description")));
 
-					ctPI.init(aId, aName, aCity, aCategory, aGPSLocation, aDescription);
+					ctPI.init(aId, aName, aCity, aGPSLocation, aDescription, aCategory);
 
 					//add instance to the hash
 					cmpSystemCtPI.put(ctPI.id.value.getValue(), ctPI);
@@ -430,7 +432,7 @@ public class DbPIs extends DbAbstract {
 							res.getString("pis.description")));
 
 					//init ctPI instance
-					ctPI.init(aId, aName, aCity, aCategory, aGPSLocation, aDescription);
+					ctPI.init(aId, aName, aCity, aGPSLocation, aDescription, aCategory);
 
 					//*************************************
 					

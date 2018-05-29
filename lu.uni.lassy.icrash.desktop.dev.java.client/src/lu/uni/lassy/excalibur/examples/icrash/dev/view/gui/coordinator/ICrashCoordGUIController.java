@@ -31,6 +31,7 @@ import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtCr
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtRequest;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtAlertStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtCrisisStatus;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.EtRequestStatus;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.types.stdlib.PtBoolean;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.utils.Log4JUtils;
 import lu.uni.lassy.excalibur.examples.icrash.dev.model.Message;
@@ -113,6 +114,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     @FXML
     private TableView<CtAlert> tblvwAlerts;
 
+    /** The tableview of the requests the user has retrieved from the system. */
+    @FXML
+    private TableView<CtRequest> tblvwRequests;
+    
     /** The tab containing the controls for crises. */
     @FXML
     private Tab tbCoordCrisis;
@@ -136,6 +141,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
     /** The combobox that allows a user to select which crisis status type to view. */
     @FXML
     private ComboBox<EtCrisisStatus> cmbbxCrisisStatus;
+    
+    /** The combobox that allows a user to select which request status type to view. */
+    @FXML
+    private ComboBox<EtRequestStatus> cmbbxRequestStatus;
 
     /** The tablview that shows the user the crises they have selected. */
     @FXML
@@ -285,10 +294,10 @@ public class ICrashCoordGUIController extends AbstractAuthGUIController {
 		setUpMessageTables(tblvwCoordMessages);
 		setUpCrisesTables(tblvwCrisis);
 		setUpAlertTables(tblvwAlerts);
-		/*
+		
 		setUpRequestTables(tblvwRequests);
 		cmbbxRequestStatus.setItems( FXCollections.observableArrayList( EtRequestStatus.values()));
-		*/
+		
 		cmbbxCrisisStatus.setItems( FXCollections.observableArrayList( EtCrisisStatus.values()));
 		cmbbxAlertStatus.setItems( FXCollections.observableArrayList( EtAlertStatus.values()));
 	}

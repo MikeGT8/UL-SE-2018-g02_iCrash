@@ -175,7 +175,7 @@ public class SystemStateController {
 	/**
 	 * Gets the act person.
 	 *
-	 * @param userName the user name
+	 * @param id the user id
 	 * @return the act coordinator
 	 * @throws ServerNotBoundException is only thrown when attempting to access a server which has no current binding. This shouldn't happen, but you never know!
 	 * @throws ServerOfflineException is an error that is thrown when the server is offline or not reachable

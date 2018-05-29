@@ -2,12 +2,17 @@ package lu.uni.lassy.excalibur.examples.icrash.dev.model.actors;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActAdministrator;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActPerson;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.environment.actors.ActProxyPerson;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtAlert;
+import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.CtPI;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtCity;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtID;
 import lu.uni.lassy.excalibur.examples.icrash.dev.java.system.types.primary.DtName;
@@ -22,6 +27,14 @@ public class ActProxyPersonImpl extends ActProxyAuthenticatedImpl implements Act
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 227L;
 
+	/** The list of class type PIs this user has retrieved from the server */
+	private Hashtable<String, CtPI> _listOfCtPis = new Hashtable<String, CtPI>();
+	
+	/** The observable map of class type PIs this user has retrieved from the server. 
+	 * Being observable, listeners can be attached to it to force the an action once updated*/
+	
+	public ObservableMap<String, CtPI> MapOfCtPis = FXCollections.observableMap(_listOfCtPis);
+	
 	/**
 	 * Instantiates a new client side actor for persons.
 	 *
