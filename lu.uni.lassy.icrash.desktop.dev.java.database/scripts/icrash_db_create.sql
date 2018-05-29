@@ -111,32 +111,31 @@ UNLOCK TABLES;
 
 
 --
--- Table structure for table `PIs`
+-- Table structure for table `pis`
 --
 
-DROP TABLE IF EXISTS `PIs`;
+DROP TABLE IF EXISTS `pis`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `PIs` (
+CREATE TABLE `pis` (
   `id` varchar(80) NOT NULL,
   `name` varchar(80) DEFAULT NULL,
   `city` varchar(80) DEFAULT NULL,
-  `category` varchar(80) DEFAULT NULL,
   `latitude` double DEFAULT NULL,
   `longitude` double DEFAULT NULL,
   `description` varchar(80) DEFAULT NULL,
-  `person` varchar(80) DEFAULT NULL,
+  `category` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `PIs`
+-- Dumping data for table `pis`
 --
 
-LOCK TABLES `PIs` WRITE;
-/*!40000 ALTER TABLE `PIs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PIs` ENABLE KEYS */;
+LOCK TABLES `pis` WRITE;
+/*!40000 ALTER TABLE `pis` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pis` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
